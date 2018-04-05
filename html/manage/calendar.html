@@ -1,0 +1,62 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row form-group" style="overflow-x: hidden; padding-bottom: 0vh;">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>จัดการการปฏิทินกิจกรรม</h2></div></div>
+		</div>
+		<div class="row" style="padding-bottom: 10vh; ">
+			<div class="col-lg-12">
+				<div class="row form-group">
+					<div class="col-lg-2">
+						<button class="btn btn-primary" ng-click="newCalendar()"><span class="glyphicon glyphicon-plus"></span> เพิ่มปฏิทิน</button>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-4 col-sm-3 col-xs-12" ng-repeat="data in DataList" style="border: 1px #ccc solid; padding: 1vh; height: 260px;">
+						<div class="row">
+							<div class="col-lg-2">
+								<button class="btn btn-primary" ng-click="updateCalendar($index, data)"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+								<button class="btn btn-danger" ng-click="removeCalendar($index, data.CalendarID)"><span class="glyphicon glyphicon-trash"></span></button>
+							</div>
+							<div class="col-lg-10">
+								<div class="row form-group">
+									<label class="col-lg-2 form-control-static">หัวข้อ </label>
+									<div class="col-lg-10" >
+										<input type="text" class="form-control" ng-model="data.CalendarName" />
+									</div>
+								</div>
+								<div class="row form-group">
+									<label class="col-lg-2 form-control-static">URL </label>
+									<div class="col-lg-10" >
+										<input type="text" class="form-control" ng-model="data.CalendarUrl" />
+									</div>
+								</div>
+								<div class="row form-group">
+									<label class="col-lg-5 form-control-static">แสดงที่หน้าแรก </label>
+									<div class="col-lg-7" >
+										<div class="btn-group">
+											<label class="btn btn-default btn-checkbox" ng-model="data.IsFirstPage" uib-btn-radio="'Y'">แสดง</label>
+						                    <label class="btn btn-default btn-checkbox" ng-model="data.IsFirstPage" uib-btn-radio="'N'">ไม่แสดง</label>
+						                </div>
+									</div>
+								</div>
+								<div class="row form-group">
+									<label class="col-lg-5 form-control-static">สถานะ </label>
+									<div class="col-lg-7" >
+										<div class="btn-group">
+											<label class="btn btn-default btn-checkbox" ng-model="data.ActiveStatus" uib-btn-radio="'Y'">ใช้งาน</label>
+						                    <label class="btn btn-default btn-checkbox" ng-model="data.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้งาน</label>
+						                </div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>

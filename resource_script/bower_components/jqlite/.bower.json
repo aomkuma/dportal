@@ -1,0 +1,33 @@
+{
+  "name": "jqlite",
+  "main": "jqlite.js",
+  "version": "0.2.41",
+  "homepage": "https://github.com/jstools/jqlite",
+  "authors": [
+    "Jesús Germade <jesus@germade.es>"
+  ],
+  "description": "Tiny JavaScript DOM query library",
+  "keywords": [
+    "javascript",
+    "query",
+    "dom"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "0.2.41",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.41",
+    "commit": "0503606518d37bef524cead185db9df5d583c24a"
+  },
+  "_source": "https://github.com/kiltjs/jqlite.git",
+  "_target": "^0.2.41",
+  "_originalSource": "kilt-jqlite",
+  "_direct": true
+}

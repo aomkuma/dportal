@@ -1,0 +1,643 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div uib-alert ng-class="'alert-success'" uib-alert class='repeat-item' ng-repeat="alert in alerts" type="alert.type" dismiss-on-timeout="3000" close="alerts.splice($index, 1);" style="text-align: center; font-size:1.2em;">{{alert.msg}}
+</div>
+<!--<input type='text' ng-model='msg' />
+  <button ng-click="addAlert(msg,'success')">Add Alert</button>-->
+<div class="row">
+    <div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>รายละเอียดการจองห้องประชุม</h2></div></div>
+</div>
+<div class="row">
+	<div class="col-lg-5">
+        <div class="row form-group">
+            <div class="col-lg-12">
+    		  <img ng-src="{{BookingDetail.RoomPicture}}" border="0" style=" border:#999 1px solid; max-width: 100%;">
+            </div>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">อ.ส.ค.พื้นที่ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.region_name}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">ห้องประชุม : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.RoomName}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">ประชุมทางไกล : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.ConferenceType == 'N'?'ไม่มี':'มี'}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">จำนวนที่รองรับ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.SeatAmount}}</label>
+        </div>
+        <hr />
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">เจ้าหน้าที่ดูแลห้อง : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.room_admin_firstname + ' ' + BookingDetail.room_admin_lastname}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">หมายเลขโทรศัพท์ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.room_admin_Mobile}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">E-mail : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.room_admin_email}}</label>
+        </div>
+        <hr />
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">เจ้าหน้าที่ดูแลด้านอุปกรณ์ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.device_admin_firstname + ' ' + BookingDetail.device_admin_lastname}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">หมายเลขโทรศัพท์ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.device_admin_Mobile}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">E-mail : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.device_admin_email}}</label>
+        </div>
+        <hr />
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">เจ้าหน้าที่ดูแลด้านอาหาร : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.food_admin_firstname + ' ' + BookingDetail.food_admin_lastname}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">หมายเลขโทรศัพท์ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.food_admin_Mobile}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">E-mail : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{BookingDetail.food_admin_email}}</label>
+        </div>
+        <hr />
+        <div class="row ">
+            <label class="col-lg-12 form-control-static">รายละเอียดห้องประชุม : </label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-12 form-control-static text-thin">{{BookingDetail.RoomDescription}}</label>
+        </div>
+	</div>
+	<div class="col-lg-7">
+    <fieldset ng-disabled="currentUser.UserID != ReserveRoomInfo.CreateBy || (ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')" ng-form='reserve_form'>
+        <div class="row">
+            <div class="col-lg-12">
+                <h4><b>ผู้ขอจอง : </b>{{ RequestUser.FirstName + ' ' + RequestUser.LastName }}</h4>
+                <h4><b>ผู้ตรวจสอบ : </b>{{ VerifyUser.FirstName + ' ' + VerifyUser.LastName }}</h4>
+            </div>
+         </div>
+        <div class="row form-group">
+            <label class="col-lg-4 form-control-static" for="RegionName"><h3>ข้อมูลการจอง</h3></label>
+        </div>
+        <div class="row form-group">
+            <label class="col-lg-3 form-control-static" for="RegionName">พื้นที่</label>
+            <div class="col-lg-8"><input class="form-control" ng-model="BookingDetail.region_name" readonly="true" /></div>
+        </div>
+        <div class="row form-group">
+            <label class="col-lg-3 form-control-static" for="RegionName">ห้องประชุม</label>
+            <div class="col-lg-8"><input class="form-control" ng-model="BookingDetail.RoomName" readonly="true" /></div>
+        </div>
+        <div class="row form-group">
+            <label class="col-lg-3 form-control-static" for="RegionName">วันที่จองเริ่มต้น </label>
+            <div class="col-lg-5">
+            <!--<app-datepicker ng-model="ReserveRoomInfo.StartDate" modelid="StartDate" valuedefault="{{ReserveRoomInfo.StartDate}}" ></app-datepicker>-->
+                <p class="input-group">
+                  <input type="text" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="ReserveRoomInfo.StartDate" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" ng-class="{required_field:ReserveRoomInfo.StartDate==null}" ng-disabled="(ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')" ng-change="checkBetweenDate('StartDate')" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open1()" ng-disabled="(ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveRoomInfo.StartDate==null}"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control" required="true" ng-model="ReserveRoomInfo.StartTime" valuedefault="{{ReserveRoomInfo.StartTime}}" ng-disabled="(ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveRoomInfo.StartTime=='' || ReserveRoomInfo.StartTime == null}"  ng-change="checkBetweenDate('StartTime')">
+                    <option value=""> กรุณาเลือก </option>
+                    <option ng-repeat="time in StartTimeList" value="{{time}}">{{time}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-lg-3 form-control-static" for="RegionName">วันที่จองสิ้นสุด</label>
+            <div class="col-lg-5">
+                <!--<app-datepicker ng-model="ReserveRoomInfo.EndDate" modelid="EndDate" valuedefault="{{ReserveRoomInfo.EndDate}}"></app-datepicker>-->
+                <p class="input-group">
+                  <input type="text" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" minDate="startMinDate" ng-model="ReserveRoomInfo.EndDate" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" ng-class="{required_field:ReserveRoomInfo.EndDate==null}" ng-disabled="(ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')"  ng-change="checkBetweenDate('EndDate')" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open2()" ng-disabled="(ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveRoomInfo.EndDate==null}"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control" required="true"  ng-model="ReserveRoomInfo.EndTime" ng-disabled="(ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveRoomInfo.EndTime=='' || ReserveRoomInfo.EndTime==null}"  ng-change="checkBetweenDate('EndTime')">
+                    <option value=""> กรุณาเลือก </option>
+                    <option ng-repeat="time in EndTimeList" value="{{time}}">{{time}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-lg-3 form-control-static" for="RegionName">หัวข้อการประชุม</label>
+            <div class="col-lg-8"><input class="form-control" ng-model="ReserveRoomInfo.TopicConference" ng-class="{'required_field':ReserveRoomInfo.TopicConference==''}" required="true" /></div>
+        </div>
+        <div class="row form-group">
+            <label class="col-lg-3 form-control-static" for="RegionName">หมายเหตุ</label>
+            <div class="col-lg-8"><textarea class="form-control" ng-model="ReserveRoomInfo.Remark" ></textarea></div>
+        </div>
+        
+        <hr />        
+        <div class="row form-group" ng-show="ReserveRoomInfo.ReserveRoomID != ''">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading"><h4><b>รายชื่อผู้เข้าร่วมประชุม</b></h4></div>
+                  <div class="panel-body">
+                    <div class="row form-group">
+                        <label class="col-lg-3 form-control-static" for="RegionName">ชื่อ - สกุล </label>
+                        <div class="col-lg-8"><input class="form-control" ng-model="BookingDetail.attendee" uib-typeahead="user for user in searchUserAutoComplete($viewValue, 'USER') | limitTo:20" typeahead-on-select="autocompleteUserSelected($item, $model, $label)" ng-paste="$event.preventDefault()" /></div>
+                    </div>
+                    <div ng-show="InternalAttendeeList.length > 0">
+                        <div class="row">
+                            <div ng-repeat="attendee in InternalAttendeeList" class="col-lg-3 alert alert-info alert-dismissible" role="alert">
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteInternalAttendee($index, attendee.UserID, attendee.ReserveRoomID)" ng-show="currentUser.UserID == ReserveRoomInfo.CreateBy"><span aria-hidden="true">&times;</span></button>
+                              {{attendee.FirstName}}&nbsp;{{attendee.LastName}}
+                            </div>
+                        </div>
+                        <!--<label class="col-lg-3" ng-repeat="attendee in AttendeeList">{{attendee.FirstName}}&nbsp;{{attendee.LastName}}</label>-->
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group" ng-show="ReserveRoomInfo.ReserveRoomID != ''">
+            <form name="AttendeeForm">
+            
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h4><b>รายชื่อผู้เข้าร่วมประชุม (บุคคลภายนอก)</b></h4></div>
+                        <div class="panel-body">
+                            <div class="row form-group">
+                                <label class="col-lg-3 form-control-static" for="RegionName">ชื่อ</label>
+                                <div class="col-lg-8"><input class="form-control" ng-class="{'required_field':(AttendeeExt.Email != null && AttendeeExt.Email != '') || (AttendeeExt.Mobile != null && AttendeeExt.Mobile != '') }" ng-model="AttendeeExt.Name" uib-typeahead="user for user in searchUserAutoComplete($viewValue, 'EXUSER') | limitTo:20" typeahead-on-select="autocompleteExUserSelected($item, $model, $label)" /></div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-lg-3 form-control-static" for="RegionName">E-mail</label>
+                                <div class="col-lg-8">
+                                    <input type="email" class="form-control" ng-model="AttendeeExt.Email" name="attendeeEmail" />
+                                    <span class="error" ng-show="AttendeeForm.attendeeEmail.$error.email">
+                                    Not valid email!</span>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-lg-3 form-control-static" for="RegionName">หมายเลขโทรศัพท์</label>
+                                <div class="col-lg-8"><input class="form-control" ng-model="AttendeeExt.Mobile" ui-mask="999-999-9999" model-view-value="true"  ui-mask-placeholder ui-mask-placeholder-char="" /></div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-lg-3 form-control-static" for="RegionName"></label>
+                                <div class="col-lg-8"><button class="btn btn-primary btn-block" ng-disabled="(!AttendeeForm.attendeeEmail.$valid)" ng-click="addExternalAdtendee(AttendeeExt)"><span class="glyphicon glyphicon-plus"></span> เพิ่ม</button></div>
+                            </div>
+                            <div class="row">
+                                <div ng-repeat="attendeeExt in ExternalAttendeeList" class="col-lg-3 alert alert-success alert-dismissible" role="alert">
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-show="currentUser.UserID == ReserveRoomInfo.CreateBy" ng-click="deleteExternalAttendee($index, attendeeExt.AttendeeID)"><span aria-hidden="true">&times;</span></button>
+                                  {{attendeeExt.AttendeeName}}<br>
+                                  {{attendeeExt.Email}}<br>
+                                  {{attendeeExt.Mobile}}
+                                </div>
+                            </div>
+                                
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row form-group" ng-show="ReserveRoomInfo.ReserveRoomID != ''">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4><b>อุปกรณ์ที่ต้องการเพิ่ม</b></h4></div>
+                    <div class="panel-body">
+                        <div class="row form-group">
+                            <div class="col-lg-2"><button class="btn btn-primary" ng-click="chooseDevice()">เลือกอุปกรณ์</button></div>
+                        </div>
+                        
+                        <div ng-show="DeviceList.length > 0">
+                            <div class="row">
+                                <div ng-repeat="device in DeviceList" class="col-lg-4 alert alert-danger alert-dismissible" role="alert">
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteRoomDevice($index, device.DeviceID, device.ReserveRoomID)" ng-show="currentUser.UserID == ReserveRoomInfo.CreateBy"><span aria-hidden="true">&times;</span></button>
+                                  <img ng-src="{{device.DevicePicture}}" style="max-height: 40px;" /> &nbsp; {{device.DeviceName}} ({{device.Amount}})
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group" ng-show="ReserveRoomInfo.ReserveRoomID != ''">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h4><b>อาหาร</b></h4></div>
+                    <div class="panel-body">
+                        <div class="row form-group">
+                            <label class="col-lg-2">อาหารว่าง</label>
+                            <div class="col-lg-9">
+                                <div class="btn-group">
+                                    <label class="btn btn-info btn-checkbox" ng-model="ReserveRoomInfo.Breakfast" uib-btn-checkbox="'Breakfast'" ng-class="{'unselect_food':ReserveRoomInfo.Breakfast=='' || ReserveRoomInfo.Breakfast==null || ReserveRoomInfo.Breakfast==undefined}">เช้า</label>
+                                    <label class="btn btn-info btn-checkbox" ng-model="ReserveRoomInfo.Lunch" uib-btn-checkbox="'Lunch'" ng-class="{'unselect_food':ReserveRoomInfo.Lunch=='' || ReserveRoomInfo.Lunch==null || ReserveRoomInfo.Lunch==undefined ,'unselect_food_disabled':ReserveRoomInfo.Lunch==undefined}">บ่าย</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-lg-2">อาหารหลัก</label>
+                            <div class="col-lg-2"><button class="btn btn-primary" ng-click="chooseFood()">เลือกอาหาร</button></div>
+                        </div>
+                        <div ng-show="FoodList.length > 0">
+                           
+                            <div class="row">
+                                <div ng-repeat="food in FoodList" class="col-lg-4 alert alert-danger alert-dismissible" role="alert">
+                                  
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteRoomFood($index, food.FoodID, food.ReserveRoomID)" ng-show="currentUser.UserID == ReserveRoomInfo.CreateBy"><span aria-hidden="true">&times;</span></button>
+                                  <img ng-src="{{food.FoodPicture}}" style="max-height: 40px;" /> &nbsp; {{food.FoodName}} ({{food.Amount}})
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row form-group" ng-show="ReserveRoomInfo.ReserveRoomID != '' && (ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')">
+            <div class="page-header">
+                <h3>ห้องประชุมต้นทาง</h3> 
+            </div>
+            <div class="col-lg-4">
+                <div class="status-{{ReserveRoomInfo.ReserveStatus}}">{{ ReserveRoomInfo.ReserveStatus==''||ReserveRoomInfo.ReserveStatus=='Request'?'อยู่ระหว่างการพิจารณา':(ReserveRoomInfo.ReserveStatus == 'Approve' ?'อนุมัติ':'ไม่อนุมัติ') }}</div>
+            </div>
+            <div class="col-lg-8">
+                <textarea class="form-control" disabled="true" ng-model="ReserveRoomInfo.AdminComment"></textarea>
+            </div>
+         </div>
+         <div class="row form-group" ng-show="ReserveRoomInfo.ReserveRoomID != '' && BookingDetail.ConferenceType == 'Y'">
+            <div class="page-header">
+                <h3>ห้องประชุมปลายทาง</h3> 
+            </div>
+            <div class="col-lg-12 table-responsive">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>เลือก</th>
+                            <th>พื้นที่</th>
+                            <th>ห้องประชุม</th>
+                            <th>สถานะ</th>
+                            <th>หมายเหตุ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="descRoom in RoomDestinationList">
+                            <td><input type="checkbox" ng-model="descRoom.selected_room" ng-click="roomDestEvent($index, descRoom)" ng-true-value="true" ng-false-value="false" ng-disabled="currentUser.UserID != ReserveRoomInfo.CreateBy || ReserveRoomInfo.ReserveStatus != ''"></td>
+                            <td>{{descRoom.RegionName}}</td>
+                            <td>{{descRoom.RoomName}}</td>
+                            <td><div class="des-status-{{descRoom.ReserveStatus}}">{{descRoom.ReserveStatus == null || descRoom.ReserveStatus == '' ? 'ไม่มี' : descRoom.ReserveStatus == 'Full'?'ไม่ว่าง':descRoom.ReserveStatus}}</div></td>
+                            <td><textarea class="form-control" readonly="true" ng-model="descRoom.RoomDesAdminComment"></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+         </div>
+         
+        </fieldset>
+        <div ng-form='verify_form'>
+            <div class="row form-group" ng-show="currentUser.UserID == ReserveRoomInfo.AdminID && ReserveRoomInfo.ReserveStatus == 'Request'">
+                <div class="page-header">
+                    <h3>ห้องประชุมต้นทาง</h3> 
+                </div>
+                <div class="row ">
+                    <label class="col-lg-3 form-control-static">อ.ส.ค.พื้นท ี่ : </label>
+                    <label class="col-lg-9 form-control-static text-thin">{{BookingDetail.region_name}}</label>
+                </div>
+                <div class="row ">
+                    <label class="col-lg-3 form-control-static">ห้องประชุม : </label>
+                    <label class="col-lg-9 form-control-static text-thin">{{BookingDetail.RoomName}}</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="status-{{AdminStatus}}">{{ AdminStatus==''||AdminStatus=='Request'?'อยู่ระหว่างการพิจารณา':(AdminStatus == 'Approve' ?'อนุมัติ':'ไม่อนุมัติ') }}</div>
+                    </div>
+                    <div class="col-lg-9">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                
+                                <input type="radio" required="required" value="Approve" id="radio_approve" ng-model="AdminStatus"> <label for="radio_approve">อนุมัติ </label>
+                                &nbsp; <input type="radio" required="required" value="Reject" id="radio_reject"  ng-model="AdminStatus"> <label for="radio_reject">ไม่อนุมัติ </label>
+                            </div>
+                            <div class="col-lg-12">
+                                <textarea class="form-control" ng-model="AdminComment" ng-readonly="AdminStatus == 'Approve'" ng-required="AdminStatus=='Reject' && (AdminComment=='' || AdminComment == null)" ng-class="{required_field:(AdminStatus=='Reject' && (AdminComment=='' || AdminComment == null))}" placeholder="ระบุเหตุผล"></textarea>    
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+             </div>
+             <div class="row form-group" ng-show="currentUser.UserID == ReserveRoomInfo.AdminID">
+                <div class="col-lg-12">
+                    <br /><br />
+                    <a role="button" class="btn btn-default" href="#/roomconference"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปหน้าแรก </a>
+                    <button class="btn btn-success" ng-click="markStatus(ReserveRoomInfo.ReserveRoomID,AdminStatus, AdminComment)" ng-disabled="(!verify_form.$valid)" ng-show="ReserveRoomInfo.ReserveStatus == 'Request'"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก </button>
+
+                </div>
+             </div>
+        </div>
+
+        <div ng-form='verify_des_form'>
+            <div class="row form-group" ng-show="currentUser.UserID == ReserveRoomDestination.VerifyBy">
+                <div class="page-header">
+                    <h3>ห้องประชุมปลายทาง</h3> 
+                </div>
+                <div class="row ">
+                    <label class="col-lg-3 form-control-static">อ.ส.ค.พื้นท ี่ : </label>
+                    <label class="col-lg-9 form-control-static text-thin">{{ReserveRoomDestination.RegionName}}</label>
+                </div>
+                <div class="row ">
+                    <label class="col-lg-3 form-control-static">ห้องประชุม : </label>
+                    <label class="col-lg-9 form-control-static text-thin">{{ReserveRoomDestination.RoomName}}</label>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="status-{{AdminStatus}}">{{ AdminStatus==''||AdminStatus=='Request'?'อยู่ระหว่างการพิจารณา':(AdminStatus == 'Approve' ?'อนุมัติ':'ไม่อนุมัติ') }}</div>
+                    </div>
+                    <div class="col-lg-9">
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                
+                                <input type="radio" required="required" value="Approve" id="radio_approve" ng-model="AdminStatus"> <label for="radio_approve">อนุมัติ </label>
+                                &nbsp; <input type="radio" required="required" value="Reject" id="radio_reject"  ng-model="AdminStatus"> <label for="radio_reject">ไม่อนุมัติ </label>
+                            </div>
+                            <div class="col-lg-12">
+                                <textarea class="form-control" ng-model="AdminComment" ng-readonly="AdminStatus == 'Approve'" ng-required="AdminStatus=='Reject' && (AdminComment=='' || AdminComment==null)"  ng-class="{required_field:(AdminStatus=='Reject' && (AdminComment=='' || AdminComment == null))}" placeholder="ระบุเหตุผล"></textarea>    
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+             </div>
+             <div class="row form-group" ng-show="currentUser.UserID == ReserveRoomDestination.VerifyBy">
+                <div class="col-lg-12">
+                    <br /><br />
+                    <a role="button" class="btn btn-default" href="#/roomconference"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปหน้าแรก </a>
+                    <button class="btn btn-success" ng-click="markStatusRoomDestination(ReserveRoomDestination.DestinationRoomID,AdminStatus, AdminComment)" ng-disabled="(!verify_des_form.$valid)"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก </button>
+
+                </div>
+             </div>
+        </div>
+
+        </div>
+        <div class="row form-group"  ng-show="currentUser.UserID == ReserveRoomInfo.CreateBy && ReserveRoomInfo.ReserveStatus == ''">
+            <div class="col-lg-12 obj_center">
+                <a role="button" class="btn btn-default" href="#/roomconference"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปหน้าแรก </a>
+                <button class="btn btn-primary" ng-click="saveDraft()" ng-disabled="!reserve_form.$valid" ng-show="ReserveRoomInfo.ReserveRoomID == ''"><span class="glyphicon glyphicon-floppy-disk" ></span> <!--บันทึกข้อมูล-->ตรวจสอบ </button>
+                <button type="button" class="btn btn-danger" ng-click="cancelRoom(ReserveRoomInfo.ReserveRoomID)" ng-show="ReserveRoomInfo.ReserveRoomID != ''"><span class="glyphicon glyphicon-remove"></span> ยกเลิกการจองห้อง</button>
+                <button type="button" class="btn btn-primary" ng-click="requestReserveRoom()" ng-show="ReserveRoomInfo.ReserveRoomID != '' && ReserveRoomInfo.ReserveStatus == ''"><span class="glyphicon glyphicon-ok"></span> บันทึก</button>
+            </div>
+        </div>
+        <div class="row form-group"  ng-show="currentUser.UserID == ReserveRoomInfo.CreateBy && ReserveRoomInfo.ReserveStatus == 'Request'">
+            <div class="col-lg-12 obj_center">
+                <a role="button" class="btn btn-default" href="#/roomconference"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปหน้าแรก </a>
+                <button class="btn btn-primary" ng-click="saveDraft()" ng-disabled="!reserve_form.$valid"><span class="glyphicon glyphicon-floppy-disk" ></span> <!--บันทึกข้อมูล-->บันทึก </button>
+                <button type="button" class="btn btn-danger" ng-click="cancelRoom(ReserveRoomInfo.ReserveRoomID)" ng-show="ReserveRoomInfo.ReserveRoomID != ''"><span class="glyphicon glyphicon-remove"></span> ยกเลิกการจองห้อง</button>
+                
+            </div>
+        </div>
+        <div class="row form-group"  ng-show="currentUser.UserID == ReserveRoomInfo.CreateBy && (ReserveRoomInfo.ReserveStatus == 'Approve' || ReserveRoomInfo.ReserveStatus == 'Reject')">
+            <div class="col-lg-12 obj_center">
+                <a role="button" class="btn btn-default" href="#/roomconference"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปหน้าแรก </a>
+                <button type="button" class="btn btn-danger" ng-click="cancelRoom(ReserveRoomInfo.ReserveRoomID)" ng-show="ReserveRoomInfo.ReserveRoomID != ''"><span class="glyphicon glyphicon-remove"></span> ยกเลิกการจองห้อง</button>
+                
+            </div>
+        </div>
+    </div>
+    
+</div>
+<div class="page-header">&nbsp;</div>
+<div ng-include src="'html/footer.html'"></div>
+<script type="text/ng-template" id="choose_device.html">
+	<div class="modal-header">
+	<h5 class="modal-title"><h3><b>Devices</b><h3></h5>
+    <h4>อุปกรณ์ที่เลือก</h4>
+            <div class="row">
+                <div ng-repeat="selectedDevice in DeviceList" class="col-lg-3 alert alert-danger alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteRoomDevice($index, selectedDevice.DeviceID, ReserveRoomInfo.ReserveRoomID)"><span aria-hidden="true">&times;</span></button>
+                  <img ng-src="{{selectedDevice.DevicePicture}}" style="max-height: 40px;" /> &nbsp; {{selectedDevice.DeviceName}} ({{selectedDevice.Amount}})
+                </div>
+            </div>
+	</div>
+	<div class="modal-body" style="max-height:300px; overflow-y: auto;" scrolly="showMoreDevice()">
+	   <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <colgroup> 
+                    <col class="col-xs-1"> 
+                    <col class="col-xs-1">
+                    <col class="col-xs-1">
+                    <col class="col-xs-1">
+                    <col class="col-xs-1">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>รูป</th>
+                        <th>ชื่ออุปกรณ์</th>
+                        <th>จำนวน</th>
+                        <th>จำนวนที่เลือก</th>
+                        <th>เลือก</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="device in AllDeviceList">
+                        <td><img ng-src="{{device.DevicePicture}}" style="max-width:40%;"></td>
+                        <td>{{device.DeviceName}}</td>
+                        <td>{{device.DeviceAmount}}</td>
+                        <td><input type="number" ng-model="device.Amount" class="form-control" min="1"></td>
+                        <td><button class="btn btn-default" ng-click="selectDevice(device)" ng-disabled="checkDisabledBtn(device.Amount, device.DeviceAmount)"><span class="glyphicon glyphicon-ok"></span></button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+       </div>
+       <div class="page-header">
+            
+       </div>
+	</div>
+	<div class="modal-footer">
+    <!--<button class="btn btn-default" ng-click="ok()">Confirm</button>-->
+	<button class="btn btn-default" ng-click="cancel()">Close</button>
+	</div>
+</script>
+
+<script type="text/ng-template" id="choose_food.html">
+	<div class="modal-header">
+	<h5 class="modal-title"><h3><b>Foods</b><h3></h5>
+    <h4>อาหารที่เลือก</h4>
+            <div class="row">
+                <div ng-repeat="food in FoodList" class="col-lg-3 alert alert-danger alert-dismissible" role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteRoomFood($index, food.FoodID, ReserveRoomInfo.ReserveRoomID)"><span aria-hidden="true">&times;</span></button>
+                  <img ng-src="{{food.FoodPicture}}" style="max-height: 40px;" /> &nbsp; {{food.FoodName}} ({{food.Amount}})
+                </div>
+            </div>
+	</div>
+	<div class="modal-body" style="max-height:300px; overflow-y: auto;" scrolly="showMoreFood()">
+	   <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <colgroup> 
+                    <col class="col-xs-1"> 
+                    <col class="col-xs-1">
+                    <col class="col-xs-1">
+                    <col class="col-xs-1">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>รูป</th>
+                        <th>ชื่ออาหาร</th>
+                        <th>จำนวน</th>
+                        <th>เลือก</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="food in AllFoodList">
+                        <td><img ng-src="{{food.FoodPicture}}" style="max-width:40%;"></td>
+                        <td>{{food.FoodName}}</td>
+                        <td><input type="number" ng-model="food.Amount" class="form-control"  min="1"></td>
+                        <td><button class="btn btn-default" ng-click="selectFood(food)"><span class="glyphicon glyphicon-ok"></span></button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+       </div>
+       <div class="page-header">
+            
+       </div>
+	</div>
+	<div class="modal-footer">
+    <!--<button class="btn btn-default" ng-click="ok()">Confirm</button>-->
+	<button class="btn btn-default" ng-click="cancel()">Close</button>
+	</div>
+</script>
+
+<style>
+.alert{
+    font-size:0.8em;
+}
+.text-thin{
+    font-weight: lighter;
+}
+
+.status-{
+    text-align: center;
+    background-color: #F3F376;
+    border: 5px solid #DADA4D;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.status-Approve{
+    text-align: center;
+    background-color: #9CEB9C;
+    border: 5px solid #52AC52;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.status-Reject{
+    text-align: center;
+    background-color: #DA564C;
+    border: 5px solid #BD6161;
+    border-radius: 10px;
+    padding: 5px;
+    color: #FFF;
+}
+
+.status-Request{
+    text-align: center;
+    background-color: #F3F376;
+    border: 5px solid #DADA4D;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.des-status-Approve{
+    text-align: center;
+    background-color: #9CEB9C;
+    border: 5px solid #52AC52;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.des-status-Reject{
+    text-align: center;
+    background-color: #DA564C;
+    border: 5px solid #BD6161;
+    border-radius: 10px;
+    padding: 5px;
+    color: #FFF;
+}
+
+.des-status-Full{
+    text-align: center;
+    background-color: #DA564C;
+    border: 5px solid #BD6161;
+    border-radius: 10px;
+    padding: 5px;
+    color: #FFF;
+}
+
+.des-status-Waiting{
+    text-align: center;
+    background-color: #F3F376;
+    border: 5px solid #DADA4D;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.typeahead-demo .custom-popup-wrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    background-color: #f9f9f9;
+  }
+
+  .typeahead-demo .custom-popup-wrapper > .message {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    color: #868686;
+  }
+
+  .typeahead-demo .custom-popup-wrapper > .dropdown-menu {
+    position: static;
+    float: none;
+    display: block;
+    min-width: 160px;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .repeat-item.ng-enter,
+    .repeat-item.ng-leave {
+      -webkit-transition: 0.5s linear all;
+      transition: 0.5s linear all;
+    }
+    
+    .repeat-item.ng-enter,
+    .repeat-item.ng-leave.ng-leave-active {
+      opacity: 0;
+    }
+    
+    .repeat-item.ng-leave,
+    .repeat-item.ng-enter.ng-enter-active {
+      opacity: 1;
+    }
+
+    .unselect_food{
+        background-color: #ccc; 
+        color: #000000;
+    }
+    fieldset[disabled] .unselect_food {
+       
+       background-color: #ccc; 
+        color: #000000;
+    }
+</style>

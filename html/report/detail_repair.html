@@ -1,0 +1,173 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row">
+	<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>ตารางการแจ้งซ่อม</h2></div></div>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12">
+		<form class="form-inline">
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ประเภทงานซ่อม : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.RepairedTypeID" ng-options="repairedType.RepairedTypeName for repairedType in RepairedTypeList track by repairedType.RepairedTypeID" required>
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; พื้นที่ : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Region" ng-options="region.RegionName for region in RegionList track by region.RegionID" required ng-change="changeRegion(condition.Region)">
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ผู้รับเรื่อง : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.UserID" ng-options="user.FirstName + ' ' + user.LastName for user in UserList track by user.UserID" >
+					<option value="">ทั้งหมด</option>
+				</select>
+		  	</div>
+		  	
+		</form>
+	</div>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12">
+		<form class="form-inline">
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; วันที่ : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Day" ng-options="day.dayValue for day in DayList track by day.dayText" >
+					<option value="">ทั้งหมด</option>
+				</select>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; เดือน : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Month" ng-options="month.monthValue for month in MonthList track by month.monthText" >
+					<option value="">ทั้งหมด</option>
+				</select>
+		  	</div>
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ปี : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Year" ng-options="year.yearText as year.yearValue for year in YearList" required>
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	
+			<button class="btn btn-primary" ng-click="queryReport(condition)" ng-disabled="condition.Year == null"><span class="glyphicon glyphicon-search"></span> ออกรายงาน</button>
+			<button class="btn btn-danger" ng-click="exportToPDF(condition, DataList, Summary)" ng-disabled="condition.Year == null" ng-show="DataList != null"><span class="glyphicon glyphicon-download"></span> Download PDF</button>
+			<button type="submit" class="btn btn-success" ng-click="exportToExcel(condition, DataList, Summary)" ng-disabled="condition.Year == null" ng-show="DataList != null"><span class="glyphicon glyphicon-download"></span> Download Excel</button>
+		</form>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<th>รหัสแจ้งซ่อม</th>
+						<th>ปัญหาย่อยงานซ่อม</th>
+						<th>หน่วยงาน</th>
+						<th>วันที่แจ้ง</th>
+						<th>ผู้รับเรื่อง</th>
+						<th>สถานะ</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="data in DataList">
+						<td>
+							<button class="btn btn-primary btn-sm" ng-click="viewDetail(data)">
+								<span class="glyphicon glyphicon-search"></span>
+
+							</button>
+						</td>
+						<td>
+							{{data.RepairedCode}}
+						</td>
+						<td>
+							{{data.RepairedSubIssueName}}
+						</td>
+						<td>
+							{{data.GroupName}}
+						</td>
+						<td>
+							{{data.CreateDateTime}}
+						</td>
+						<td>
+							{{data.RecieverFirstName}} {{data.RecieverLastName}}
+						</td>
+						<td>
+							{{data.RepairedStatus}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>
+<script type="text/ng-template" id="view_repair.html">
+	<div class="modal-header">
+        <div class="row">
+            
+            <div class="col-lg-12">
+            	<h3><b>รายละเอียดแจ้งซ่อม</b></h3>
+            </div>
+            
+        </div>
+	</div>
+	<div class="modal-body">
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">รหัสแจ้งซ่อม</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.RepairedCode}}</label>
+	   		
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ปัญหาย่อยงานซ่อม</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.RepairedSubIssueName}}</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ระยะเวลา SLA</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.SLA}} วัน</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">สถานะ SLA</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.RepairedStatus == 'เสร็จสิ้น'?Repair.SLAStatus == 1?'ผ่าน':'ไม่ผ่าน':'-'}}</label>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">หน่วยงาน</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.GroupName}}</label>
+	   	</div>
+	   	<div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">วันที่แจ้ง</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.CreateDateTime}}</label>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เวลาที่รับเรื่อง</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.ReceiveDateTime}}</label>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">ผู้รับเรื่อง</label>
+	   		<label class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.RecieverFirstName}} {{Repair.RecieverLastName}}</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">ผู้แจ้ง</label>
+	   		<label class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.CreatorFirstName}} {{Repair.CreatorLastName}}</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">หมายเลข IP ผู้แจ้ง</label>
+	   		<label class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.RequestorIP}}</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">รายละเอียด</label>
+	   		<label class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.RepairedDetail}}</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">ผู้รับเรื่อง</label>
+	   		<label class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Repair.RepairedStatus}}</label>
+	   </div>
+	</div>
+	<div class="modal-footer">
+    <!--<button class="btn btn-default" ng-click="ok()">Confirm</button>-->
+	<button class="btn btn-default" ng-click="cancel()">Close</button>
+	</div>
+</script>

@@ -1,0 +1,116 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row form-group scrollable-default" style="max-height:78vh; overflow-y: auto;  padding-bottom: 10vh;" scrolly="loadList()">
+	<div class="col-lg-12 col-md-12 visible-lg visible-md">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>กำหนดสิทธิ์การเข้าถึงสมุดโทรศัพท์ภายนอก</h2></div></div>
+		</div>
+		<div class="page-header">
+			<h3>{{PhoneBook.CompanyName}} หมายเลขโทรศัพท์ {{PhoneBook.Tel}}</h3>
+		</div>
+		<div class="row form-group">
+			<div class="col-lg-12">
+				<form class="form-inline">
+					<div class="form-group">
+					    <label for="exampleInputName2">&nbsp; พื้นที่ : </label>
+					    &nbsp; <select class="form-control" ng-model="condition.Region" ng-options="region.RegionID as region.RegionName for region in RegionList">
+							<option value="">ทั้งหมด</option>
+						</select>
+				  	</div>
+				  	<div class="form-group">
+					    <button type="button" class="btn btn-primary"  ng-click="search(condition.Region)"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+					    <button type="button" class="btn btn-success"  ng-click="updatePermission(condition.Region, 'SELECT_ALL', '', '', '')"><span class="glyphicon glyphicon-check"></span> เลือกทั้งหมด</button>
+					    <button type="button" class="btn btn-danger"  ng-click="updatePermission(condition.Region, 'UNSELECT_ALL', '', '', '')"><span class="glyphicon glyphicon-unchecked"></span> ยกเลิกทั้งหมด</button>
+				  	</div>
+				</form>
+				
+			</div>
+		</div>
+		<div class="row">
+
+			<div class="col-lg-12">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered">
+						<thead>
+							<tr>
+								<th colspan="4">สำนัก / กอง / แผนก / พื้นที่</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="office in DataList">
+								<td  valign="top">
+									<input type="checkbox" ng-model="office.AllowStatus" ng-click="updatePermission(condition.Region, 'OFFICE', office.GroupID, office.OrgID, office.AllowStatus)"  ng-true-value="'1'" ng-false-value="'0'">
+									&nbsp;{{office.OrgName}}
+								</td>
+								<td ng-show="office.Division.length > 0">
+									<table width="100%" class="table table-bordered">
+										<tr ng-repeat="division in office.Division">
+											<td valign="top" width="30%">
+												<input type="checkbox" ng-model="division.AllowStatus" ng-click="updatePermission(condition.Region, 'DIVISION', division.GroupID, division.OrgID, division.AllowStatus)"  ng-true-value="'1'" ng-false-value="'0'">
+												&nbsp;{{division.OrgName}}
+											</td>
+											<td width="70%" ng-show="division.Department.length > 0">
+												<table width="100%">
+													<tr ng-repeat="department in division.Department">
+														<td valign="top" width="50%">
+															<input type="checkbox" ng-model="department.AllowStatus" ng-click="updatePermission(condition.Region, 'DEPARTMENT', department.GroupID, department.OrgID, department.AllowStatus)" ng-true-value="'1'" ng-false-value="'0'">
+															&nbsp;{{department.OrgName}}
+														</td>
+														<td  valign="top"  width="50%">
+															{{department.RegionName}}
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td  ng-show="division.Department.length == 0">
+												<table width="100%">
+													<tr>
+														<td valign="top" width="50%">
+															&nbsp;
+														</td>
+														<td  valign="top"  width="50%">
+															{{division.RegionName}}
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td ng-show="office.Division.length == 0">
+									<table width="100%" class="table table-bordered">
+										<tr>
+											<td valign="top" width="30%">
+												&nbsp;
+											</td>
+											<td  width="70%">
+												<table width="100%">
+													<tr>
+														<td valign="top" width="50%">
+															&nbsp;
+														</td>
+														<td  valign="top"  width="50%">
+															{{office.RegionName}}
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-sm-12 visible-xs visible-sm card" ng-repeat="data in DataList">
+		<button type="button" class="btn btn-default btn-sm " ng-click="updateProfileDialog($index, data)"><span class="glyphicon glyphicon-user" style="color:#3D9AE1;"></span></button>
+		<br>
+		บริษัท : {{data.CompanyName}}
+		<br>
+		เบอร์โทร : {{data.Tel}}
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>

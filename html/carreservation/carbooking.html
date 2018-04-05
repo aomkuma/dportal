@@ -1,0 +1,592 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div uib-alert ng-class="'alert-success'" uib-alert class='repeat-item' ng-repeat="alert in alerts" type="alert.type" dismiss-on-timeout="3000" close="alerts.splice($index, 1);" style="text-align: center; font-size:1.2em;">{{alert.msg}}
+</div>
+<!--<input type='text' ng-model='msg' />
+  <button ng-click="addAlert(msg,'success')">Add Alert</button>-->
+<div class="row">
+    <div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>รายละเอียดการจองพาหนะ</h2></div></div>
+</div>
+<div class="row">
+	<div class="col-lg-5" ng-show="CarDetail != undefined">
+        <div class="row form-group">
+            <div class="col-lg-12">
+    		  <img ng-src="{{CarDetail.CarPicture}}" border="0" style=" border:#999 1px solid; max-width: 100%;">
+            </div>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">อ.ส.ค.พื้นท ี่ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{ReserveCarInfo.RegionName}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">ประเภทรถ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{CarDetail.CarType}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">ยี่ห้อ : </label>
+            <label class="col-lg-3 form-control-static text-thin">{{CarDetail.Brand}}</label>
+            <label class="col-lg-1 form-control-static">รุ่น</label>
+            <label class="col-lg-4 form-control-static text-thin">{{CarDetail.Model}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">ทะเบียนรถ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{CarDetail.License }}&nbsp;{{CarDetail.LicenseProvinceName }}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">จำนวนที่นั่ง : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{CarDetail.SeatAmount}}</label>
+        </div>
+        <hr />
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">เจ้าหน้าที่ดูแลห้อง : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{CarDetail.FirstName + ' ' + CarDetail.LastName}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">หมายเลขโทรศัพท์ : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{CarDetail.Mobile}}</label>
+        </div>
+        <div class="row ">
+            <label class="col-lg-4 form-control-static">E-mail : </label>
+            <label class="col-lg-8 form-control-static text-thin">{{CarDetail.Email}}</label>
+        </div>
+        
+	</div>
+	<div class="col-lg-7">
+        <fieldset ng-disabled="currentUser.UserID != ReserveCarInfo.CreateBy" ng-form='reserve_form'>
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4><b>ผู้ขอจอง : </b>{{ RequestUser.FirstName + ' ' + RequestUser.LastName }}</h4>
+                    <h4><b>ผู้ตรวจสอบ : </b>{{ VerifyUser.FirstName + ' ' + VerifyUser.LastName }}</h4>
+                </div>
+             </div>
+            <div class="row form-group">
+                <label class="col-lg-4 form-control-static" for="RegionName"><h3>ข้อมูลการจอง</h3></label>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 form-control-static" for="RegionName">พื้นท ี่</label>
+                <div class="col-lg-8">
+                    <!--<input class="form-control" ng-model="ReserveCarInfo.RegionName" readonly="true" />-->
+                    <select class="form-control" ng-model="ReserveCarInfo.RegionID" ng-options="region.RegionID as region.RegionName for region in RegionList">
+                        <!--<option value="">ทั้งหมด</option>-->
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 form-control-static" for="RegionName">จังหวัดปลายทาง</label>
+                <div class="col-lg-8">
+                    <select class="form-control" required="true" ng-model="ReserveCarInfo.ProvinceID" ng-options="province.ProvinceID as province.ProvinceName for province in ProvinceList" ng-class="{required_field:ReserveCarInfo.ProvinceID==''}">
+                        <option value="">กรุณาเลือก</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 form-control-static" for="RegionName">สถานที่ปลายทาง</label>
+                <div class="col-lg-8"><input class="form-control" required="true" ng-model="ReserveCarInfo.Destination" ng-class="{required_field:ReserveCarInfo.Destination==''}" /></div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 form-control-static" for="RegionName">วัน/เวลา เดินทางไป </label>
+                <div class="col-lg-5">
+                <!--<app-datepicker ng-model="ReserveCarInfo.StartDate" modelid="StartDate" valuedefault="{{ReserveCarInfo.StartDate}}" ></app-datepicker>-->
+                    <p class="input-group">
+                      <input type="text" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="ReserveCarInfo.StartDate" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" ng-class="{required_field:ReserveCarInfo.StartDate==null}" ng-disabled="(ReserveCarInfo.ReserveStatus == 'Approve' || ReserveCarInfo.ReserveStatus == 'Reject')" ng-blur="checkSelectDateTime(ReserveCarInfo.StartDate, ReserveCarInfo.StartTime, ReserveCarInfo.EndDate, ReserveCarInfo.EndTime)" ng-change="checkBetweenDate()" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open1()" ng-disabled="(ReserveCarInfo.ReserveStatus == 'Approve' || ReserveCarInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveCarInfo.StartDate==null}"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                </div>
+                <div class="col-lg-3">
+                    <select class="form-control" required="true" ng-model="ReserveCarInfo.StartTime" valuedefault="{{ReserveCarInfo.StartTime}}" ng-disabled="(ReserveCarInfo.ReserveStatus == 'Approve' || ReserveCarInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveCarInfo.StartTime=='' || ReserveCarInfo.StartTime == null}" ng-blur="checkSelectDateTime(ReserveCarInfo.StartDate, ReserveCarInfo.StartTime, ReserveCarInfo.EndDate, ReserveCarInfo.EndTime)">
+                        <option value=""> กรุณาเลือก </option>
+                        <option ng-repeat="time in StartTimeList" value="{{time}}">{{time}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 form-control-static" for="RegionName">วัน/เวลา เดินทางกลับ</label>
+                <div class="col-lg-5">
+                    <!--<app-datepicker ng-model="ReserveCarInfo.EndDate" modelid="EndDate" valuedefault="{{ReserveCarInfo.EndDate}}"></app-datepicker>-->
+                    <p class="input-group">
+                      <input type="text" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="ReserveCarInfo.EndDate" is-open="popup2.opened" datepicker-options="dateOptions2" ng-required="true" close-text="Close" ng-class="{required_field:ReserveCarInfo.EndDate==null}" ng-disabled="(ReserveCarInfo.ReserveStatus == 'Approve' || ReserveCarInfo.ReserveStatus == 'Reject')" ng-blur="checkSelectDateTime(ReserveCarInfo.StartDate, ReserveCarInfo.StartTime, ReserveCarInfo.EndDate, ReserveCarInfo.EndTime)" />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open2()" ng-disabled="(ReserveCarInfo.ReserveStatus == 'Approve' || ReserveCarInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveCarInfo.EndDate==null}"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                </div>
+                <div class="col-lg-3">
+                    <select class="form-control" required="true"  ng-model="ReserveCarInfo.EndTime" ng-disabled="(ReserveCarInfo.ReserveStatus == 'Approve' || ReserveCarInfo.ReserveStatus == 'Reject')" ng-class="{required_field:ReserveCarInfo.EndTime=='' || ReserveCarInfo.EndTime==null}" ng-blur="checkSelectDateTime(ReserveCarInfo.StartDate, ReserveCarInfo.StartTime, ReserveCarInfo.EndDate, ReserveCarInfo.EndTime)">
+                        <option value=""> กรุณาเลือก </option>
+                        <option ng-repeat="time in EndTimeList" value="{{time}}">{{time}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 form-control-static" for="RegionName">ภารกิจ</label>
+                <div class="col-lg-8"><input class="form-control" ng-model="ReserveCarInfo.Mission" ng-class="{'required_field':ReserveCarInfo.Mission==''}" required="true" /></div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 form-control-static" for="RegionName">หมายเหตุ</label>
+                <div class="col-lg-8"><textarea class="form-control" ng-model="ReserveCarInfo.Remark" ></textarea></div>
+            </div>
+            
+            <hr />        
+            <div class="row form-group" ><!--ng-show="ReserveCarInfo.ReserveCarID != '' && (ReserveCarInfo.ReserveStatus == '' || ReserveCarInfo.ReserveStatus == null)"-->
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                      <div class="panel-heading"><h4><b>รายชื่อผู้ร่วมเดินทาง</b></h4></div>
+                      <div class="panel-body">
+                        <div class="row form-group">
+                             <label class="col-lg-3 form-control-static">พนักงานขับรถ</label>
+                            <div class="col-lg-8">
+                                <div class="btn-group" ng-show="currentUser.UserID == ReserveCarInfo.CreateBy">
+                                    <label class="btn btn-info btn-radiobox" ng-model="ReserveCarInfo.DriverType" uib-btn-radio="'Y'" ng-click="setDriver(ReserveCarInfo.DriverType)">ต้องการ</label>
+                                    <label class="btn btn-info btn-radiobox" ng-model="ReserveCarInfo.DriverType" uib-btn-radio="'N'" ng-click="setDriver(ReserveCarInfo.DriverType)">ไม่ต้องการ</label>
+                                </div>
+                                <label class="form-control-static" ng-show="currentUser.UserID != ReserveCarInfo.CreateBy">
+                                {{ DriverType=='Y'?'ต้องการ':'ไม่ต้องการ' }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-lg-3 form-control-static">จำนวนผู้เดินทาง</label>
+                            <div class="col-lg-3">
+                                <select class="form-control" required="true" ng-model="ReserveCarInfo.TravelerAmount" ng-options="seatAmount.SeatAmount as seatAmount.SeatAmount for seatAmount in SeatAmountList" ng-class="{'required_field': ReserveCarInfo.TravelerAmount == null || ReserveCarInfo.TravelerAmount == '0'}" ng-change="checkTraveller()">
+                                    <option value="">กรุณาเลือก</option>
+                                </select>
+                            </div>
+                            <label class="col-lg-1 form-control-static">คน</label>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-lg-3 form-control-static">ชื่อ - สกุล </label>
+                            <div class="col-lg-8"><input class="form-control" ng-model="Traveller.Name" uib-typeahead="user for user in searchUserAutoComplete($viewValue, 'USER') | limitTo:20" typeahead-on-select="autocompleteUserSelected($item, $model, $label)" ng-paste="$event.preventDefault()" /></div>
+                        </div>
+                        <div ng-show="TravellerList.length > 0">
+                            <div class="row">
+                                <div ng-repeat="traveller in TravellerList" class="col-lg-3 alert alert-info alert-dismissible" role="alert">
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteTraveller($index, traveller.TravellerID)" ng-show="currentUser.UserID == ReserveCarInfo.CreateBy"><span aria-hidden="true">&times;</span></button>
+                                  {{traveller.FirstName}}&nbsp;{{traveller.LastName}}
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group" ng-show="currentUser.UserID != ReserveCarInfo.AdminID && (ReserveCarInfo.ReserveStatus == 'Approve' || ReserveCarInfo.ReserveStatus == 'Reject')">
+                <div class="col-lg-12">
+                    <div class="panel panel-success">
+                      <div class="panel-heading"><h4><b>สถานะการอนุมัติ</b></h4></div>
+                      <div class="panel-body">
+                        <div class="row form-group">
+                            
+                            <div class="col-lg-4">
+                                <div class=" status-{{ReserveCarInfo.ReserveStatus}}">
+                                {{ ReserveCarInfo.ReserveStatus==null||ReserveCarInfo.ReserveStatus=='Request'?'อยู่ระหว่างการพิจารณา':(ReserveCarInfo.ReserveStatus == 'Approve' ?'อนุมัติ':'ไม่อนุมัติ') }}</div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row form-group" ng-show="ReserveCarInfo.ReserveStatus == 'Approve'">
+                            
+                            <div class="col-lg-12" ng-show="ReserveCarInfo.DriverType == 'Internal'">
+                                <div class="row form-group">
+                                    <label class="col-lg-4 form-control-static">
+                                        พนักงานขับรถ
+                                    </label>
+                                    <div class="col-lg-8">
+                                        <input class="form-control" ng-model="InternalDriver.Name"  readonly="true" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" ng-show="ReserveCarInfo.DriverType == 'External'">
+                                <div class="row form-group">
+                                    <label class="col-lg-4 form-control-static">
+                                        พนักงานขับรถสัญญาจ้าง
+                                    </label>
+                                    <div class="col-lg-8">
+                                        <input class="form-control" ng-model="ExternalDriver.DriverName"   readonly="true" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <label class="col-lg-4 form-control-static">
+                                        หมายเลขโทรศัพท์
+                                    </label>
+                                    <div class="col-lg-8">
+                                        <input class="form-control" ng-model="ExternalDriver.Mobile"  readonly="true"  />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group" ng-show="ReserveCarInfo.ReserveStatus == 'Reject'">
+                            <div class="col-lg-12">
+                                <textarea readonly="true" class="form-control" ng-model="ReserveCarInfo.AdminComment" ng-required="ReserveCarInfo.ReserveStatus=='Reject' && (ReserveCarInfo.AdminComment=='' || ReserveCarInfo.AdminComment==null)"  ng-class="{required_field:(ReserveCarInfo.ReserveStatus=='Reject' && (ReserveCarInfo.AdminComment=='' || ReserveCarInfo.AdminComment == null))}"  required="true" placeholder="ระบุเหตุผล"></textarea> 
+                            </div>
+                        </div>
+
+                      </div>
+                    </div>
+                </div>
+            </div>
+            
+            </fieldset>
+        
+            <div ng-form='verify_form' class="row form-group" ng-show="ReserveCarInfo.AdminID == currentUser.UserID">
+            <div class="col-lg-12">
+                <div class="panel panel-success">
+                  <div class="panel-heading"><h4><b>สถานะการอนุมัติ</b></h4></div>
+                  <div class="panel-body">
+                    <div class="row form-group">
+                        <div class="col-lg-4">
+                            <div class="btn-group">
+                                <label class="btn btn-success btn-radiobox" ng-model="ReserveCarInfo.ReserveStatus" uib-btn-radio="'Approve'" ng-click="checkReserveStatus('Approve')">อนุมัติ</label>
+                                <label class="btn btn-danger btn-radiobox" ng-model="ReserveCarInfo.ReserveStatus" uib-btn-radio="'Reject'" ng-click="checkReserveStatus('Reject')">ไม่อนุมัติ</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class=" status-{{ReserveCarInfo.ReserveStatus}}">
+                            {{ ReserveCarInfo.ReserveStatus==''||ReserveCarInfo.ReserveStatus=='Request'?'อยู่ระหว่างการพิจารณา':(ReserveCarInfo.ReserveStatus == 'Approve' ?'อนุมัติ':'ไม่อนุมัติ') }}</div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row form-group" ng-show="ReserveCarInfo.ReserveStatus == 'Approve' && (DriverType == 'Y' || ReserveCarInfo.DriverType == 'Internal' || ReserveCarInfo.DriverType == 'External')">
+                        <div class="col-lg-12">
+                            <div class="btn-group">
+                                <label class="btn btn-info btn-radiobox" ng-model="ReserveCarInfo.DriverType" uib-btn-radio="'Internal'"  ng-click="checkDriverType('Internal')">พนักงานขับรถ</label>
+                                <label class="btn btn-info btn-radiobox" ng-model="ReserveCarInfo.DriverType" uib-btn-radio="'External'" ng-click="checkDriverType('External')">พนักงานขับรถสัญญาจ้าง</label>
+                            </div>
+
+                        </div>
+                        <br>&nbsp;<br>
+                        <div class="col-lg-12" ng-show="ReserveCarInfo.DriverType == 'Internal'">
+                            <div class="row form-group">
+                                <label class="col-lg-4 form-control-static">
+                                    พนักงานขับรถ
+                                </label>
+                                <div class="col-lg-8">
+                                    <input class="form-control" ng-model="InternalDriver.Name" uib-typeahead="user for user in searchDriverAutoComplete($viewValue, 'USER') | limitTo:20" typeahead-on-select="autocompleteDriverSelected($item, $model, $label)" ng-class="{'required_field':checkInternalDriverCondition()}" ng-required="(ReserveCarInfo.DriverType == 'Internal')" ng-paste="$event.preventDefault();" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12" ng-show="ReserveCarInfo.DriverType == 'External'">
+                            <div class="row form-group">
+                                <label class="col-lg-4 form-control-static">
+                                    พนักงานขับรถสัญญาจ้าง
+                                </label>
+                                <div class="col-lg-8">
+                                    <input class="form-control" ng-model="ExternalDriver.DriverName"  ng-class="{'required_field':ReserveCarInfo.DriverType == 'External' && (ExternalDriver.DriverName == null || ExternalDriver.DriverName == '')}" ng-required="(ReserveCarInfo.DriverType == 'External')" />
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <label class="col-lg-4 form-control-static">
+                                    หมายเลขโทรศัพท์
+                                </label>
+                                <div class="col-lg-8">
+                                    <input class="form-control" ng-model="ExternalDriver.Mobile" ng-class="{'required_field':ReserveCarInfo.DriverType == 'External' && (ExternalDriver.Mobile == '' || ExternalDriver.Mobile == null)}" ui-mask="999-999-9999" model-view-value="true"  ui-mask-placeholder ui-mask-placeholder-char="" ng-required="(ReserveCarInfo.DriverType == 'External')"  />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row form-group" ng-show="ReserveCarInfo.ReserveStatus == 'Reject'">
+                        <div class="col-lg-12">
+                            <textarea class="form-control" ng-model="ReserveCarInfo.AdminComment" ng-required="ReserveCarInfo.ReserveStatus=='Reject' && (ReserveCarInfo.AdminComment=='' || ReserveCarInfo.AdminComment==null)"  ng-class="{required_field:(ReserveCarInfo.ReserveStatus=='Reject' && (ReserveCarInfo.AdminComment=='' || ReserveCarInfo.AdminComment == null))}" placeholder="ระบุเหตุผล"></textarea> 
+                            
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-lg-12 obj_center">
+                            <a role="button" class="btn btn-default" href="#/"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปหน้าแรก </a>
+                            <button class="btn btn-primary" ng-click="adminUpdateCarStatus()" ng-disabled="(verify_form.$invalid) || (ReserveCarInfo.ReserveStatus == 'Approve' && ReserveCarInfo.CarID == 0)" ng-show="ReserveCarInfo.ReserveStatus == 'Approve'"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล </button>
+                            <button class="btn btn-primary" ng-click="adminUpdateCarStatus()" ng-disabled="(ReserveCarInfo.AdminComment=='' || ReserveCarInfo.AdminComment==null)" ng-show="ReserveCarInfo.ReserveStatus == 'Reject'"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล </button>
+                            <button class="btn btn-warning" ng-show="ReserveCarInfo.ReserveStatus == 'Approve'" ng-click="showSelectCar()"><span class="glyphicon glyphicon-shopping-cart"></span> เลือกรถ</button>
+                            <button type="button" class="btn btn-info" ng-click="printReserveCar()" ng-show="ReserveCarInfo.ReserveStatus == 'Approve'"><span class="glyphicon glyphicon-ok"></span> พิมพ์ใบจอง</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row form-group"  ng-show="currentUser.UserID == ReserveCarInfo.CreateBy && ReserveCarInfo.ReserveStatus == ''">
+            <div class="col-lg-12 obj_center">
+                <a role="button" class="btn btn-default" href="#/"><span class="glyphicon glyphicon-arrow-left"></span> กลับไปหน้าแรก </a>
+                <button class="btn btn-primary" ng-click="requestReserveCar()" ng-disabled="(!reserve_form.$valid) || ReserveCarInfo.TravelerAmount == '0'" ng-show="ReserveCarInfo.ReserveCarID == ''"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึกข้อมูล </button>
+                <button type="button" class="btn btn-danger" ng-click="cancelReserveCar(ReserveCarInfo.ReserveCarID)" ng-show="ReserveCarInfo.ReserveCarID != ''"><span class="glyphicon glyphicon-remove"></span> ยกเลิกการจองพาหนะ</button>
+                <button type="button" class="btn btn-primary" ng-click="saveDraft()" ng-show="ReserveCarInfo.ReserveCarID != '' && ReserveCarInfo.ReserveStatus == null"><span class="glyphicon glyphicon-ok"></span> บันทึก</button>
+                <button type="button" class="btn btn-info" ng-click="printReserveCar()" ng-show="ReserveCarInfo.ReserveStatus == 'Approve'"><span class="glyphicon glyphicon-ok"></span> พิมพ์ใบจอง</button>
+            </div>
+        </div>
+
+        
+
+    </div>
+    
+</div>
+<div class="page-header">&nbsp;</div>
+<div ng-include src="'html/footer.html'"></div>
+<script type="text/ng-template" id="choose_car.html">
+    <div class="modal-header">
+    <h5 class="modal-title"><h3><b>เลือกรถ</b><h3></h5>
+   
+    </div>
+    <div class="modal-body" style="height:100%;">
+
+        <div class="row form-group" style="background-color: #E0F3DF; padding: 10px;">
+            <label class="col-lg-2 form-control-static">
+                รถที่เลือก
+            </label>
+            <label class="col-lg-4 form-control-static">
+                {{SelectedCarDetail.Brand}} {{SelectedCarDetail.Model}}<br>
+                {{SelectedCarDetail.License}} {{SelectedCarDetail.LicenseProvinceName}}
+            </label>
+        </div>
+        <div class="row form-group">
+            <label class="col-lg-2 form-control-static">
+                ประเภทรถ
+            </label>
+            <div class="col-lg-4">
+                <select class="form-control" ng-model="SelectCarTypeID" ng-options="Car.CarTypeID as (Car.CarType+' '+Car.SeatAmount+' ที่นั่ง') for Car in Cartype" ng-change="setSelectCarTypeID()">
+                    <option value="">ทั้งหมด</option>
+                </select>
+            </div>
+            <div class="col-lg-6">
+                <div class="row">
+                    <label class=" col-lg-5 form-control-static">
+                        วัน - เวลาเดินทางไป
+                    </label>
+                    <label class=" col-lg-7 form-control-static">
+                        {{ FromDate }} น.
+                    </label>
+                </div>
+                <div class="row">
+                    <label class=" col-lg-5 form-control-static">
+                        วัน - เวลาเดินทางกลับ
+                    </label>
+                    <label class=" col-lg-7 form-control-static">
+                        {{ ToDate }} น.
+                    </label>
+                </div>
+                <div class="row">
+                    <label class=" col-lg-5 form-control-static">
+                        จำนวนผู้เดินทาง
+                    </label>
+                    <label class=" col-lg-7 form-control-static">
+                        {{ ReserveCarInfo.TravelerAmount }} คน
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row" style="margin-top: 0px; text-align: center;">
+                    <div class="col-lg-12 col-xs-12 visible-lg" style="text-align: center;">
+                        <div class="col-lg-1 col-xs-12  date_rang_block default_bg_color" style="width: 4.5%; text-align: right;   color: #FFF; height: 80px;"><h4><a ng-click="setDateRange(2)"  style="color: #FFF;"><</a></h4></div>
+                        <div class="col-lg-1 col-xs-12  date_rang_block default_bg_color" style="width: 13%; height:80px;" ng-repeat="date in dateRangeDisplay"><h4><a  ng-class="{active_date:$index == 3,normal_date:$index != 3}" ng-click="setDateRange($index)">{{date}}</a></h4></div>
+                        <div class="col-lg-1 col-xs-12  date_rang_block default_bg_color" style="width: 4.5%; text-align: left; height: 80px;"><h4><a ng-click="setDateRange(4)"  style="color: #FFF;">&gt;</a></h4></div>
+                    </div>
+                    <div class="col-xs-12 visible-xs" style="text-align: center;">
+                        <div class="col-xs-12 date_rang_block default_bg_color" style="text-align: center; color: #FFF;"><h4><a ng-click="setDateRange(2)"  style="color: #FFF;"><</a></h4></div>
+                        <div class="col-xs-12 date_rang_block default_bg_color" style="font-size: 0.8em;" ng-repeat="date in dateRangeDisplay"><h4><a style="color: #FFF;" ng-class="{active_date:$index == 3,normal_date:$index != 3}" font-size: 0.8em;" ng-click="setDateRange($index)">{{date}}</a></h4></div>
+                        <div class="col-xs-12 date_rang_block default_bg_color" style=" text-align: center; "><h4><a ng-click="setDateRange(4)"  style="color: #FFF;">&gt;</a></h4></div>
+                    </div>
+                    <div class="col-lg-12 col-xs-12" style="text-align: center;">
+                        <table class="table table-bordered table-striped" style="width: 100%; word-wrap:break-word; table-layout: fixed; font-size: 0.8em;">
+                            <tr style="text-align: center; background-color: #B6DCDC;" class="hidden-xs">
+                                <th width="8%">{{ ReserveCarInfo.RegionName }}</th>
+                                <th>0:00</th>
+                                <th>1:00</th>
+                                <th>2:00</th>
+                                <th>3:00</th>
+                                <th>4:00</th>
+                                <th>5:00</th>
+                                <th>6:00</th>
+                                <th>7:00</th>
+                                <th>8:00</th>
+                                <th>9:00</th>
+                                <th>10:00</th>
+                                <th>11:00</th>
+                                <th>12:00</th>
+                                <th>13:00</th>
+                                <th>14:00</th>
+                                <th>15:00</th>
+                                <th>16:00</th>
+                                <th>17:00</th>
+                                <th>18:00</th>
+                                <th>19:00</th>
+                                <th>20:00</th>
+                                <th>21:00</th>
+                                <th>22:00</th>
+                                <th>23:00</th>
+                            </tr>
+                            <tr style="text-align: center;" class="visible-xs">
+                                <th width="18%">ห้อง</th>
+                                <th>7</th>
+                                <th>8</th>
+                                <th>9</th>
+                                <th>10</th>
+                                <th>11</th>
+                                <th>12</th>
+                                <th>13</th>
+                                <th>14</th>
+                                <th>15</th>
+                                <th>16</th>
+                                <th>17</th>
+                                <th>18</th>
+                                <th>19</th>
+                                <th>20</th>
+                            </tr> 
+                            <tr ng-repeat="car in CarList" ng-if="car.CarTypeID == SelectCarTypeID || SelectCarTypeID ==null">
+                                <td style="text-align: left;"><a ng-click="setDraftSelectedCar(car)">{{car.Brand}} {{car.Model}} ( {{car.License}} {{car.LicenseProvinceName}} )</a></td>
+                                <!--<td ng-repeat="time in CarTimeList" ng-class="getStatus(time, car.reserve_cars, currentUser.UserID)"> 
+                                </td>-->
+                                <td ng-repeat="time in car.timeList" class="{{time.status}}"> 
+                                    
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok(SelectedCarDetail)">Confirm</button>
+        <button class="btn btn-default" ng-click="cancel()">Close</button>
+    </div>
+</script>
+
+<style>
+.alert{
+    font-size:0.8em;
+}
+.text-thin{
+    font-weight: lighter;
+}
+
+.status-{
+    text-align: center;
+    background-color: #F3F376;
+    border: 5px solid #DADA4D;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.status-Approve{
+    text-align: center;
+    background-color: #9CEB9C;
+    border: 5px solid #52AC52;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.status-Reject{
+    text-align: center;
+    background-color: #DA564C;
+    border: 5px solid #BD6161;
+    border-radius: 10px;
+    padding: 5px;
+    color: #FFF;
+}
+
+.status-Request{
+    text-align: center;
+    background-color: #F3F376;
+    border: 5px solid #DADA4D;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.des-status-Approve{
+    text-align: center;
+    background-color: #9CEB9C;
+    border: 5px solid #52AC52;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.des-status-Reject{
+    text-align: center;
+    background-color: #DA564C;
+    border: 5px solid #BD6161;
+    border-radius: 10px;
+    padding: 5px;
+    color: #FFF;
+}
+
+.des-status-Waiting{
+    text-align: center;
+    background-color: #F3F376;
+    border: 5px solid #DADA4D;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.typeahead-demo .custom-popup-wrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    background-color: #f9f9f9;
+  }
+
+  .typeahead-demo .custom-popup-wrapper > .message {
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    color: #868686;
+  }
+
+  .typeahead-demo .custom-popup-wrapper > .dropdown-menu {
+    position: static;
+    float: none;
+    display: block;
+    min-width: 160px;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .repeat-item.ng-enter,
+    .repeat-item.ng-leave {
+      -webkit-transition: 0.5s linear all;
+      transition: 0.5s linear all;
+    }
+    
+    .repeat-item.ng-enter,
+    .repeat-item.ng-leave.ng-leave-active {
+      opacity: 0;
+    }
+    
+    .repeat-item.ng-leave,
+    .repeat-item.ng-enter.ng-enter-active {
+      opacity: 1;
+    }
+
+    .app-modal-window .modal-dialog {
+      width: 1290px;
+    }
+
+    .reserve_approved{
+        background-color: #A8E671;
+    }
+    .reserve_waiting{
+        background-color: #F3F376;
+    }
+    .reserve_unvailable{
+        background-color: #FF5C5C;
+        color:#FFF;
+    }
+    .spn_status{
+        color: #FFF;
+    }
+    .active_date{
+        color:yellow;
+        font-size: 1.4em;
+        font-weight: bolder;
+    }
+    .normal_date{
+        color:#FFF;
+    }
+</style>

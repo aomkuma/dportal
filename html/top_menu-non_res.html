@@ -1,0 +1,237 @@
+<div class="row" style="background-color: #EFEFEF; padding: 10PX;">
+    <!--
+    <div class="col-lg-8 visible-lg">
+        <a href="#/"><img src="img/dpo_logo.png" style="max-width: 100%;" /></a>
+    </div>
+    <div class="col-sm-8 visible-sm">
+        <a href="#/"><img src="img/dpo_logo.png" style="max-width: 100%;" /></a>
+    </div>
+    -->
+    <div class="col-lg-2 col-md-2 col-sm-2  col-xs-2">
+         <a href="#/"><img src="img/dpo_logo_only.png" style="max-width: 70%; padding-top: 0px;" /></a>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="color:#606060;">
+        <div style="padding-top: 0px;">
+            <label style="font-weight: bolder; font-size: 2.3em;"><span class="red_font_head">อ</span>งค์การ<span class="red_font_head">ส่</span>งเสริมกิจการโ<span class="red_font_head">ค</span>นมแห่งประเทศ</label>
+            <br>
+            <label style="font-weight: bolder; font-size: 1.3em; margin-top: -30px;"><span class="blue_font_head">D</span>AIRY FARMING <span class="blue_font_head">P</span>ROMOTION <span class="blue_font_head">O</span>RGANIZATION OF THAILAND</label>
+            <br>
+            <label style="font-weight: bolder; font-size: 1.1em;" class="blue_font_head">รู้และรับผิดชอบ ส่งมอบสิ่งที่มีคุณค่า พัฒนาอย่างต่อเนื่อง เน้นเรื่องธรรมาภิบาล</label>
+        </div>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+    </div>
+    <div ng-controller="NotificationController" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 img-notify">
+        <a style="cursor: pointer;" uib-popover-template="'notificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkNotificationBoxStatus()">
+        <img class="" src="img/notification.png" ng-class="{'img-alert-unseen':totalNewNotifications > 0}" style="max-width: 80%;  margin-left:45%; margin-top: 15%; padding: 10px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
+        <span ng-show="totalNewNotifications > 0" style=" margin-left:70%; margin-top: -45%; position: absolute; font-weight: 800; color: red; font-size : 1.5em; width: 50px; text-align: center;">{{totalNewNotifications}}</span>
+        </a>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="vertical-align: middle; padding:0px; margin:0px;">
+
+        <div class="col-lg-12 user_login_section" style="padding: 0px;">
+            <!--<img ng-src="img/user/{{currentUser.Picture==''|| currentUser.Picture=='null'?'default_profile.png':currentUser.Picture}}" style="max-width: 100%; border-radius:40px 40px 40px 40px;" />-->
+            <img src="http://ehr.dpo.go.th/uploads/{{currentUser.Picture}}" style="max-width: 35%; border-radius:100%;">
+            <!--<img src="img/user/aommy_profile.jpg" style="max-width: 35%; border-radius:100%;">-->
+            <br>
+            {{ currentUser.FirstName }} {{ currentUser.LastName }} 
+            <!--<div ng-show="currentUser.PositionName != ''">
+                {{ currentUser.PositionName }}
+            </div>-->
+            <br>
+            <a ng-click="editProfile(currentUser.UserID)">แก้ไขข้อมูล</a>
+            <!--<a>แก้ไขข้อมูล</a> | --><a ng-click="logout()">ออกจากระบบ</a>
+            
+        </div>
+    </div>
+</div>
+<div class="row form-group">
+    <div class="col-lg-12" style="padding-left: 0px; padding-right: 0px;">
+        <nav class="navbar navbar-inverse" style="border-bottom-color: #31b0d5;">
+          <div class="container-fluid">
+            <div class="">
+                <div class="col-lg-9  col-md-9 col-sm-9 col-xs-9">
+                  <ul class="nav navbar-nav"  style="text-align: center;">
+                    <li ng-class="{'menu_selected':menu_selected == ''}"><a href="#/"><b ng-class="{'font_menu_selected':menu_selected == ''}">หน้าหลัก</b></a></li>
+                    <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'roomconference' || menu_selected == 'vehicles'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>การจอง</b> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/roomconference" class="dropdown-toggle" data-toggle="dropdown">ห้องประชุม</a></li>
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/vehicles/-1" class="dropdown-toggle" data-toggle="dropdown">พาหนะ</a></li>
+                        </ul>
+                    </li>
+                    <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'news' || menu_selected == 'calendar'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>ประชาสัมพันธ์</b> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/news/na" class="dropdown-toggle" data-toggle="dropdown">ข่าวประชาสัมพันธ์</a></li>
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/calendar" class="dropdown-toggle" data-toggle="dropdown">ปฏิทิน</a></li>
+                        </ul>
+                    </li>
+                    <!--<li ng-class="{'menu_selected':menu_selected == 'roomconference'}"><a href="#/roomconference"><b ng-class="{'font_menu_selected':menu_selected == 'roomconference'}">จองห้องประชุม</b></a></li>
+                    <li ng-class="{'menu_selected':menu_selected == 'vehicles'}"><a href="#/vehicles/-1"><b ng-class="{'font_menu_selected':menu_selected == 'vehicles'}">จองพาหนะ</b></a></li>-->
+                    
+                    <!--<li ng-class="{'menu_selected':menu_selected == 'calendar'}"><a href="#/calendar"><b ng-class="{'font_menu_selected':menu_selected == 'calendar'}">ปฏิทิน</b></a></li>-->
+                    <li class="menu-item dropdown"  ng-class="{'menu_selected' : (menu_selected.indexOf('telephonebook_') != -1) }"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>สมุดโทรศัพท์</b> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/telephonebook_internal" class="dropdown-toggle" data-toggle="dropdown">สมุดโทรศัพท์ภายใน</a></li>
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/telephonebook_external" class="dropdown-toggle" data-toggle="dropdown">สมุดโทรศัพท์ภายนอก</a></li>
+                        </ul>
+                    </li>
+                    <!--<li ng-class="{'menu_selected':menu_selected == 'news'}"><a href="#/news/na"><b ng-class="{'font_menu_selected':menu_selected == 'news'}">ข่าวประชาสัมพันธ์</b></a></li>-->
+                    <li ng-class="{'menu_selected':menu_selected == 'repair'}"><a href="#/repair"><b ng-class="{'font_menu_selected':menu_selected == 'repair'}">แจ้งซ่อม</b></a></li>
+                    <li ng-class="{'menu_selected':menu_selected == 'link'}"><a href="#/link"><b ng-class="{'font_menu_selected':menu_selected == 'link'}">เชื่อมโยงระบบ</b></a></li>
+                    <!--<li ng-show="currentUser.GroupID == '1'"><a href="#/management"><b>จัดการ</b></a></li>-->
+                    <li ng-show="filterHeadMenu('2,3,7')" class="menu-item dropdown"  ng-class="{'menu_selected' : (menu_selected.indexOf('report_') != -1) }"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>รายงาน</b> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li  ng-show="filterMenu(2)" class="menu-item dropdown dropdown-submenu"><a href="#/report_summary_room" class="dropdown-toggle" data-toggle="dropdown">สรุปการใช้งานห้องประชุม</a></li>
+                            <li  ng-show="filterMenu(2)" class="menu-item dropdown dropdown-submenu"><a href="#/report_detail_room" class="dropdown-toggle" data-toggle="dropdown">ตารางการใช้งานห้องประชุม</a></li>
+                            <li ng-show="filterMenu(3)" class="menu-item dropdown dropdown-submenu"><a href="#/report_summary_car" class="dropdown-toggle" data-toggle="dropdown">สรุปการใช้ยานพาหนะ</a></li>
+                            <li ng-show="filterMenu(3)" class="menu-item dropdown dropdown-submenu"><a href="#/report_detail_car" class="dropdown-toggle" data-toggle="dropdown">ตารางการใช้ยานพาหนะ</a></li>
+                            <li ng-show="filterMenu(7)" class="menu-item dropdown dropdown-submenu"><a href="#/report_summary_repair" class="dropdown-toggle" data-toggle="dropdown">สรุปการแจ้งซ่อม</a></li>
+                            <li ng-show="filterMenu(7)" class="menu-item dropdown dropdown-submenu"><a href="#/report_detail_repair" class="dropdown-toggle" data-toggle="dropdown">ตารางการแจ้งซ่อม</a></li>
+                        </ul>
+                    </li>
+                    <li ng-show="filterHeadMenu('')" class="menu-item dropdown"  ng-class="{'menu_selected' : (menu_selected.indexOf('manage_') != -1) }"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>จัดการ</b> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li ng-show="filterMenu(6)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_news" class="dropdown-toggle" data-toggle="dropdown">ข่าว</a></li>
+                            <li ng-show="filterMenu(2)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_room" class="dropdown-toggle" data-toggle="dropdown">ห้องประชุม</a></li>
+                            <li ng-show="filterMenu(4)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_device" class="dropdown-toggle" data-toggle="dropdown">อุปกรณ์</a></li>
+                            <li ng-show="filterMenu(2)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_food" class="dropdown-toggle" data-toggle="dropdown">อาหาร</a></li>
+                            <li ng-show="filterMenu(3)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_car" class="dropdown-toggle" data-toggle="dropdown">ยานพาหนะ</a></li>
+                            <li ng-show="filterMenu(3)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_cartype" class="dropdown-toggle" data-toggle="dropdown">ประเภทยานพาหนะ</a></li>
+                            <li ng-show="filterMenu(8)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_link" class="dropdown-toggle" data-toggle="dropdown">การเชื่อมโยง</a></li>
+                            <li ng-show="filterMenu(7)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_repair" class="dropdown-toggle" data-toggle="dropdown">งานซ่อม</a></li>
+                            <li ng-show="filterMenu(10)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_calendar" class="dropdown-toggle" data-toggle="dropdown">ปฏิทินกิจกรรม</a></li>
+                            <li ng-show="filterMenu(1)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_permission" class="dropdown-toggle" data-toggle="dropdown">สิทธิ์การใช้งาน</a></li>
+                            <li ng-show="filterMenu(9)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_telephonebook" class="dropdown-toggle" data-toggle="dropdown">สมุดโทรศัพท์ภายนอก</a></li>
+                            <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_department" class="dropdown-toggle" data-toggle="dropdown">พื้นที่แผนก</a></li>
+                            <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_log" class="dropdown-toggle" data-toggle="dropdown">Log</a></li>
+                        </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                    <div class="input-group" style="padding-top: 5px;">
+                        <input type="text" class="form-control"  ng-model="news_keyword" placeholder="ค้นหา..." name="srch-term" id="srch-term" style="border: 1px solid #31b0d5;">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit" style="border: 1px solid #31b0d5;" ng-click="searchNews(news_keyword)"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div><!--/.nav-collapse -->
+          </div>
+        </nav>
+    </div>
+</div>
+<script type="text/ng-template" id="notificationTemplate.html">
+    <div>
+        <h3>แจ้งเตือน</h3>
+        <a href="#/notifications">
+        ดูทั้งหมด</a>
+        <hr>
+    </div>
+    <div class="row" style="max-height: 500px; overflow-y: auto;"  scrolly="getNotifications($parent.currentUser.RegionID , $parent.currentUser.GroupID, $parent.currentUser.UserID, false)">
+    <div class="col-lg-12" ng-class="{'div-notification-unseen':notify.NotificationStatus=='Unseen'}" ng-repeat="notify in NotificationList">
+        <a ng-click="updateAndGotoPage($index, notify)" ng-bind-html="notify.NotificationText | htmlToPlaintext"></a><br>
+        <span class="text-muted" style="font-size: 0.8em;">เมื่อ {{reFormatDate(notify.PushDateTime)}}</span>
+        <hr>
+    </div>
+    <div class="col-lg-12" ng-show="NotificationList == null || NotificationList.length == 0"> 
+        ยังไม่มีรายการแจ้งเตือน
+    </div>
+    </div>
+</script>
+<script type="text/ng-template" id="update_contact.html">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-lg-1">
+                <i class="glyphicon glyphicon-user" style="color:#3D9AE1;"></i>
+            </div>
+            <div class="col-lg-10">
+                <b>แก้ไขข้อมูลการติดต่อ</b>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+       <div class="row">
+            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">พื้นที่</label>
+            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.RegionName}}" ng-disabled="true"></div>
+            
+       </div>
+       <div class="row">
+            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">หน่วยงาน</label>
+            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.orgName}}" ng-disabled="true"></div>
+       </div>
+       <div class="row">
+            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ชื่อ - สกุล</label>
+            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.FirstName + ' ' + Contact.LastName}}"></div>
+       </div>
+       <div class="row">
+            <label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">อีเมล</label>
+            <div class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.Email}}"></div>
+       </div>
+       <div class="row">
+            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โต๊ะ</label>
+            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.InternalContact"></div>
+        </div>
+       <div class="row">
+            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โทรศัพท์</label>
+            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Tel"></div>
+        </div>
+        <div class="row">
+            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">แฟกซ์</label>
+            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Fax"></div>
+        </div>
+       <div class="row">
+            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">มือถือ</label>
+            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Mobile"></div>
+        </div>
+       
+    </div>
+    <div class="modal-footer">
+    <button class="btn btn-default" ng-click="ok(Contact)">Confirm</button>
+    <button class="btn btn-default" ng-click="cancel()">Close</button>
+    </div>
+</script>
+<style>
+    .menu_selected{
+        background-color: #4CC6C6;
+        color:#FFF;
+        border-radius: 20px 20px 0px 0px;
+    }
+    .menu_selected a { color: #FFF; }
+    .menu_selected a:visited { color: #FFF; }
+    .menu_selected a:hover { color: #FFF; }
+    .menu_selected a:active { color: #FFF; }
+    .menu_selected a:focus { color: #FFF; }
+     .font_menu_selected {
+        color:#FFF;
+     }
+     
+     .dropdown_open{
+        background-color: #4CC6C6;
+        color:#FFF;
+        border-radius: 20px 20px 0px 0px;
+     }
+
+     .img-alert-unseen {
+        border:2px solid red;
+     }
+     .img-alert-unseen:hover {
+        border:1px solid #ccc;
+     }
+     .popover-notification {
+        min-width: 380px;
+     }
+     .div-notification-unseen{
+        background-color: #E2F7FF;
+        padding-top:10px ;
+     }
+     .menu_selected a:visited {
+     color: #000; 
+    }
+    .red_font_head{
+        color: #CC0000;
+    }
+    .blue_font_head{
+        color: #0066CC;
+    }
+</style>

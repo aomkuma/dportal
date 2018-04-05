@@ -1,0 +1,78 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row form-group" style="overflow-x: hidden; padding-bottom: 0vh;">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>จัดการงานซ่อม</h2></div></div>
+		</div>
+	</div>
+</div>
+<div class="row" style="padding-bottom: 10vh; ">
+	<div class="col-lg-12">
+		<div class="page-header">
+			<h3>ประเภทงานซ่อม</h3>
+		</div>
+	</div>
+	<div class="col-lg-12" ng-form name="updateForm">
+		<div class="row form-group">
+			<label class="col-lg-2 form-control-static">
+			ประเภทงาน
+			</label>
+			<div class="col-lg-5">
+				<input class="form-control" ng-model="Data.RepairedTypeName" ng-class="{required_field: Data.RepairedTypeName == ''}" ng-required="Data.RepairedTypeName == ''">
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-2 form-control-static">
+			สถานะ
+			</label>
+			<div class="col-lg-10">
+				<div class="btn-group">
+                    <label class="btn btn-default btn-checkbox" ng-model="Data.ActiveStatus" uib-btn-radio="'Y'">ใช้งาน</label>
+                    <label class="btn btn-default btn-checkbox" ng-model="Data.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้งาน</label>
+                </div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-12">
+		<div class="page-header obj_center">
+			<a class="btn btn-default" href="#/manage_repair"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</a>
+            <button class="btn btn-primary" ng-click="updateData(Data)" ng-disabled="!updateForm.$valid"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>
+		</div>
+	</div>
+	<div class="col-lg-10 col-lg-offset-1" ng-show="Data.repair_title != null">
+		<div class="table-responsive">
+			<caption>
+				<h3>หัวข้องานซ่อม</h3>
+				<a role="button" class="btn btn-primary" href="#/manage_repair_title/{{Data.RepairedTypeID}}"><span class="glyphicon glyphicon-plus"></span> เพิ่มหัวข้องานซ่อม</a>
+			</caption>
+        	<table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 15vh;">#</th>
+                        <th>หัวข้องาน</th>
+                        <th>รหัสแจ้งซ่อม</th>
+                        <th>ฝ่ายที่รับผิดชอบ</th>
+                        <th>สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	<tr ng-repeat="data in Data.repair_title">
+                        <td>
+                            <a role="button" class="btn btn-primary btn-sm " href="#/manage_repair_title/{{Data.RepairedTypeID}}/{{data.RepairedTitleID}}"><span class="glyphicon glyphicon-edit"></span></a>
+                            <!--<button type="button" class="btn btn-danger btn-sm " ng-click="confirmDelete($index, data.RepairedTitleID)"><span class="glyphicon glyphicon-trash"></span></button>-->
+                        </td>
+                        <td>{{data.RepairedTitleName}}</td>
+                        <td>{{data.RepairedTitleCode}}</td>
+                        <td>{{data.orgName}}</td>
+                        <td>
+                        	<span class="glyphicon glyphicon-check" ng-show="data.ActiveStatus == 'Y'"></span>
+                            <span class="glyphicon glyphicon-remove" ng-show="data.ActiveStatus == 'N'"></span>
+                        </td>
+                   	</tr>
+                </tbody>
+            </table>
+        </div>
+	</div>
+	
+</div>
+<div ng-include src="'html/footer.html'"></div>

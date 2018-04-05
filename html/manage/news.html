@@ -1,0 +1,477 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div  ng-show="showPage == 'MAIN'" class="row form-group scrollable-default" style="max-height:78vh; overflow-y: auto; padding-bottom: 0vh;" scrolly="loadList()">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>จัดการข่าว</h2></div></div>
+		</div>
+		<div class="row" style="padding-bottom: 10vh; ">
+			<div class="col-lg-12">
+				<div class="row form-group">
+					<div class="col-lg-12">
+						<form class="form-inline">
+							<div class="form-group">
+							    <label for="exampleInputName2">&nbsp; แสดงข่าวของ : </label>
+							    &nbsp; <select class="form-control" ng-model="condition.RegionID" ng-options="region.RegionID as region.RegionName for region in RegionList" ng-change="setCondition()">
+									<option value="">ทั้งหมด</option>
+								</select>
+						  	</div>
+						  	<div class="form-group">
+							    <label for="exampleInputName2">&nbsp; การแสดงผล : </label>
+						  	</div>
+						  	<div class="form-group">
+						  		<input type="checkbox" ng-model="condition.CurrentNews" ng-true-value="'Y'" ng-false-value="'0'" ng-click="setCondition()">
+							    <label for="exampleInputName2">&nbsp; ข่าวปัจจุบัน &nbsp;</label>
+						  	</div>
+						  	<div class="form-group">
+						  		<input type="checkbox" ng-model="condition.HideNews" ng-true-value="'N'"  ng-false-value="'0'" ng-click="setCondition()">
+							    <label for="exampleInputName2">&nbsp; ข่าวที่ถูกปิด &nbsp;</label>
+						  	</div>
+						  	<div class="form-group">
+						  		<input type="checkbox" ng-model="condition.WaitApprove" ng-true-value="'Y'"  ng-false-value="'0'" ng-click="setCondition()">
+							    <label for="exampleInputName2">&nbsp; ข่าวที่รอการอนุมัติ &nbsp;</label>
+						  	</div>
+							<button class="btn btn-primary pull-right" ng-click="showUpdatePage(-1, null)"><span class="glyphicon glyphicon-plus"></span> เพิ่มข่าว</button>
+						</form>
+						
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-lg-4 col-sm-3 col-xs-12" ng-repeat="data in DataList" style="border: 1px #ccc solid; height: 600px; word-break:break-all;">
+						<div class="row" style="height: 240px;">
+							<div class="col-lg-12 obj_center">
+								<img ng-src="{{data.NewsPicture}}" alt="" style="max-width: 100%; height: 230px;">
+							</div>
+						</div>
+						<div class="page-header">
+							<h4><a ng-click="showUpdatePage($index, data)" style="cursor: pointer; color: #FF5C5C;" ng-bind-html="data.NewsTitle | htmlToPlaintext"></a></h4>
+						</div>
+						<span ng-bind-html="data.NewsContent | htmlToPlaintext | cut:true:180:' ...'" style="word-wrap: break-word;"></span>
+						
+						<div class="row" style="padding-top: 2vh;">
+							<div class="col-lg-6">
+								<span class=" pull-left main-status-{{data.NewsStatus}}" ng-show="data.ActiveStatus == 'Y'">{{data.NewsStatus==null?'กำลังสร้างข่าว'
+															:data.NewsStatus=='Request'?'รอการอนุมัติ'
+																:data.NewsStatus=='Approve'?'อนุมัติ':'ไม่อนุมัติ'}}</span>
+								<span class=" pull-left main-status-Reject" ng-show="data.ActiveStatus == 'N'">
+									ปิดการแสดงข่าว
+								</span>
+							</div>	
+							<div class="col-lg-6 ">
+								<span class="pull-right" style="color: #FF5C5C;">{{data.NewsTypeName}}</span>
+							</div>	
+						</div>
+						<hr>
+						<div class="row" style="padding-bottom: 3vh;">
+							<div class="col-lg-6">
+								<span class=" pull-left" style="color:#A5C7CE;">{{data.NewsDateTimeFormat}}</span>
+							</div>	
+							<div class="col-lg-6 ">
+								<span class="pull-right" style="color: #A5C7CE;">จำนวนเข้าชม {{data.VisitCount==null?0:data.VisitCount}} ครั้ง</span>
+							</div>	
+						</div>
+					</div>
+					<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-show="showPage == 'UPDATE'" class="row scrollable-default" style="max-height:100%; overflow-y: auto; padding-bottom: 10vh;">
+	
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;">
+				<div id='content'>
+					<h2 class='topic' ng-show="News.NewsID == ''">เพิ่มข่าว</h2>
+					<h2 class='topic' ng-show="News.NewsID != ''">แก้ไขข่าว</h2>
+				</div>
+			</div>
+		</div>
+		<fieldset ng-disabled="News.NewsStatus == 'Approve' || News.NewsStatus == 'Reject'">
+		<!--<div class="row form-group">
+			<div class="col-lg-5">
+				<img ng-src="{{News.NewsPicture}}" style="max-width: 100%"  ng-show="fileimg==null">
+				<img ngf-thumbnail="fileimg" style="max-width: 100%" ng-show="News.NewsPicture==''">
+			</div>
+		</div>-->
+			<div ng-form name="updateForm">
+			<!--<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				พื้นที่
+				</label>
+				<div class="col-lg-5">
+					<select class="form-control" ng-model="News.NewsRegionID" ng-options="region.RegionID as region.RegionName for region in RegionList" disabled="true">
+						<option value="">ทั้งหมด</option>
+					</select>
+				</div>
+			</div>-->
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				พื้นที่
+				</label>
+				<div class="col-lg-5">
+					<select class="form-control" ng-model="News.NewsType" ng-options="newsType.NewsTypeID as newsType.NewsTypeName for newsType in NewsTypeList" required="true" ng-class="{required_field:News.NewsType==''}">
+						<option value="">โปรดระบุ..</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				ระยะเวลาการแสดงข่าว
+				</label>
+				<div class="col-lg-10">
+					<div class="btn-group">
+	                    <label class="btn btn-default btn-checkbox" ng-model="News.LimitDisplay" uib-btn-radio="'N'" ng-click="checkLimitDisplay()">ไม่กำหนด</label>
+	                    <label class="btn btn-default btn-checkbox" ng-model="News.LimitDisplay" uib-btn-radio="'Y'" ng-click="checkLimitDisplay()">กำหนด</label>
+	                </div>
+				</div>
+			</div>
+			
+			<div class="row form-group" ng-show="News.LimitDisplay == 'Y'">
+	            <label class="col-lg-2 form-control-static">เริ่ม </label>
+	            <div class="col-lg-2">
+	            <!--<app-datepicker ng-model="ReserveRoomInfo.StartDate" modelid="StartDate" valuedefault="{{ReserveRoomInfo.StartDate}}" ></app-datepicker>-->
+	                <p class="input-group">
+	                  <input type="text" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="News.StartDate" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="News.LimitDisplay == 'Y'"  close-text="Close" ng-class="{required_field:News.StartDate==null && News.LimitDisplay == 'Y'}" />
+	                  <span class="input-group-btn">
+	                    <button type="button" class="btn btn-default" ng-click="open1()" ng-class="{required_field:News.StartDate==null && News.LimitDisplay == 'Y'}"><i class="glyphicon glyphicon-calendar"></i></button>
+	                  </span>
+	                </p>
+	            </div>
+	            <div class="col-lg-2">
+	                <select class="form-control" ng-required="News.LimitDisplay == 'Y'" ng-model="News.StartTime" valuedefault="{{News.StartTime}}" ng-class="{required_field:News.StartTime==null && News.LimitDisplay == 'Y'}" >
+	                    <option value=""> กรุณาเลือก </option>
+	                    <option ng-repeat="time in timeList" value="{{time}}">{{time}}</option>
+	                </select>
+	            </div>
+	            <label class="col-lg-1 form-control-static">
+	                <input type="checkbox" ng-model="News.NewsEnd" ng-true-value="true" ng-false-value="false" ng-click="checkClearEndTime()"> สิ้นสุด
+	            </label>
+	            <div class="col-lg-2">
+	            <!--<app-datepicker ng-model="ReserveRoomInfo.StartDate" modelid="StartDate" valuedefault="{{ReserveRoomInfo.StartDate}}" ></app-datepicker>-->
+	                <p class="input-group">
+	                  <input type="text" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="News.EndDate" is-open="popup2.opened" datepicker-options="dateOptions" ng-required="News.LimitDisplay == 'Y' && News.NewsEnd"  close-text="Close" ng-class="{required_field:News.EndDate==null && News.NewsEnd}" />
+	                  <span class="input-group-btn">
+	                    <button type="button" class="btn btn-default" ng-click="open2()" ng-disabled="!News.NewsEnd" ng-class="{required_field:News.EndDate==null && News.LimitDisplay == 'Y'}"><i class="glyphicon glyphicon-calendar"></i></button>
+	                  </span>
+	                </p>
+	            </div>
+	            <div class="col-lg-2">
+	                <select class="form-control"  ng-required="News.LimitDisplay == 'Y' && News.NewsEnd"  ng-model="News.EndTime" ng-disabled="!News.NewsEnd" valuedefault="{{News.EndTime}}" ng-class="{required_field:News.EndTime==null && News.NewsEnd}" >
+	                    <option value=""> กรุณาเลือก </option>
+	                    <option ng-repeat="time in timeList" value="{{time}}">{{time}}</option>
+	                </select>
+	            </div>
+	        </div>
+	        <div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				สถานะ
+				</label>
+				<div class="col-lg-10">
+					<div class="btn-group">
+	                    <label class="btn btn-default btn-checkbox" ng-model="News.ActiveStatus" uib-btn-radio="'Y'">ใช้</label>
+	                    <label class="btn btn-default btn-checkbox" ng-model="News.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้</label>
+	                </div>
+				</div>
+			</div>
+			
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				วันที่ข่าว
+				</label>
+				<div class="col-lg-2">
+					<p class="input-group">
+	                  <input type="text" required="true" ng-class="{required_field:News.NewsDateTime==null || News.NewsDateTime==''}" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="News.NewsDateTime" is-open="popup3.opened" datepicker-options="dateOptions" close-text="Close"  />
+	                  <span class="input-group-btn">
+	                    <button type="button" class="btn btn-default" ng-click="open3()"><i class="glyphicon glyphicon-calendar"></i></button>
+	                  </span>
+	                </p>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				หัวข้อข่าว
+				</label>
+				<div class="col-lg-10" id="ckeditor_title">
+					<textarea class="form-control" id="editor_title1" name="editor_title1" ng-model="News.NewsTitle" rows="10" data-sample="1" data-sample-short="" maxlength="120" ng-keyup="checkNewsTitleLength(News.NewsTitle)"></textarea>
+				</div>
+			</div>
+			
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				เนื้อหา
+				</label>
+				<div class="col-lg-10" id="ckeditor">
+					<textarea class="form-control" id="editor1" name="editor1" ng-model="News.NewsContent" rows="20" data-sample="1" data-sample-short="" >
+					</textarea>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				รูปภาพหลัก 
+				<br>
+				(.png,.jpg,.raw ขนาดไม่เกิน 5 MB)
+				</label>
+				<div class="col-lg-10">
+					<div class="row">
+						<div class="col-lg-4" >
+							<p class="input-group">
+			                  <input type="text" readonly="true" class="form-control" ng-model="fileimg.name" />
+			                  <span class="input-group-btn">
+								<button class="btn btn-default" ngf-select ng-model="fileimg" accept="image/*" ngf-max-size="5MB" ngf-pattern="'.png,.jpg,.raw'" ngf-model-invalid="invalidMainImgFile">เลือก</button>
+							</span>
+			                </p>
+						</div>
+						<div class="col-lg-3">
+							<img ngf-thumbnail="fileimg" style="max-width: 100%">
+							<div class="file-alert" ng-show="invalidMainImgFile.$error === 'maxSize'">ขนาดไฟล์ต้องไม่เกิน : {{invalidMainImgFile.$errorParam}}</div>
+						</div>
+						
+					</div>
+					
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+				รูปภาพประกอบ
+				<br>
+				(.png,.jpg,.raw ขนาดไม่เกิน 5 MB)
+				</label>
+				<div class="col-lg-10">
+					
+					<div class="row" ng-repeat="img in ImgList">
+						<div class="col-lg-4" >
+							<p class="input-group">
+			                  <input type="text" readonly="true" class="form-control" ng-model="img.fileimg.name" />
+			                  <span class="input-group-btn">
+			                    <button class="btn btn-default" ngf-select ng-model="img.fileimg" accept="image/*" ngf-max-size="5MB" ngf-pattern="'.png,.jpg,.raw'" ngf-model-invalid="img.fileimg.invalidFile">เลือก</button>
+			                  </span>
+			                </p>
+						</div>
+						<div class="col-lg-3">
+							<img ngf-thumbnail="img.fileimg" style="max-width: 100%">
+							<div class="file-alert" ng-show="img.fileimg.invalidFile.$error === 'maxSize'">ขนาดไฟล์ต้องไม่เกิน : {{img.fileimg.invalidFile.$errorParam}}</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
+					ไฟล์แนบ
+					<br>
+					(เฉพาะไฟล์ word, excel, powerpoint, PDF ขนาดไม่เกิน 25 MB)
+				</label>
+				<div class="col-lg-10">
+					<div class="row" ng-repeat="attachFile in AttachFileList">
+						<div class="col-lg-4" >
+							<p class="input-group">
+			                  <input type="text" readonly="true" class="form-control" ng-model="attachFile.attachFile.name" />
+			                  <span class="input-group-btn">
+			                    <button class="btn btn-default" ngf-select ng-model="attachFile.attachFile" ngf-max-size="25MB" ngf-pattern="'.doc,.docx,.xlsx,.xls,.pdf,.ppt,.pptx'" ngf-model-invalid="invalidFile">เลือก</button>
+			                  </span>
+			                </p>
+						</div>
+						<div class="col-lg-8">
+							<div class="file-alert" ng-show="invalidFile.$error === 'pattern'">ประเภทไฟล์ไม่ถูกต้อง รองรับเฉพาะ : {{invalidFile.$errorParam}} และขนาดไฟล์ต้องไม่เกิน : 25MB</div>
+							<div class="file-alert" ng-show="invalidFile.$error === 'maxSize'">ขนาดไฟล์ต้องไม่เกิน : {{invalidFile.$errorParam}}</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		</fieldset>
+		<div class="row form-group" ng-show="News.NewsID != ''">
+			<label class="col-lg-12 form-control-static">
+				<h4>รูปภาพหลัก</h4>
+			</label>
+			<div class="col-lg-5">
+				<img ng-src="{{News.NewsPicture}}" style="max-width:100%; height: auto; border: 10px solid #94D5D5;" ng-show="News.NewsPicture != ''" />
+            </div>
+		</div>
+		<div class="row form-group" ng-show="News.NewsID != ''">
+			<label class="col-lg-12 form-control-static">
+				<h4>รูปภาพประกอบ</h4>
+			</label>
+			<div ng-repeat="picture in News.pictures" class="col-lg-3 alert alert-success alert-dismissible" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteNewsPicture($index, picture.NewsPictureID)" ng-show="currentUser.UserID == News.CreateBy"><span aria-hidden="true">&times;</span></button>
+				<img ng-src="{{picture.PicturePath}}" style="height: 80px;" />
+            </div>
+		</div>
+		<div class="row form-group" ng-show="News.NewsID != ''">
+			<label class="col-lg-12 form-control-static">
+				<h4>ไฟล์แนบ</h4>
+			</label>
+			<div ng-repeat="attachFile in News.attachFiles" class="col-lg-3 alert alert-success alert-dismissible text-justify" role="alert">
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="deleteAttachFile($index, attachFile.AttachID)" ng-show="currentUser.UserID == News.CreateBy"><span aria-hidden="true">&times;</span></button>
+				<div class="row">
+					<div class="col-lg-12" style="word-wrap: break-word;">
+					{{ attachFile.AttachRealFileName }}<br>{{'('+ (attachFile.AttachFileSize / 1024  | number : 2) +' kb.)' }}
+					</div>
+				</div>
+            </div>
+		</div>
+		<div class="row form-group" ng-show="currentUser.UserID != News.VerifyBy && (News.NewsStatus == 'Approve' || News.NewsStatus == 'Reject')">
+			<div class="col-lg-6 col-lg-offset-3">
+				<div class="panel panel-success">
+					<div class="panel-heading"><h4><b>สถานะการอนุมัติ</b></h4></div>
+					<div class="panel-body">
+                        <div class="row form-group">
+                        	
+                            <div class="col-lg-4">
+                                <div class=" status-{{News.NewsStatus}}">
+                                {{ News.NewsStatus==null||News.NewsStatus=='Request'?'อยู่ระหว่างการพิจารณา':(News.NewsStatus == 'Approve' ?'อนุมัติ':'ไม่อนุมัติ') }}</div>
+                            </div>
+						</div>
+						<div ng-show="News.NewsStatus == 'Approve'">
+							<div class="row form-group">
+								<label class="col-lg-4 form-control-static">พื้นที่แสดง</label>
+								<div class="col-lg-8">
+									<select ng-model="News.GlobalVisible" class="form-control" disabled="disabled">
+										<option value="Y">Global</option>
+										<option value="N">Local</option>
+									</select>
+								</div>
+							</div>
+							<div class="row form-group">
+								<label class="col-lg-4 form-control-static">แสดงหน้าแรก</label>
+								<div class="col-lg-8">
+									<select ng-model="News.ShowNewsFeed" class="form-control" disabled="disabled">
+										<option value="N">ไม่แสดง</option>
+										<option value="Y">แสดง</option>
+									</select>
+								</div>
+							</div>
+							<div class="row form-group">
+								<label class="col-lg-4 form-control-static">
+								สถานะ
+								</label>
+								<div class="col-lg-8">
+									<div class="btn-group">
+					                    <label class="btn btn-default btn-checkbox" ng-model="News.ActiveStatus" uib-btn-radio="'Y'">ใช้</label>
+					                    <label class="btn btn-default btn-checkbox" ng-model="News.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้</label>
+					                </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row form-group" ng-show="currentUser.UserID == News.CreateBy">
+			<div class="col-lg-12 obj_center">
+			<hr>
+				<button class="btn btn-default" ng-click="goBackMain()"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</button>
+				<button class="btn btn-primary" ng-click="upload(ImgList)"  ng-disabled="updateForm.$invalid"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button><!-- ng-show="News.NewsStatus == null || News.NewsStatus == 'Request'"-->
+				<!--<button class="btn btn-primary" ng-show="News.NewsStatus == null" ng-click="upload(ImgList)"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>-->
+			</div>
+		</div>
+		<hr>
+	</div>
+	
+
+	<div class="col-lg-12" ng-show="currentUser.UserID == News.VerifyBy" ng-form="verfyForm">
+		<div class="row form-group">
+			<div class="col-lg-6 col-lg-offset-3">
+				<div class="panel panel-success">
+					<div class="panel-heading"><h4><b>สถานะการอนุมัติ</b></h4></div>
+					<div class="panel-body">
+                        <div class="row form-group">
+                        	<div class="col-lg-4">
+	                            <div class="btn-group" required="true">
+	                                <label class="btn btn-success btn-radiobox" ng-click="checkAdminStatus()" ng-model="News.NewsStatus" uib-btn-radio="'Approve'">อนุมัติ</label>
+	                                <label class="btn btn-danger btn-radiobox" ng-click="checkAdminStatus()" ng-model="News.NewsStatus" uib-btn-radio="'Reject'">ไม่อนุมัติ</label>
+	                            </div>
+	                        </div>
+                            <div class="col-lg-4">
+                                <div class=" status-{{News.NewsStatus}}">
+                                {{ News.NewsStatus==null||News.NewsStatus=='Request'?'อยู่ระหว่างการพิจารณา':(News.NewsStatus == 'Approve' ?'อนุมัติ':'ไม่อนุมัติ') }}</div>
+                            </div>
+						</div>
+						<div ng-show="News.NewsStatus == 'Approve'">
+							<div class="row form-group">
+								<label class="col-lg-4 form-control-static">พื้นที่แสดง</label>
+								<div class="col-lg-8">
+									<select ng-model="News.GlobalVisible" class="form-control">
+										<option value="Y">Global</option>
+										<option value="N">Local</option>
+									</select>
+								</div>
+							</div>
+							<div class="row form-group">
+								<label class="col-lg-4 form-control-static">แสดงหน้าแรก</label>
+								<div class="col-lg-8">
+									<select ng-model="News.ShowNewsFeed" class="form-control">
+										<option value="N">ไม่แสดง</option>
+										<option value="Y">แสดง</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-lg-12 obj_center">
+				<button class="btn btn-default" ng-click="goBackMain()"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</button>
+				<button class="btn btn-primary" ng-click="adminUpdateStatus()" ng-disabled="!verfyForm.$valid || News.NewsStatus == 'Request'"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>
+				<hr>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-lg-12" ng-show="currentUser.UserID != News.VerifyBy && currentUser.UserID != News.CreateBy">
+		<div class="row form-group">
+			<div class="col-lg-12 obj_center">
+				<button class="btn btn-default" ng-click="goBackMain()"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</button>
+				
+				<hr>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>
+<style>
+	.status-{
+		color: #DBC500;
+	}
+	.main-status-Waiting{
+		color: #DBC500;
+	}
+	.main-status-Approve{
+		color: green;
+	}
+	.main-status-Reject{
+		color: red;
+	}
+	.status-Approve{
+	    text-align: center;
+	    background-color: #9CEB9C;
+	    border: 5px solid #52AC52;
+	    border-radius: 10px;
+	    padding: 5px;
+	}
+
+	.status-Reject{
+	    text-align: center;
+	    background-color: #DA564C;
+	    border: 5px solid #BD6161;
+	    border-radius: 10px;
+	    padding: 5px;
+	    color: #FFF;
+	}
+
+	.status-Request{
+	    text-align: center;
+	    background-color: #F3F376;
+	    border: 5px solid #DADA4D;
+	    border-radius: 10px;
+	    padding: 5px;
+	}
+	
+</style>

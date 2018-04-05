@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en-US" ng-app="app">
+	<head>
+		<meta charset="utf-8">
+
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>DPO Portal</title>
+		<meta name="description" content="">
+		<meta name="author" content="AOMKUMA">
+
+		<!--<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- include js & css -->
+		<link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="resource_script/bower_components/angular-ui-bootstrap/dist/ui-bootstrap-csp.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="resource_script/bower_components/ng-responsive-calendar/dist/css/calendar.min.css"/>
+        
+		<script type="text/javascript" src="resource_script/bower_components/angular/angular.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-cookies/angular-cookies.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-route/angular-route.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/ngstorage/ngStorage.min.js"></script>
+        <script type="text/javascript" src="resource_script/bower_components/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-animate/angular-animate.min.js"></script>
+		<script type="text/javascript" src="resource_script/node_modules/ng-image-gallery/dist/ng-image-gallery.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-bind-html-compile/angular-bind-html-compile.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/jqlite/jqlite.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-ui-mask/dist/mask.js"></script>
+        <script src="resource_script/bower_components/ng-responsive-calendar/dist/js/calendar-tpls.min.js"></script>
+        <script src="resource_script/bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
+		<script src="resource_script/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+		<!--<script src="resource_script/node_modules/angular-file-saver/dist/angular-file-saver.js"></script>
+		<script src="resource_script/node_modules/angular-file-saver/dist/angular-file-saver.bundle.js"></script>-->
+		
+		<script type="text/javascript" src="resource_script/app.js?version=1"></script>		
+		<script type="text/javascript" src="resource_script/app_route.js?version=1"></script>
+		<script type="text/javascript" src="resource_script/app_factory.js?version=1"></script>
+		<script type="text/javascript" src="resource_script/app_controller.js?version=1"></script>
+		<script type="text/javascript" src="resource_script/app_controller_car.js?version=1"></script>
+		<script type="text/javascript" src="resource_script/app_controller_repair.js?version=1"></script>
+		<script type="text/javascript" src="resource_script/app_controller_report.js?version=1"></script>
+		<script type="text/javascript" src="resource_script/app_util.js?version=1"></script>
+		<!--
+		<link href="resource_script/admin_script/ckeditor_sdk/theme/css/fonts.css" rel="stylesheet">
+		<link href="resource_script/admin_script/ckeditor_sdk/theme/css/sdk.css" rel="stylesheet">-->
+		<script src="resource_script/ckeditor_sdk/vendor/ckeditor/ckeditor.js"></script>
+		<script src="resource_script/ckeditor_sdk/samples/assets/picoModal-2.0.1.min.js"></script>
+		<script src="resource_script/ckeditor_sdk/samples/assets/contentloaded.js"></script>
+		<script src="resource_script/ckeditor_sdk/samples/assets/beautify-html.js"></script>
+        
+        <script type="text/javascript" src='resource_script/bower_components/pdfmake/build/pdfmake.min.js' charset="utf-8"></script>
+		<script type="text/javascript" src='resource_script/bower_components/pdfmake/build/vfs_fonts.js' charset="utf-8"></script>
+		<script type="text/javascript" src='resource_script/bower_components/pdfmake/build/build/vfs_fonts.js' charset="utf-8"></script>
+		<!-- include end -->
+		<link href="resource_script/node_modules/ng-image-gallery/dist/ng-image-gallery.css" rel="stylesheet"/>
+		<link href="css/theme.css?version=1" rel="stylesheet" type="text/css">
+	</head>
+
+	<body ng-controller="AppController">
+        <div class="overlay" ng-show="overlay.overlay" style="padding-top: 0px;"><img src="img/spin.gif"  style="width:10%; margin: 0 auto; margin-top:20%; padding-top 50%;" /></div>
+		<div class="ng-view container" id="main_div_app" style="overflow-x: hidden;"></div>
+        <script src="resource_script/jquery.min.js"></script>
+        <script src="resource_script/bootstrap.min.js"></script>
+        
+            
+	</body>
+	
+</html>
