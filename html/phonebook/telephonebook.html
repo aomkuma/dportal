@@ -1,0 +1,188 @@
+<div ng-include src="'html/top_menu.html'"></div>
+	<div class="row form-group scrollable-default" style="max-height:78vh; overflow-y: auto;  padding-bottom: 10vh;" scrolly="loadList()">
+		<div class="col-lg-12 col-md-12 visible-lg visible-md">
+			<div class="row">
+				<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>สมุดโทรศัพท์ภายใน</h2></div></div>
+			</div>
+			<hr>
+			<div class="row form-group">
+				<div class="col-lg-12">
+					<form class="form-inline">
+						<div class="form-group">
+						    <label for="exampleInputName2">&nbsp; สำนัก/กอง/แผนก : </label>
+						    &nbsp; <select class="form-control" ng-model="Group" ng-options="dep.GroupID as dep.OrgName for dep in DepartmentList">
+								<option value="">ทั้งหมด</option>
+							</select>
+					  	</div>
+					  	<div class="form-group">
+						    <input type="text" ng-model="Username" class="form-control" placeholder="ชื่อ - สกุล">
+					  	</div>
+					  	<div class="form-group">
+						    <button type="button" class="btn btn-primary"  ng-click="search()" ng-disabled="disabled_search"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+					  	</div>
+					</form>
+				</div>
+
+			</div>
+			<div class="row form-group">
+				<div class="col-lg-12">
+					<div class="table-responsive">
+						<!--<caption class=""><button class="btn btn-info pull-left" ng-click="editProfile(currentUser.UserID)" style="font-size: 1em;"><span class="glyphicon glyphicon-edit"></span> แก้ไขสมุดโทรศัพท์ของคุณ</button></caption>-->
+						<table class="table table-striped table-bordered table-hover">
+							<tbody>
+								<tr ng-repeat="data in DataList">
+									<td>
+										<button type="button" class="btn btn-default btn-sm " ng-click="viewContact($index, data)"><span class="glyphicon glyphicon-user" style="color:#3D9AE1;"></span></button>
+									</td>
+									<td>
+										{{data.RegionName}}
+									</td>
+									<td>
+										{{data.orgName}}
+									</td>
+									<td>
+										{{data.FirstName + ' ' + data.LastName}}
+									</td>
+									<td>
+										<span class="glyphicon glyphicon-star" ng-show="data.Star == 'Y'" style="color: #F2B742;"></span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-12 visible-xs visible-sm card" ng-repeat="data in DataList">
+			<button type="button" class="btn btn-default btn-sm " ng-click="viewContact($index, data)"><span class="glyphicon glyphicon-user" style="color:#3D9AE1;"></span></button>
+			<span class="glyphicon glyphicon-star" ng-show="data.Star == 'Y'" style="color: #F2B742;"></span>
+			<br>
+			พื้นที่ : {{data.RegionName}}
+			<br>
+			หน่วยงาน : {{data.orgName}}
+			<br>
+			ชื่อ - สกุล : {{data.FirstName + ' ' + data.LastName}}
+		</div>
+	</div>
+<div ng-include src="'html/footer.html'"></div>
+<script type="text/ng-template" id="view_contact.html">
+	<div class="modal-header">
+        <div class="row">
+            <div class="col-lg-1">
+            	<h3><i class="glyphicon glyphicon-user" style="color:#3D9AE1;"></i></h3>
+            </div>
+            <div class="col-lg-5 hidden-xs">
+            	<h3><b>รายละเอียด</b></h3>
+            </div>
+            <div class="col-lg-6">
+            	<h3>
+	            	<span style="cursor: pointer;" ng-show="Contact.Star == null" ng-click="addFavourite(Contact.UserID)">เพิ่มในสมุดของคุณ 
+	            	<i class="glyphicon glyphicon-star-empty" style="color:#F2B742;"></i>
+	            	</span>
+	            	<span style="cursor: pointer;" ng-show="Contact.Star == 'Y'" ng-click="removeFavourite(Contact.FavouriteID, Contact.UserID)">ลบออกจากสมุดของคุณ 
+	            	<i class="glyphicon glyphicon-star" style="color:#F2B742;"></i>
+	            	</span>
+	            </h3>
+            </div>
+        </div>
+	</div>
+	<div class="modal-body">
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">พื้นที่</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.RegionName}}</label>
+	   		
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">หน่วยงาน</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.orgName}}</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ชื่อ - สกุล</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.FirstName + ' ' + Contact.LastName}}</label>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โต๊ะ</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.InternalContact}}</label>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โทรศัพท์</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.Tel}}</label>
+	   	</div>
+	   	<div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">แฟกซ์</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.Fax}}</label>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">มือถือ</label>
+	   		<label class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.Mobile}}</label>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">อีเมล</label>
+	   		<label class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;">&nbsp;{{Contact.Email}}</label>
+	   </div>
+	</div>
+	<div class="modal-footer">
+    <!--<button class="btn btn-default" ng-click="ok()">Confirm</button>-->
+	<button class="btn btn-default" ng-click="cancel()">Close</button>
+	</div>
+</script>
+<script type="text/ng-template" id="update_contact.html">
+	<div class="modal-header">
+        <div class="row">
+            <div class="col-lg-1">
+            	<i class="glyphicon glyphicon-user" style="color:#3D9AE1;"></i>
+            </div>
+            <div class="col-lg-10">
+            	<b>แก้ไขข้อมูลการติดต่อ</b>
+            </div>
+        </div>
+	</div>
+	<div class="modal-body">
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">พื้นที่</label>
+	   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.RegionName}}" ng-disabled="true"></div>
+	   		
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">หน่วยงาน</label>
+	   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.orgName}}" ng-disabled="true"></div>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ชื่อ - สกุล</label>
+	   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.FirstName + ' ' + Contact.LastName}}"></div>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">อีเมล</label>
+	   		<div class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.Email}}"></div>
+	   </div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โต๊ะ</label>
+	   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.InternalContact"></div>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โทรศัพท์</label>
+	   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Tel"></div>
+	   	</div>
+	   	<div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">แฟกซ์</label>
+	   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Fax"></div>
+	   	</div>
+	   <div class="row">
+	   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">มือถือ</label>
+	   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Mobile"></div>
+	   	</div>
+	   
+	</div>
+	<div class="modal-footer">
+    <button class="btn btn-default" ng-click="ok(Contact)">Confirm</button>
+	<button class="btn btn-default" ng-click="cancel()">Close</button>
+	</div>
+</script>
+<style type="text/css" media="screen">
+	.card{
+		background-color: #94D5D5;
+		border: 2px solid #4CC6C6;
+		padding: 2vh;
+	}	
+</style>

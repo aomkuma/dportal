@@ -1,0 +1,236 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div uib-alert ng-class="'alert-success'" uib-alert class='repeat-item' ng-repeat="alert in alerts" type="alert.type" dismiss-on-timeout="3000" close="alerts.splice($index, 1);" style="text-align: center; font-size:1.2em;">{{alert.msg}}
+</div>
+<div class="row form-group">
+	<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>รายละเอียดแจ้งปัญหา แจ้งซ่อม</h2></div></div>
+</div>
+<div class="row form-group" ng-show="currentUser.UserID == Repair.CreateBy">
+	<div class="col-lg-6 col-lg-offset-3"  ng-form="requestForm">
+		<div class="row form-group">
+			<label class="col-lg-3">
+				ประเภทงาน
+			</label>
+			<div class="col-lg-9">
+				<select class="form-control" ng-model="Repair.RepairedTypeID" ng-options="RepairType.RepairedTypeID as RepairType.RepairedTypeName for RepairType in RepairTypeList" ng-change="setRepairType(Repair.RepairedTypeID)" ng-class="{required_field:Repair.RepairedTypeID == '' || Repair.RepairedTypeID == null}" ng-required="Repair.RepairedTypeID == '' || Repair.RepairedTypeID == null">
+					<option value="">กรุณาเลือก</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3">
+				หัวข้องานซ่อม
+			</label>
+			<div class="col-lg-9">
+				<select class="form-control" ng-model="Repair.RepairedTitleID" ng-options="RepairTitle.RepairedTitleID as RepairTitle.RepairedTitleName for RepairTitle in RepairTitleList" ng-change="setRepairTitle(Repair.RepairedTitleID)" ng-class="{required_field:Repair.RepairedTitleID == '' || Repair.RepairedTitleID == null}" ng-required="Repair.RepairedTitleID == '' || Repair.RepairedTitleID == null">
+					<option value="">กรุณาเลือก</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3">
+				ปัญหางานซ่อม
+			</label>
+			<div class="col-lg-9">
+				<select class="form-control" ng-model="Repair.RepairedIssueID" ng-options="RepairIssue.RepairedIssueID as RepairIssue.RepairedIssueName for RepairIssue in RepairIssueList" ng-change="setRepairIssue(Repair.RepairedIssueID)" ng-class="{required_field:Repair.RepairedIssueID == '' || Repair.RepairedIssueID == null}" ng-required="Repair.RepairedIssueID == '' || Repair.RepairedIssueID == null">
+					<option value="">กรุณาเลือก</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3">
+				ปัญหาย่อยงานซ่อม
+			</label>
+			<div class="col-lg-9">
+				<select class="form-control" ng-model="Repair.RepairedSubIssueID" ng-options="RepairSubIssue.RepairedSubIssueID as RepairSubIssue.RepairedSubIssueName for RepairSubIssue in RepairSubIssueList" ng-change="setRepairSubIssue(Repair.RepairedSubIssueID)" ng-class="{required_field:Repair.RepairedSubIssueID == '' || Repair.RepairedSubIssueID == null}" ng-required="Repair.RepairedSubIssueID == '' || Repair.RepairedSubIssueID == null">
+					<option value="">กรุณาเลือก</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3">
+				รายละเอียด
+			</label>
+			<div class="col-lg-9">
+				<textarea class="form-control" ng-model="Repair.RepairedDetail" placeholder="กรุณาระบุอาการ และสถานที่ซ่อมบำรุง"></textarea>
+			</div>
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-3">
+				พื้นที่
+			</label>
+			<div class="col-lg-9">
+				<select class="form-control" ng-model="Repair.RegionID" ng-options="region.RegionID as region.RegionName for region in RegionList"  ng-class="{required_field:Repair.RegionID == '' || Repair.RegionID == null}" ng-required="Repair.RegionID == '' || Repair.RegionID == null">
+					<option value="">กรุณาเลือก</option>
+				</select>
+			</div>
+		</div>
+		<div class="row form-group" ng-show="Repair.CreateBy == currentUser.UserID && (Repair.RepairedStatus != 'Request' && Repair.RepairedStatus != '')">
+			<div class="col-lg-12" >
+				<fieldset ng-disabled="true">
+					<div class="panel panel-info">
+						<div class="panel-heading"><h3><b>สถานะ</b></h3></div>
+						<div class="panel-body">
+							<div class="col-lg-10 col-lg-offset-1">
+								<input type="radio" ng-model="RepairStatus" value="Finish" id="RepairStatusFinish"> <label for="RepairStatusFinish">เสร็จสิ้น</label> <br>
+								<textarea class="form-control" ng-model="Repair.FinishComment" ng-required="(RepairStatus == 'Finish'  && (Repair.FinishComment =='' || Repair.FinishComment == null))" ng-class="{'required_field':RepairStatus == 'Finish' && (Repair.FinishComment ==''  || Repair.FinishComment == null)}" ></textarea>
+								</br>
+							</div>
+							<div class="col-lg-10 col-lg-offset-1">
+								<input type="radio" ng-model="RepairStatus" value="Suspend" id="RepairStatusSuspend"> <label for="RepairStatusSuspend">ระงับการดำเนินการ</label> <br>
+								<textarea class="form-control" ng-model="Repair.SuspenedComment" ng-required="RepairStatus == 'Suspend'  && (Repair.SuspenedComment =='' || Repair.SuspenedComment == null)" ng-class="{'required_field':RepairStatus == 'Suspend' && (Repair.SuspenedComment ==''  || Repair.SuspenedComment == null)}" ></textarea>
+								</br>
+							</div>
+							<div class="col-lg-10 col-lg-offset-1">
+								<input type="radio" ng-model="RepairStatus"  value="Cancel" id="RepairStatusCancel"> <label for="RepairStatusCancel">ยกเลิก</label> <br>
+								<textarea class="form-control"  ng-model="Repair.CancelComment"></textarea>
+								</br>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-lg-12 obj_center">
+				</br>
+				<a class="btn btn-default" role="button" href="#/"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</a>
+				<!--<button class="btn btn-primary" ng-click="updateRepair(Repair)" ng-disabled="!requestForm.$valid" ng-show="Repair.RepairedStatus == '' || Repair.RepairedStatus == 'Request' "><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>-->
+				<!--<button type="button" class="btn btn-danger" ng-click="updateStatusRepair(Repair, 'Cancel')" ng-show="Repair.RepairedID != '' && (Repair.RepairedStatus == '' || Repair.RepairedStatus == 'Request')"><span class="glyphicon glyphicon-remove"></span> ยกเลิกการแจ้งซ่อม</button>-->
+				<button type="button" class="btn btn-primary" ng-click="updateStatusRepair(Repair, 'Request')" ng-show="(Repair.RepairedStatus == '')" ng-disabled="!requestForm.$valid"><span class="glyphicon glyphicon-ok"></span> บันทึก</button>
+				<hr>
+			</div>
+		</div>
+	</div>
+</div>
+
+<fieldset ng-disabled="currentUser.UserID != ReserveCarInfo.CreateBy">
+	<div class="row form-group" ng-show="currentUser.UserID != Repair.CreateBy">
+		<div class="col-lg-6 col-lg-offset-3"  ng-form="verfyForm">
+			<div class="row form-group">
+				<label class="col-lg-3">
+					ประเภทงาน
+				</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="Repair.RepairedTypeID" ng-options="RepairType.RepairedTypeID as RepairType.RepairedTypeName for RepairType in RepairTypeList" ng-change="setRepairType(Repair.RepairedTypeID)" ng-class="{required_field:Repair.RepairedTypeID == '' || Repair.RepairedTypeID == null}" ng-required="Repair.RepairedTypeID == '' || Repair.RepairedTypeID == null">
+						<option value="">กรุณาเลือก</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-3">
+					หัวข้องานซ่อม
+				</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="Repair.RepairedTitleID" ng-options="RepairTitle.RepairedTitleID as RepairTitle.RepairedTitleName for RepairTitle in RepairTitleList" ng-change="setRepairTitle(Repair.RepairedTitleID)" ng-class="{required_field:Repair.RepairedTitleID == '' || Repair.RepairedTitleID == null}" ng-required="Repair.RepairedTitleID == '' || Repair.RepairedTitleID == null">
+						<option value="">กรุณาเลือก</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-3">
+					ปัญหางานซ่อม
+				</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="Repair.RepairedIssueID" ng-options="RepairIssue.RepairedIssueID as RepairIssue.RepairedIssueName for RepairIssue in RepairIssueList" ng-change="setRepairIssue(Repair.RepairedIssueID)" ng-class="{required_field:Repair.RepairedIssueID == '' || Repair.RepairedIssueID == null}" ng-required="Repair.RepairedIssueID == '' || Repair.RepairedIssueID == null">
+						<option value="">กรุณาเลือก</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-3">
+					ปัญหาย่อยงานซ่อม
+				</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="Repair.RepairedSubIssueID" ng-options="RepairSubIssue.RepairedSubIssueID as RepairSubIssue.RepairedSubIssueName for RepairSubIssue in RepairSubIssueList" ng-change="setRepairSubIssue(Repair.RepairedSubIssueID)" ng-class="{required_field:Repair.RepairedSubIssueID == '' || Repair.RepairedSubIssueID == null}" ng-required="Repair.RepairedSubIssueID == '' || Repair.RepairedSubIssueID == null">
+						<option value="">กรุณาเลือก</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-3">
+					รายละเอียด
+				</label>
+				<div class="col-lg-9">
+					<textarea class="form-control" ng-model="Repair.RepairedDetail"  ng-required="Repair.RepairedDetail == ''" placeholder="กรุณาระบุอาการ และสถานที่ซ่อมบำรุง"></textarea>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-3">
+					พื้นที่
+				</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="Repair.RegionID" ng-options="region.RegionID as region.RegionName for region in RegionList"  ng-class="{required_field:Repair.RegionID == '' || Repair.RegionID == null}" ng-required="Repair.RegionID == '' || Repair.RegionID == null">
+						<option value="">กรุณาเลือก</option>
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+</fieldset>
+
+
+<div class="row form-group" ng-show="currentUser.UserID != Repair.CreateBy">
+	<div class="col-lg-6 col-lg-offset-3" ng-form="adminForm">
+		<div class="row form-group">
+			<div class="col-lg-12">
+				<div class="panel panel-info">
+					<div class="panel-heading"><h3><b>รายละเอียดการดำเนินการ</b></h3></div>
+					<div class="panel-body">
+						<label class="col-lg-3 form-control-static">
+							วันที่รับแจ้งซ่อม
+						</label>
+						<div class="col-lg-9">
+							<p class="input-group">
+								<span class="input-group-btn">
+									<button type="button" class="btn btn-success" ng-click="updateAdminReceiveRepair(Repair)"  ng-disabled="AdminReceiveDate != null && AdminReceiveDate != ''"><i class="glyphicon glyphicon-check"></i>&nbsp;รับทราบเพื่อดำเนินการซ่อม</button>
+								</span>
+								<input type="text" readonly="true" class="form-control" ng-model="AdminReceiveDate" />
+								
+		                    </p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12" ng-show="AdminReceiveDate != null && AdminReceiveDate != ''">
+				<fieldset ng-disabled="Repair.RepairedStatus == 'Finish' || Repair.RepairedStatus == 'Cancel'">
+				
+					<div class="panel panel-info">
+						<div class="panel-heading"><h3><b>สถานะ</b></h3></div>
+						<div class="panel-body">
+							<div class="col-lg-10 col-lg-offset-1">
+								<input type="radio" ng-model="RepairStatus" value="Finish" id="RepairStatusFinish" ng-click="checkAdminStatus('Finish')"> <label for="RepairStatusFinish">เสร็จสิ้น</label> <br>
+								<textarea class="form-control" ng-model="Repair.FinishComment" ng-required="(RepairStatus == 'Finish'  && (Repair.FinishComment =='' || Repair.FinishComment == null))" ng-class="{'required_field':RepairStatus == 'Finish' && (Repair.FinishComment ==''  || Repair.FinishComment == null)}" ng-disabled="RepairStatus != 'Finish'"></textarea>
+								</br>
+							</div>
+							<div class="col-lg-10 col-lg-offset-1">
+								<input type="radio" ng-model="RepairStatus" value="Suspend" id="RepairStatusSuspend" ng-click="checkAdminStatus('Suspend')"> <label for="RepairStatusSuspend">ระงับการดำเนินการ</label> <br>
+								<textarea class="form-control" ng-model="Repair.SuspenedComment" ng-required="RepairStatus == 'Suspend'  && (Repair.SuspenedComment =='' || Repair.SuspenedComment == null)" ng-class="{'required_field':RepairStatus == 'Suspend' && (Repair.SuspenedComment ==''  || Repair.SuspenedComment == null)}"  ng-disabled="RepairStatus != 'Suspend'"></textarea>
+								</br>
+							</div>
+							<div class="col-lg-10 col-lg-offset-1">
+								<input type="radio" ng-model="RepairStatus"  value="Cancel" id="RepairStatusCancel" ng-click="checkAdminStatus('Cancel')"> <label for="RepairStatusCancel">ยกเลิก</label> <br>
+								<textarea class="form-control"  ng-model="Repair.CancelComment"  ng-disabled="RepairStatus != 'Cancel'"></textarea>
+								</br>
+							</div>
+							<div class="col-lg-10 col-lg-offset-1 obj_center">
+								
+								<button class="btn btn-primary" ng-click="updateRepairAdmin(Repair, RepairStatus)" ng-disabled="!adminForm.$valid || RepairStatus == ''" ng-show="Repair.RepairedStatus != 'Finish' && Repair.RepairedStatus != 'Cancel'"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>
+								
+							</div>
+							
+						</div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-lg-12 obj_center">
+			</br>
+				<a class="btn btn-default" role="button" href="#/"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</a>
+				
+				<hr>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>

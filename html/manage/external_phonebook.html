@@ -1,0 +1,153 @@
+<div ng-include src="'html/top_menu.html'"></div>
+	<div class="row form-group scrollable-default" style="max-height:78vh; overflow-y: auto;  padding-bottom: 10vh;" scrolly="loadList()">
+		<div class="col-lg-12 col-md-12 visible-lg visible-md">
+			<div class="row">
+				<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>จัดการสมุดโทรศัพท์ภายนอก</h2></div></div>
+			</div>
+			<hr>
+			<div class="row form-group">
+				<div class="col-lg-4">
+					<input type="text" class="form-control" ng-model="condition.keyword" placeholder="ค้นหาบริษัท / หน่วยงาน">
+				</div>
+				<div class="col-lg-8">
+					<form class="form-inline">
+						<div class="form-group">
+							
+						    <label for="exampleInputName2">&nbsp; การแสดงข้อมูล : </label>
+						    &nbsp; <select class="form-control" ng-model="condition.activeStatus">
+								<option value="">ทั้งหมด</option>
+								<option value="Y">ใช้งาน</option>
+								<option value="N">ไม่ใช้งาน</option>
+							</select>
+					  	</div>
+					  	<button type="button" class="btn btn-primary" ng-click="search()" ng-disabled="disabled_search"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+					</form>
+					
+				</div>
+			</div>
+			<div class="row">
+
+				<div class="col-lg-12">
+					<div class="table-responsive">
+						<caption class=""><button class="btn btn-info pull-left" ng-click="updateProfileDialog(-1, null)" style="font-size: 1em;"><span class="glyphicon glyphicon-edit"></span> เพิ่มสมุดโทรศัพท์</button></caption>
+						<table class="table table-striped table-bordered table-hover">
+							<tbody>
+								<tr ng-repeat="data in DataList">
+									<td>
+										<button type="button" class="btn btn-default btn-sm " ng-click="updateProfileDialog($index, data)"><span class="glyphicon glyphicon-user" style="color:#3D9AE1;"></span></button>
+										<button type="button" class="btn btn-primary btn-sm " ng-click="goUpdatePermission(data.PhoneBookID)"><span class="glyphicon glyphicon-edit" style="color:#3D9AE1;"></span></button>
+									</td>
+									<td>
+										{{data.CompanyName}}
+									</td>
+									<td>
+										{{data.Tel}}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-sm-12 visible-xs visible-sm card" ng-repeat="data in DataList">
+			<button type="button" class="btn btn-default btn-sm " ng-click="updateProfileDialog($index, data)"><span class="glyphicon glyphicon-user" style="color:#3D9AE1;"></span></button>
+			<br>
+			บริษัท : {{data.CompanyName}}
+			<br>
+			เบอร์โทร : {{data.Tel}}
+		</div>
+	</div>
+<div ng-include src="'html/footer.html'"></div>
+<script type="text/ng-template" id="update_ex_contact.html">
+	<div class="modal-header">
+        <div class="row">
+            <div class="col-lg-2" ng-show="Contact.Picture == ''">
+            	<h3><i class="glyphicon glyphicon-user" style="color:#3D9AE1;"></i></h3>
+            </div>
+            <div class="col-lg-2" ng-show="Contact.Picture != ''">
+            	<img src="{{ Contact.Picture}}" style="max-width: 100%">
+            </div>
+            <div class="col-lg-8 text-center">
+            	<h3><b>รายละเอียด</b></h3>
+            </div>
+        </div>
+	</div>
+	<div class="modal-body">
+		<form name="updateform">
+		   <div class="row">
+		   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ชื่อ</label>
+		   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.FirstName"></div>
+		   </div>
+		   <div class="row">
+		   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">สกุล</label>
+		   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.LastName"></div>
+		   </div>
+		   <div class="row">
+		   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">หน่วยงาน / บริษัท</label>
+		   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control required_field" ng-model="Contact.CompanyName" required="true"></div>
+		   </div>
+		   <div class="row">
+		   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โทรศัพท์</label>
+		   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control required_field" ng-model="Contact.Tel" required="true"></div>
+		   	</div>
+		   	<div class="row">
+		   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">แฟกซ์</label>
+		   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Fax"></div>
+		   	</div>
+		   <div class="row">
+		   		<label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">มือถือ</label>
+		   		<div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Mobile"></div>
+		   	</div>
+		   <div class="row">
+		   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">อีเมล</label>
+		   		<div class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Email"></div>
+		   </div>
+		   <div class="row">
+				<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">
+				รูปภาพ
+				</label>
+				<div class="col-lg-9  col-sm-7 col-xs-12 form-control-static">
+					<div class="row">
+						<div class="col-lg-8" >
+							<p class="input-group">
+			                  <input type="text" readonly="true" class="form-control" value="{{ Contact.fileimg.name }}" />
+			                  <span class="input-group-btn">
+								<button class="btn btn-default" ngf-select ng-model="Contact.fileimg" accept="image/*" ngf-max-size="3MB" ngf-pattern="'.png,.jpg,.gif'">เลือก</button>
+							</span>
+			                </p>
+						</div>
+						<div class="col-lg-3">
+							<!--<img src="{{ Contact.Picture}}" style="max-width: 100%" ng-show=" Contact.Picture != '' && Contact.fileimg == null">-->
+							<img ngf-thumbnail="Contact.fileimg" style="max-width: 100%">
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		   <div class="row">
+		   		<label class="col-lg-3  col-sm-5 col-xs-12 form-control-static"">
+				สถานะ
+				</label>
+				<div class="col-lg-9  col-sm-7 col-xs-12 form-control-static">
+					<div class="btn-group">
+	                    <label class="btn btn-default btn-checkbox" ng-model="Contact.ActiveStatus" uib-btn-radio="'Y'">ใช้งาน</label>
+	                    <label class="btn btn-default btn-checkbox" ng-model="Contact.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้งาน</label>
+	                </div>
+				</div>
+		   </div>
+		</form>
+	</div>
+	<div class="modal-footer">
+    <button class="btn btn-default" ng-click="ok(Contact)" ng-disabled="updateform.$invalid">Confirm</button>
+	<button class="btn btn-default" ng-click="cancel()">Close</button>
+	</div>
+</script>
+<style type="text/css" media="screen">
+	.card{
+		background-color: #94D5D5;
+		border: 2px solid #4CC6C6;
+		padding: 2vh;
+	}	
+</style>

@@ -1,0 +1,25 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row">
+	<div class="col-lg-12 page-header">
+	<h3>ผลการค้นหา ( {{ NewsList.length + AttachFileList.length == '' ? 0: NewsList.length + AttachFileList.length }} ) รายการ</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+		<ul>
+			<li ng-repeat="data in AttachFileList">
+				<a target="_self" href="{{data.AttachFilePath}}">{{data.AttachRealFileName}}</a>
+			</li>
+		</ul>
+	</div>
+	<div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+		<ul>
+			<li ng-repeat="data in NewsList">
+				<a href="#/news_detail/{{data.NewsID}}" style="cursor: pointer; color: #FF5C5C;" ng-bind-html="data.NewsTitle | htmlToPlaintext"></a>
+				<br><span class="text-muted">{{ convertDateToThai(data.NewsDateTime) }}</span>
+				<br><span ng-bind-html="data.NewsContent | htmlToPlaintext | cut:true:180:' ...'"></span>
+			</li>
+		</ul>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>

@@ -1,0 +1,15 @@
+<div ng-include src="'html/top_menu.html'"></div>
+	<div class="row">
+		<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>{{Rule.Title}}</h2></div></div>
+	</div>
+	<div class="row form-group" ng-repeat="ruleList in Rule.RuleList">
+		<div class="col-lg-12">
+			{{ruleList.RuleTitle }}
+			<ul>
+				<li ng-repeat="contents in ruleList.RuleContent">
+					<a href="{{contents.Url}}" target="_blank">{{contents.Content}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+<div ng-include src="'html/footer.html'"></div>

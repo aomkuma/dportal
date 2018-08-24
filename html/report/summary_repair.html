@@ -1,0 +1,122 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row">
+	<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>รายงานสรุปแจ้งซ่อม</h2></div></div>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12">
+		<form class="form-inline">
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ประเภทงาน : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.RepairType" ng-options="RepairType.RepairedTypeID as RepairType.RepairedTypeName for RepairType in RepairTypeList" ng-change="setRepairType(condition.RepairType)">
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; หัวข้องานซ่อม : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.RepairedTitle" ng-options="RepairTitle.RepairedTitleID as RepairTitle.RepairedTitleName for RepairTitle in RepairTitleList" ng-change="setRepairTitle(condition.RepairedTitle)">
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ปัญหางานซ่อม : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.RepairIssue" ng-options="RepairIssue.RepairedIssueID as RepairIssue.RepairedIssueName for RepairIssue in RepairIssueList" ng-change="setRepairIssue(condition.RepairIssue)">
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ปัญหาย่อยงานซ่อม : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.RepairSubIssue" ng-options="RepairSubIssue.RepairedSubIssueID as RepairSubIssue.RepairedSubIssueName for RepairSubIssue in RepairSubIssueList">
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ปีงบประมาณ : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Year" ng-options="year.yearText as year.yearValue for year in YearList">
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	<button class="btn btn-primary" ng-click="queryReport(condition)" ng-disabled="condition.Year == null"><span class="glyphicon glyphicon-search"></span> ออกรายงาน</button>
+		  	<button class="btn btn-info" ng-click="refresh()"><span class="glyphicon glyphicon-search"></span> Reset</button>
+		</form>
+	</div>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12">
+		<form class="form-inline">
+			
+			<button class="btn btn-danger" ng-click="exportToPDF(condition, DataList, Summary)" ng-disabled="condition.Year == null" ng-show="DataList != null"><span class="glyphicon glyphicon-download"></span> Download PDF</button>
+			<button type="submit" class="btn btn-success" ng-click="exportToExcel(condition, DataList, Summary)" ng-disabled="condition.Year == null" ng-show="DataList != null"><span class="glyphicon glyphicon-download"></span> Download Excel</button>
+		</form>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>ประเภทงานซ่อม</th>
+						<th>หัวข้องานซ่อม</th>
+						<th>ปัญหางานซ่อม</th>
+						<th>ปัญหาย่อยงานซ่อม</th>
+						<th>จำนวนที่รับแจ้ง</th>
+						<th>ซ่อมเสร็จสิ้น</th>
+						<th>ระงับชั่วคราว</th>
+						<th>ยกเลิกงานซ่อม</th>
+						<th>ผ่าน SLA</th>
+						<th>ไม่ผ่าน SLA</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="data in DataList">
+						<td>
+							{{data.RepairedTypeName}}
+						</td>
+						<td>
+							{{data.RepairedTitleName}}
+						</td>
+						<td>
+							{{data.RepairedIssueName}}
+						</td>
+						<td>
+							{{data.RepairedSubIssueName}}
+						</td>
+						<td>
+							{{data.countTotal}}
+						</td>
+						<td>
+							{{data.countFinish}}
+						</td>
+						<td>
+							{{data.countHold}}
+						</td>
+						<td>
+							{{data.countCancel}}
+						</td>
+						<td>
+							{{data.countSLAPass}}
+						</td>
+						<td>
+							{{data.countSLAFailed}}
+						</td>
+					</tr>
+					<tr ng-show="DataList.length == 0"><td align="center" colspan="10">ไม่พบข้อมูล</td></tr>
+				</tbody>
+				<tfoot  ng-show="DataList.length > 0">
+					<tr>
+						<td colspan="4">{{Summary.name}}</td>
+						<td>{{Summary.sumTotal}}</td>
+						<td>{{Summary.sumFinish}}</td>
+						<td>{{Summary.sumHold}}</td>
+						<td>{{Summary.sumCancel}}</td>
+						<td>{{Summary.sumPassSLA}}</td>
+						<td>{{Summary.sumFailSLA}}</td>
+					</tr>
+				</tfoot>
+			</table>
+			<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>

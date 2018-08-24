@@ -1,0 +1,11 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row form-group">
+	<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>Log</h2></div></div>
+</div>
+<div class="row">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-repeat="data in DataList">
+		<a ng-click="downloadLog(data.filename)">{{data.filename}}</a>
+	</div>
+</div>
+<div class="page-header"></div>
+<div ng-include src="'html/footer.html'"></div>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-US" ng-app="app">
+	<head>
+		<meta charset="utf-8">
+
+		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		Remove this if you use the .htaccess -->
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>DPO Portal</title>
+		<meta name="description" content="">
+		<meta name="author" content="AOMKUMA">
+
+		<!--<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- include js & css -->
+		<link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+		<link href="resource_script/bower_components/angular-ui-bootstrap/dist/ui-bootstrap-csp.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="resource_script/bower_components/ng-responsive-calendar/dist/css/calendar.min.css"/>
+        
+		<script type="text/javascript" src="resource_script/bower_components/angular/angular.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-cookies/angular-cookies.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-route/angular-route.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/ngstorage/ngStorage.min.js"></script>
+        <script type="text/javascript" src="resource_script/bower_components/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-animate/angular-animate.min.js"></script>
+		<script type="text/javascript" src="resource_script/node_modules/ng-image-gallery/dist/ng-image-gallery.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-bind-html-compile/angular-bind-html-compile.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/jqlite/jqlite.min.js"></script>
+		<script type="text/javascript" src="resource_script/bower_components/angular-ui-mask/dist/mask.js"></script>
+        <script src="resource_script/bower_components/ng-responsive-calendar/dist/js/calendar-tpls.min.js"></script>
+        <script src="resource_script/bower_components/ng-file-upload/ng-file-upload-shim.min.js"></script>
+		<script src="resource_script/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+		<!--<script src="resource_script/node_modules/angular-file-saver/dist/angular-file-saver.js"></script>
+		<script src="resource_script/node_modules/angular-file-saver/dist/angular-file-saver.bundle.js"></script>-->
+		
+		<script type="text/javascript" src="resource_script/app.js"></script>		
+		<script type="text/javascript" src="resource_script/app_route.js"></script>
+		<script type="text/javascript" src="resource_script/app_factory.js"></script>
+		<script type="text/javascript" src="resource_script/app_controller.js"></script>
+		<script type="text/javascript" src="resource_script/app_controller_car.js"></script>
+		<script type="text/javascript" src="resource_script/app_controller_repair.js"></script>
+		<script type="text/javascript" src="resource_script/app_controller_report.js"></script>
+		<script type="text/javascript" src="resource_script/app_util.js"></script>
+		<!--
+		<link href="resource_script/admin_script/ckeditor_sdk/theme/css/fonts.css" rel="stylesheet">
+		<link href="resource_script/admin_script/ckeditor_sdk/theme/css/sdk.css" rel="stylesheet">-->
+		<script src="resource_script/ckeditor_sdk/vendor/ckeditor/ckeditor.js"></script>
+		<script src="resource_script/ckeditor_sdk/samples/assets/picoModal-2.0.1.min.js"></script>
+		<script src="resource_script/ckeditor_sdk/samples/assets/contentloaded.js"></script>
+		<script src="resource_script/ckeditor_sdk/samples/assets/beautify-html.js"></script>
+        
+        <script type="text/javascript" src='resource_script/bower_components/pdfmake/build/pdfmake.min.js' charset="utf-8"></script>
+		<script type="text/javascript" src='resource_script/bower_components/pdfmake/build/vfs_fonts.js' charset="utf-8"></script>
+		<script type="text/javascript" src='resource_script/bower_components/pdfmake/build/build/vfs_fonts.js' charset="utf-8"></script>
+		<!-- include end -->
+		<link href="resource_script/node_modules/ng-image-gallery/dist/ng-image-gallery.css" rel="stylesheet"/>
+		<link href="css/theme.css" rel="stylesheet" type="text/css">
+	</head>
+
+	<body ng-controller="AppController">
+        <div class="overlay" ng-show="overlay.overlay" style="padding-top: 0px;"><img src="img/spin.gif"  style="width:10%; margin: 0 auto; margin-top:20%; padding-top 50%;" /></div>
+		<div class="ng-view container" id="main_div_app" style="overflow-x: hidden;"></div>
+        <script src="resource_script/jquery.min.js"></script>
+        <script src="resource_script/bootstrap.min.js"></script>
+        
+            
+	</body>
+	<style type="text/css" media="screen">
+		/* Template-specific stuff
+ *
+ * Customizations just for the template; these are not necessary for anything
+ * with disabling the responsiveness.
+ */
+
+/* Account for fixed navbar */
+body {
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+body,
+.navbar-fixed-top,
+.navbar-fixed-bottom {
+  min-width: 1300px;
+}
+
+/* Don't let the lead text change font-size. */
+.lead {
+  font-size: 16px;
+}
+
+/* Finesse the page header spacing */
+.page-header {
+  margin-bottom: 30px;
+}
+.page-header .lead {
+  margin-bottom: 10px;
+}
+
+
+/* Non-responsive overrides
+ *
+ * Utilize the following CSS to disable the responsive-ness of the container,
+ * grid system, and navbar.
+ */
+
+/* Reset the container */
+.container {
+  width: 1300px;
+  max-width: none !important;
+}
+
+/* Demonstrate the grids */
+.col-xs-4 {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: #eee;
+  background-color: rgba(86,61,124,.15);
+  border: 1px solid #ddd;
+  border: 1px solid rgba(86,61,124,.2);
+}
+
+.container .navbar-header,
+.container .navbar-collapse {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+/* Always float the navbar header */
+.navbar-header {
+  float: left;
+}
+
+/* Undo the collapsing navbar */
+.navbar-collapse {
+  display: block !important;
+  height: auto !important;
+  padding-bottom: 0;
+  overflow: visible !important;
+  visibility: visible !important;
+}
+
+.navbar-toggle {
+  display: none;
+}
+.navbar-collapse {
+  border-top: 0;
+}
+
+.navbar-brand {
+  margin-left: -15px;
+}
+
+/* Always apply the floated nav */
+.navbar-nav {
+  float: left;
+  margin: 0;
+}
+.navbar-nav > li {
+  float: left;
+}
+.navbar-nav > li > a {
+  padding: 15px;
+}
+
+/* Redeclare since we override the float above */
+.navbar-nav.navbar-right {
+  float: right;
+}
+
+/* Undo custom dropdowns */
+.navbar .navbar-nav .open .dropdown-menu {
+  position: absolute;
+  float: left;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-width: 0 1px 1px;
+  border-radius: 0 0 4px 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+.navbar-default .navbar-nav .open .dropdown-menu > li > a {
+  color: #333;
+}
+.navbar .navbar-nav .open .dropdown-menu > li > a:hover,
+.navbar .navbar-nav .open .dropdown-menu > li > a:focus,
+.navbar .navbar-nav .open .dropdown-menu > .active > a,
+.navbar .navbar-nav .open .dropdown-menu > .active > a:hover,
+.navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
+  color: #fff !important;
+  background-color: #428bca !important;
+}
+.navbar .navbar-nav .open .dropdown-menu > .disabled > a,
+.navbar .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+.navbar .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+  color: #999 !important;
+  background-color: transparent !important;
+}
+
+/* Undo form expansion */
+.navbar-form {
+  float: left;
+  width: auto;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-right: 0;
+  margin-left: 0;
+  border: 0;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+/* Copy-pasted from forms.less since we mixin the .form-inline styles. */
+.navbar-form .form-group {
+  display: inline-block;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.navbar-form .form-control {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
+
+.navbar-form .form-control-static {
+  display: inline-block;
+}
+
+.navbar-form .input-group {
+  display: inline-table;
+  vertical-align: middle;
+}
+
+.navbar-form .input-group .input-group-addon,
+.navbar-form .input-group .input-group-btn,
+.navbar-form .input-group .form-control {
+  width: auto;
+}
+
+.navbar-form .input-group > .form-control {
+  width: 100%;
+}
+
+.navbar-form .control-label {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.navbar-form .radio,
+.navbar-form .checkbox {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.navbar-form .radio label,
+.navbar-form .checkbox label {
+  padding-left: 0;
+}
+
+.navbar-form .radio input[type="radio"],
+.navbar-form .checkbox input[type="checkbox"] {
+  position: relative;
+  margin-left: 0;
+}
+
+.navbar-form .has-feedback .form-control-feedback {
+  top: 0;
+}
+
+/* Undo inline form compaction on small screens */
+.form-inline .form-group {
+  display: inline-block;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.form-inline .form-control {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
+
+.form-inline .form-control-static {
+  display: inline-block;
+}
+
+.form-inline .input-group {
+  display: inline-table;
+  vertical-align: middle;
+}
+.form-inline .input-group .input-group-addon,
+.form-inline .input-group .input-group-btn,
+.form-inline .input-group .form-control {
+  width: auto;
+}
+
+.form-inline .input-group > .form-control {
+  width: 100%;
+}
+
+.form-inline .control-label {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+
+.form-inline .radio,
+.form-inline .checkbox {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.form-inline .radio label,
+.form-inline .checkbox label {
+  padding-left: 0;
+}
+
+.form-inline .radio input[type="radio"],
+.form-inline .checkbox input[type="checkbox"] {
+  position: relative;
+  margin-left: 0;
+}
+
+.form-inline .has-feedback .form-control-feedback {
+  top: 0;
+}	
+	</style>
+</html>
