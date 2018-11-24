@@ -5,7 +5,7 @@
 	$office_url = 'http://hrquery.dpo.go.th/json.php?office';
 	$staff_url = 'http://hrquery.dpo.go.th/json.php?staff';
 
-	$dpo_url = 'https://172.23.10.223';
+	$dpo_url = 'https://dportal.dpo.go.th';
 	$dpo_department_url = $dpo_url . '/dpo/public/eHrUpdateDepartment/';
 	$dpo_division_url = $dpo_url . '/dpo/public/eHrUpdateDivision/';
 	$dpo_office_url = $dpo_url . '/dpo/public/eHrUpdateOffice/';
@@ -23,11 +23,13 @@
           $ctx = stream_context_create($params);
           $fp = @fopen($url, 'rb', false, $ctx);
            if (!$fp) {
+           	print_r($fp);
                 return array("STATUS"=>'ERROR',"MSG"=>"ERROR :: Problem with $url");
             //throw new Exception("Problem with $url, $php_errormsg");
           }
           $response = @stream_get_contents($fp);
           if ($response === false) {
+          	print_r($response);
                 return array("STATUS"=>'ERROR',"MSG"=>"ERROR :: Problem reading data from $url");
 //            throw new Exception("Problem reading data from $url");
           }

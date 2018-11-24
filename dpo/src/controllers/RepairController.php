@@ -7,6 +7,7 @@
     use App\Service\UserService;
     use App\Service\RunningNoService;
     use App\Service\PermissionService;
+    use App\Controller\Mailer;
 
     class RepairController extends Controller {
         protected $logger;
@@ -354,13 +355,19 @@
                     $mailer->isHtml(true);
                     $mailer->setHTMLContent($this->generateEmailToCreatorContent($RepairNotify, $RepairStatus));
                     $User = UserService::getUser($Repair['CreateBy']);
-                    $mailer->setReceiver($User['Email']);
+                    
+                    if(!empty($User['Email'])){
+                        $mailer->setReceiver($User['Email']);
 
-                    if($mailer->sendMail()){
-                        $this->logger->info('Sent mail Repair success');
-                    }else{
-                        $this->logger->info('Sent mail Repair failed');
+                        if($mailer->sendMail()){
+                            $this->logger->info('Sent mail Repair success');
+                        }else{
+                            $this->logger->info('Sent mail Repair failed');
+                        }
                     }
+
+                    $NotificationTypeList = [15,16,20,21,22];
+                    NotificationService::updateNotificationSeenData($Repair['RepairedID'], $NotificationTypeList);
                 }
 
                 $this->data_result['DATA'] = $Repair;

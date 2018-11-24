@@ -141,3 +141,7 @@ $container['SystemManageController'] = function ($c) {
 $container['PersonRegionController'] = function ($c) {
     return new \App\Controller\PersonRegionController($c->get('logger'), $c->get('db'));
 };
+
+$container['LeaveController'] = function ($c) {
+    return new \App\Controller\LeaveController($c->get('logger'), $c->get('db'));
+};

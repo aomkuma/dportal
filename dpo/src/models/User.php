@@ -27,4 +27,8 @@ class User extends \Illuminate\Database\Eloquent\Model {
     return $user;
   }
 
+  public function personRegion()
+    {
+        return $this->hasMany('App\Model\PersonRegion','UserID');
+    }
 }

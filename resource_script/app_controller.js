@@ -1,4 +1,4 @@
-app.controller('AppController', ['$cookies','$scope', '$filter', '$uibModal','IndexOverlayFactory', 'PhoneBookFactory', function($cookies, $scope, $filter, $uibModal, IndexOverlayFactory, PhoneBookFactory) {
+app.controller('AppController', ['$cookies','$scope', '$filter', '$uibModal','IndexOverlayFactory', 'PhoneBookFactory', 'LOMSFactory', function($cookies, $scope, $filter, $uibModal, IndexOverlayFactory, PhoneBookFactory, LOMSFactory) {
 	$scope.overlay = IndexOverlayFactory;
 	$scope.overlayShow = false;
 	$scope.currentUser = null;
@@ -22,6 +22,10 @@ app.controller('AppController', ['$cookies','$scope', '$filter', '$uibModal','In
             IndexOverlayFactory.overlayHide();
             if(result.data.STATUS == 'OK'){
                 $scope.Contact = result.data.DATA;
+
+                // get Leave Data
+                $scope.getLeaveData($scope.Contact.Email);
+
                 var modalInstance = $uibModal.open({
                     animation: true,
                     templateUrl: 'update_contact.html',
@@ -57,6 +61,13 @@ app.controller('AppController', ['$cookies','$scope', '$filter', '$uibModal','In
                 }
             });
         }
+    }
+
+    $scope.getLeaveData = function(email){
+        LOMSFactory.getData(email).then(function (result) {
+            console.log(result.items);
+            $scope.LeaveList = result.items;
+        });
     }
 
     $scope.searchNews = function(keyword){
@@ -144,7 +155,7 @@ app.controller('AppController', ['$cookies','$scope', '$filter', '$uibModal','In
     //console.log('AppController ',$scope.currentUser);
 }]);
 
-app.controller('NotificationController', function($scope, NotificationFactory, IndexOverlayFactory) {
+app.controller('NotificationController', function($scope, NotificationFactory, IndexOverlayFactory, LOMSFactory) {
     // Notifications
     $scope.totalNewNotifications = 0;
     $scope.NotificationList = [];
@@ -152,6 +163,7 @@ app.controller('NotificationController', function($scope, NotificationFactory, I
     $scope.tableLoad = false;
     $scope.offset = 0;
     $scope.showNotificationBox = false;
+    $scope.showLeaveNotificationBox = false;
 
     $scope.getNotifications = function (regionID, groupID, userID, interval) {
 
@@ -177,6 +189,13 @@ app.controller('NotificationController', function($scope, NotificationFactory, I
         }
     }
 
+    $scope.getLeaveNotifications = function (email, interval) {
+        LOMSFactory.getNotificationList(email).then(function(result){
+            $scope.totalNewLeaveNotifications = result.data.DATA.totalNewNotifications;
+            $scope.LeaveNotificationList = result.data.DATA.NotificationList;
+        });
+    }
+
     $scope.reFormatDate = function (d) {
         return convertDateToFullThaiDate(makeDate(d));
         //return '9 July 2017';
@@ -200,6 +219,25 @@ app.controller('NotificationController', function($scope, NotificationFactory, I
 
     }
 
+    $scope.updateAndGotoLeavePage = function (index,notify) {
+        if(notify.ViewStatus == 'unseen'){
+            IndexOverlayFactory.overlayShow();
+            LOMSFactory.updateNotificationStatus(notify.ID, notify.Email).then(function(result){
+                IndexOverlayFactory.overlayHide();
+                if(result.data.STATUS == 'OK'){
+                    $scope.LeaveNotificationList[index].ViewStatus = 'seen';
+                    $scope.totalNewLeaveNotifications = result.data.DATA.totalNewNotifications;
+                    // console.log(notify.ReturnLink);
+                    //window.open(notify.ReturnLink, '_blank');
+                    // window.location.href = notify.ReturnLink;
+
+                }else{
+                    alert(result.DATA.DATA);
+                }
+            });
+        }
+    }
+
     $scope.checkNotificationBoxStatus = function () {
         if($scope.showNotificationBox){
             $scope.showNotificationBox = false;
@@ -208,6 +246,15 @@ app.controller('NotificationController', function($scope, NotificationFactory, I
         }
     }
 
+    $scope.checkLeaveNotificationBoxStatus = function () {
+        if($scope.showLeaveNotificationBox){
+            $scope.showLeaveNotificationBox = false;
+        }else{
+            $scope.showLeaveNotificationBox = true;
+        }
+    }
+
+    $scope.getLeaveNotifications($scope.$parent.currentUser.Email);
     $scope.getNotifications($scope.$parent.currentUser.RegionID, $scope.$parent.currentUser.GroupID, $scope.$parent.currentUser.UserID, false);
 
     // Loop for check new notification
@@ -219,7 +266,7 @@ app.controller('NotificationController', function($scope, NotificationFactory, I
         //}
         $scope.getNotifications($scope.$parent.currentUser.RegionID, $scope.$parent.currentUser.GroupID, $scope.$parent.currentUser.UserID, true);
         //console.log('complete interval check' );
-    },15000);
+    },30000);
 });
 
 app.controller('NotificationListController', function($scope, NotificationFactory, RegionFactory, IndexOverlayFactory) {
@@ -2553,7 +2600,7 @@ app.controller('LinkController', function($cookies, $scope, $uibModal, $routePar
     $scope.menu_selected = 'link';
 
     var $user_session = sessionStorage.getItem('user_session');
-    
+    console.log($user_session);
     if($user_session != null){
         $scope.$parent.currentUser = angular.fromJson($user_session);
         $scope.$parent.TotalLogin = sessionStorage.getItem('TotalLogin');
@@ -2567,6 +2614,15 @@ app.controller('LinkController', function($cookies, $scope, $uibModal, $routePar
             IndexOverlayFactory.overlayHide();
             if(result.data.STATUS == 'OK'){
                 $scope.DataList = result.data.DATA.DataList;
+                $scope.DataList.push({
+                    "LinkUrl": "http://172.23.10.224/MIS/web/#/thirdparty/authen/" + $scope.$parent.currentUser.Username + "/" + $scope.$parent.currentUser.LoginSession,
+                    "LinkIcon": "img/link/logo_mis.png",
+                    "LinkStatus": "Y",
+                    "CreateBy": 1442,
+                    "CreateDateTime": "2018-05-31 15:23:31",
+                    "LinkTopic": "ระบบ MIS (ใหม่)"
+                });
+                
                 if(result.data.Permission != null){
                     console.log("asdasd");
                     $scope.Permission = true;
@@ -4434,7 +4490,8 @@ app.controller('RuleController', function($cookies, $scope, $http, $uibModal, Up
                 'RuleTitle' : 'ข้อบังคับการพนักงาน'
                 ,'RuleContent' : 
                 [
-                    {'Content' : 'ข้อบังคับว่าด้วยค่าใช้จ่ายในการเดินทางไปปฏิบัติงาน ฉบับสมบูรณ์ (ล่าสุด 2560)','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=167'}
+                    {'Content' : 'ข้อบังคับ อ.ส.ค.ว่าด้วยค่าใช้จ่ายในการเดินทาง พ.ศ. 2561','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=212'}
+                    ,{'Content' : 'ข้อบังคับว่าด้วยค่าใช้จ่ายในการเดินทางไปปฏิบัติงาน ฉบับสมบูรณ์ (ล่าสุด 2560)','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=167'}
                     ,{'Content' : 'ข้อบังคับว่าด้วยการสงเคราะห์เกี่ยวกับการรักษาพยาบาล ฉบับสมบูรณ์ (ล่าสุด 2560)','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=166'}
                     ,{'Content' : 'ข้อบังคับว่าด้วยการพนักงาน ฉบับสมบูรณ์ (ล่าสุด 2560)','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=164'}
                     ,{'Content' : 'ข้อบังคับการพนักงาน ฉบับที่ 2 พ.ศ. 2555','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=8'}
@@ -4442,6 +4499,7 @@ app.controller('RuleController', function($cookies, $scope, $http, $uibModal, Up
                     ,{'Content' : 'ข้อบังคับการพนักงาน ฉบับที่ 3 พ.ศ. 2556','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=10'}
                     ,{'Content' : 'ข้อบังคับการพนักงาน ฉบับที่ 4 พ.ศ. 2558','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=11'}
                     ,{'Content' : 'ข้อบังคับการพนักงาน ฉบับที่ 5 พ.ศ. 2558','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=12'}
+                    ,{'Content' : 'สวัสดิการผู้ปฏิบัติงาน อ.ส.ค','Url' : 'https://sites.google.com/view/dpowelfare'}
                 ]
             }
             ,{
@@ -4468,6 +4526,37 @@ app.controller('RuleController', function($cookies, $scope, $http, $uibModal, Up
                 [
                     {'Content' : 'พระราชบัญญัติการจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=156'}
                 ]
+            }
+            ,{
+                'RuleTitle' : 'นโยบายด้านสารสนเทศ'
+                ,'RuleContent' : 
+                [
+                    {'Content' : 'นโยบายและแนวปฏิบัติ การรักษาความมั่นคงปลอดภัยสารสนเทศ สิงหาคม 2561','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=209'}
+                ]   
+            }
+            ,{
+                'RuleTitle' : 'คู่มือ อ.ส.ค.'
+                ,'RuleContent' : 
+                [
+                    {'Content' : 'การพัฒนาวัฒนธรรมองค์กรสู่ความเป็นเลิศ DPO Excellence Culture ประจำปี 2561','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=210'}
+                ]   
+            }
+            ,{
+                'RuleTitle' : 'นโยบายด้านทรัพยากรบุคคล'
+                ,'RuleContent' : 
+                [
+                    {'Content' : 'แผนแม่บทด้านทรัพยากรบุคคลประจำปี 2560-2564 ฉบับทบทวน ปี 2560 และแผนปฏิบัติการฯ ปี 2560','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=120'}
+                    ,{'Content' : 'แผนแม่บทด้านทรัพยากรบุคคล ประจำปี 2560-2564 ฉบับทบทวน ปี 2561 และ แผนปฏิบัติการฯ ปี 2561','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=198'}
+                    ,{'Content' : 'แผนแม่บทด้านทรัพยากรบุคคล ประจำปี 2560-2564 ฉบับทบทวน ปี 2562 และ แผนปฏิบัติการฯ ปี 2562','Url' : 'http://dp0rtal.dpo.go.th/index.php?option=com_attachments&task=download&id=211'}
+                ]   
+            }
+            ,{
+                'RuleTitle' : 'คู่มือการบริหารความเสี่ยง'
+                ,'RuleContent' : 
+                [
+                    {'Content' : 'คู่มือการบริหารความเสี่ยง ประจำปี พ.ศ. 2562','Url' : 'http://www.dpo.go.th/wp-content/uploads/2018/11/คู่มือการบริหารความเสี่ยง-ประจา-ปี-2562-.pdf'}
+                    ,{'Content' : 'แผนบริหารรความต่อเนื่องทางธุรกิจ (Business Continuity Plan BCP ) และแผนฟื้นฟูภัยพิบัติ(Disaster Recovery Plan  DRP) พ.ศ. 2561-2562','Url' : 'http://www.dpo.go.th/wp-content/uploads/2018/11/%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%9A%E0%B8%A3%E0%B8%AB%E0%B8%B4%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%95%E0%B9%88%E0%B8%AD%E0%B9%80%E0%B8%99%E0%B8%B7%E0%B9%88%E0%B8%AD%E0%B8%87%E0%B8%97%E0%B8%B2%E0%B8%87%E0%B8%98%E0%B8%B8%E0%B8%A3%E0%B8%81%E0%B8%B4%E0%B8%88-Business-Continuity-Plan-BCP-%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B9%81%E0%B8%9C%E0%B8%99%E0%B8%9F%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%9F%E0%B8%B9%E0%B8%A0%E0%B8%B1%E0%B8%A2%E0%B8%9E%E0%B8%B4%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4Disaster-Recovery-Plan-DRP2561-2562.pdf'}
+                ]   
             }
         ]
     };

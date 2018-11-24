@@ -15,7 +15,7 @@ return [
             'name' => 'slim-app',
             'path' => __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::INFO,
-            'maxFiles' => 90
+            'maxFiles' => 9999
         ],
         'db' => [
             //'driver' => 'sqlsrv',

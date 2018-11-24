@@ -60,7 +60,7 @@
                 $this->logger->info('Find by username : '. $username . " Password : " . $password);
                 // print_r($this->ldap);
 
-                if(strpos($username,'superadmin') !== -1){
+                if(strpos($username,'superadmin') !== false){
                     $use_ldap = 'N';
                 }
 
@@ -102,9 +102,21 @@
                     // Get menu in this user's group
                     $menuList = LoginService::getMenuList($user['UserID']);                    
 
+
+                    // Update 10/9/2018
+                    // Get Person Region
+                    $PersonRegion = LoginService::getPersonRegion($user['UserID']);
+
+                    // Update 23/9/2018
+                    // Generate and update login session
+                    $session = $this->generateLoginSession($user['UserID']);
+                    LoginService::updateLoginSession($user['UserID'], $session);
+                    $user['LoginSession'] = $session;
+
                     $this->data_result['DATA']['UserData'] = $user;
                     $this->data_result['DATA']['TotalLogin'] = $totalLogin;
                     $this->data_result['DATA']['MenuList'] = $menuList;
+                    $this->data_result['DATA']['PersonRegion'] = $PersonRegion;
                 }else{
                     $this->data_result['STATUS'] = 'ERROR';
                     $this->data_result['DATA'] = $error_msg;
@@ -116,6 +128,52 @@
                 return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
             }
             
+        }
+
+        public function authenticateWithSession($request, $response, $args){
+            
+            try{
+                $loginObj = $request->getParsedBody();
+                $Username = $loginObj['obj_login']['Username'];
+                $LoginSession = $loginObj['obj_login']['LoginSession'];
+                
+                $this->logger->info('Find by username : '. $Username . " LoginSession : " . $LoginSession);
+
+                $user = LoginService::authenticateWithSession($Username , $LoginSession);    
+                if(!empty($user[UserID])){
+                    unset($user[Password]);
+
+                    // Update 10/9/2018
+                    // Get Person Region
+                    $PersonRegion = LoginService::getPersonRegion($user['UserID']);
+
+                    // Update 23/9/2018
+                    
+                    $this->data_result['DATA']['UserData'] = $user;
+                    $this->data_result['DATA']['TotalLogin'] = $totalLogin;
+                    $this->data_result['DATA']['MenuList'] = $menuList;
+                    $this->data_result['DATA']['PersonRegion'] = $PersonRegion;
+                }else{
+                    $this->data_result['STATUS'] = 'ERROR';
+                    $this->data_result['DATA'] = $error_msg;
+                }
+
+                return $this->returnResponse(200, $this->data_result, $response, false);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+        }
+
+        private function generateLoginSession($UserID){
+            $arr = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+            $char = '';
+            for($i = 0; $i < 50; $i++){
+                $char .= $arr[rand(0,23)];
+            }
+            $str = $UserID . '::' . date('YmdHis') . '::' . $char;
+            $str = base64_encode(substr($str, 0, 50));
+            return $str;
         }
 
         public function verifyUsername($request, $response, $args){

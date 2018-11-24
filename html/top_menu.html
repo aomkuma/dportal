@@ -19,13 +19,19 @@
             <label style="font-weight: bolder; font-size: 1.3em;" class="blue_font_head">รู้และรับผิดชอบ ส่งมอบสิ่งที่มีคุณค่า พัฒนาอย่างต่อเนื่อง เน้นเรื่องธรรมาภิบาล</label>
         </div>
     </div>
-    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-    </div>
-    <div ng-controller="NotificationController" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 img-notify">
-        <a style="cursor: pointer;" uib-popover-template="'notificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkNotificationBoxStatus()">
-        <img class="" src="img/notification.png" ng-class="{'img-alert-unseen':totalNewNotifications > 0}" style="max-width: 80%;  margin-left:45%; margin-top: 15%; padding: 10px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
-        <span ng-show="totalNewNotifications > 0" style=" margin-left:70%; margin-top: -45%; position: absolute; font-weight: 800; color: red; font-size : 1.3em; width: 50px; text-align: center;">{{totalNewNotifications}}</span>
-        </a>
+    <div ng-controller="NotificationController" class="col-lg-2 col-md-2 col-sm-1 col-xs-1 img-notify">
+        <div class="col-lg-6 col-md-6">
+            <a style="cursor: pointer;" uib-popover-template="'leaveNotificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkLeaveNotificationBoxStatus()">
+            <img class="" src="img/paper.png" ng-class="{'img-alert-unseen':totalNewLeaveNotifications > 0}" style="max-width: 80%;  margin-left:70%; margin-top: 15%; padding: 0px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
+            <span ng-show="totalNewLeaveNotifications > 0" style=" margin-left:80%; margin-top: -50%; position: absolute; font-weight: 800; color: red; font-size : 1.3em; width: 50px; text-align: center;">{{totalNewLeaveNotifications}}</span>
+            </a>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <a style="cursor: pointer;" uib-popover-template="'notificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkNotificationBoxStatus()">
+            <img class="" src="img/notification.png" ng-class="{'img-alert-unseen':totalNewNotifications > 0}" style="max-width: 80%;  margin-left:45%; margin-top: 15%; padding: 0px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
+            <span ng-show="totalNewNotifications > 0" style=" margin-left:70%; margin-top: -45%; position: absolute; font-weight: 800; color: red; font-size : 1.3em; width: 50px; text-align: center;">{{totalNewNotifications}}</span>
+            </a>
+        </div>
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="vertical-align: middle; padding:0px; margin:0px;">
 
@@ -46,15 +52,23 @@
     </div>
 </div>
 <div class="row visible-sm visible-xs" style="background-color: #EFEFEF; padding-bottom: 10px;">
-    <div class="col-sm-5 col-xs-5">
+    <div class="col-sm-2 col-xs-2">
          <a href="#/"><img src="img/dpo_logo_only.png" style="max-width: 70%; padding: 5px;" /></a>
     </div>
-    <div class="col-sm-3 col-xs-3">
-        <div ng-controller="NotificationController" class="col-lg-1 col-md-1 col-sm-1 col-xs-1 img-notify">
-            <a style="cursor: pointer;" uib-popover-template="'notificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkNotificationBoxStatus()">
-            <img class="" src="img/notification.png" ng-class="{'img-alert-unseen':totalNewNotifications > 0}" style="max-width: 80px;  margin-left:0vh; margin-top: 0px; padding: 10px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
-            <span ng-show="totalNewNotifications > 0" style=" margin-left:2vh; margin-top: -45%; position: absolute; font-weight: 800; color: red; font-size : 1.5em; width: 50px; text-align: center;">{{totalNewNotifications}}</span>
-            </a>
+    <div class="col-sm-4 col-xs-4 col-sm-offset-2 col-xs-offset-2">
+        <div ng-controller="NotificationController" class="col-lg-2 col-md-2 col-sm-6 col-xs-6 img-notify">
+            <div class="col-sm-6 col-xs-6">
+                <a style="cursor: pointer;" uib-popover-template="'leaveNotificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkLeaveNotificationBoxStatus()">
+                <img class="" src="img/paper.png" ng-class="{'img-alert-unseen':totalNewLeaveNotifications > 0}" style="max-width: 80%;  margin-left:70%; margin-top: 15%; padding: 0px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
+                <span ng-show="totalNewLeaveNotifications > 0" style=" margin-left:80%; margin-top: -50%; position: absolute; font-weight: 800; color: red; font-size : 1.3em; width: 50px; text-align: center;">{{totalNewLeaveNotifications}}</span>
+                </a>
+            </div>
+            <div class="col-sm-6 col-xs-6">
+                <a style="cursor: pointer;" uib-popover-template="'notificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkNotificationBoxStatus()">
+                <img class="" src="img/notification.png" ng-class="{'img-alert-unseen':totalNewNotifications > 0}" style="max-width: 80%;  margin-left:45%; margin-top: 15%; padding: 0px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
+                <span ng-show="totalNewNotifications > 0" style=" margin-left:70%; margin-top: -45%; position: absolute; font-weight: 800; color: red; font-size : 1.3em; width: 50px; text-align: center;">{{totalNewNotifications}}</span>
+                </a>
+            </div>
         </div>
     </div>
     <div class="col-sm-4 col-xs-4" style="vertical-align: middle; padding:0px; margin:0px;">
@@ -171,12 +185,29 @@
         <hr>
     </div>
     <div class="row" style="max-height: 500px; overflow-y: auto;"  scrolly="getNotifications($parent.currentUser.RegionID , $parent.currentUser.GroupID, $parent.currentUser.UserID, false)">
-    <div class="col-lg-12" ng-class="{'div-notification-unseen':notify.NotificationStatus=='Unseen'}" ng-repeat="notify in NotificationList">
+    <div class="col-lg-12" ng-class="{'div-notification-unseen':notify.NotificationStatus=='Unseen' , 'div-notification-unseen-conference':notify.NotificationStatus=='Unseen' && (notify.NotificationType =='6'||notify.NotificationType =='7' || notify.NotificationType =='8') }" ng-repeat="notify in NotificationList">
         <a ng-click="updateAndGotoPage($index, notify)" ng-bind-html="notify.NotificationText | htmlToPlaintext"></a><br>
         <span class="text-muted" style="font-size: 0.8em;">เมื่อ {{reFormatDate(notify.PushDateTime)}}</span>
         <hr>
     </div>
     <div class="col-lg-12" ng-show="NotificationList == null || NotificationList.length == 0"> 
+        ยังไม่มีรายการแจ้งเตือน
+    </div>
+    </div>
+</script>
+<script type="text/ng-template" id="leaveNotificationTemplate.html">
+    <div>
+        <h3>แจ้งเตือนการลา</h3>
+        
+        <hr>
+    </div>
+    <div class="row" style="max-height: 500px; overflow-y: auto;">
+    <div class="col-lg-12" ng-class="{'div-notification-unseen':notify.ViewStatus=='unseen'}" ng-repeat="notify in LeaveNotificationList">
+        <a href="{{notify.ReturnLink}}" ng-click="updateAndGotoLeavePage($index, notify)" ng-bind-html="notify.Messages | htmlToPlaintext" target="_blank"></a><br>
+        <span class="text-muted" style="font-size: 0.8em;">เมื่อ {{reFormatDate(notify.NorifyDatetime)}}</span>
+        <hr>
+    </div>
+    <div class="col-lg-12" ng-show="LeaveNotificationList == null || LeaveNotificationList.length == 0"> 
         ยังไม่มีรายการแจ้งเตือน
     </div>
     </div>
@@ -192,41 +223,63 @@
             </div>
         </div>
     </div>
+
     <div class="modal-body">
-       <div class="row">
-            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">พื้นที่</label>
-            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.RegionName}}" ng-disabled="true"></div>
-            
-       </div>
-       <div class="row">
-            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">หน่วยงาน</label>
-            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.orgName}}" ng-disabled="true"></div>
-       </div>
-       <div class="row">
-            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ชื่อ - สกุล</label>
-            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.FirstName + ' ' + Contact.LastName}}"></div>
-       </div>
-       <div class="row">
-            <label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">อีเมล</label>
-            <div class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.Email}}"></div>
-       </div>
-       <div class="row">
-            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โต๊ะ</label>
-            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.InternalContact"></div>
-        </div>
-       <div class="row">
-            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โทรศัพท์</label>
-            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Tel"></div>
-        </div>
-        <div class="row">
-            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">แฟกซ์</label>
-            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Fax"></div>
-        </div>
-       <div class="row">
-            <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">มือถือ</label>
-            <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Mobile"></div>
-        </div>
-       
+        <uib-tabset active="activeJustified" justified="true">
+            <uib-tab index="0" heading="ข้อมูลส่วนตัว">
+                <br><br>
+               <div class="row">
+                    <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">พื้นที่</label>
+                    <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.RegionName}}" ng-disabled="true"></div>
+                    
+               </div>
+               <div class="row">
+                    <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">หน่วยงาน</label>
+                    <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" value="{{Contact.orgName}}" ng-disabled="true"></div>
+               </div>
+               <div class="row">
+                    <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">ชื่อ - สกุล</label>
+                    <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.FirstName + ' ' + Contact.LastName}}"></div>
+               </div>
+               <div class="row">
+                    <label class="col-lg-3  col-sm-5 col-xs-12 form-control-static">อีเมล</label>
+                    <div class="col-lg-9  col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-disabled="true" value="{{Contact.Email}}"></div>
+               </div>
+               <div class="row">
+                    <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โต๊ะ</label>
+                    <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.InternalContact"></div>
+                </div>
+               <div class="row">
+                    <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">เบอร์โทรศัพท์</label>
+                    <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Tel"></div>
+                </div>
+                <div class="row">
+                    <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">แฟกซ์</label>
+                    <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Fax"></div>
+                </div>
+               <div class="row">
+                    <label class="col-lg-3 col-sm-5 col-xs-12 form-control-static">มือถือ</label>
+                    <div class="col-lg-9 col-sm-7 col-xs-12 form-control-static" style="font-weight: lighter;"><input class="form-control" ng-model="Contact.Mobile"></div>
+                </div>
+            </uib-tab>
+            <uib-tab index="1" heading="รายละเอียดวันลาคงเหลือ">
+                <br><br>
+                <table class="table table-striped table-borderd">
+                    <tr>
+                        <th>ประเภทวันลา</th>
+                        <th>วันลาคงเหลือ</th>
+                        <th>วันลาที่ใช้ไป</th>
+                    </tr>
+                    <tbody>
+                        <tr ng-repeat="data in LeaveList">
+                            <td>{{data.entityLeaveperyear.leaveType.leaveTypeName}}</td>
+                            <td>{{data.leaveQuotaDay}}</td>
+                            <td>{{data.useQuotaDay}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </uib-tab>
+        </uib-tabset>
     </div>
     <div class="modal-footer">
     <button class="btn btn-default" ng-click="ok(Contact)">Confirm</button>
@@ -266,6 +319,10 @@
      }
      .div-notification-unseen{
         background-color: #E2F7FF;
+        padding-top:10px ;
+     }
+     .div-notification-unseen-conference{
+        background-color: #FFE4F7;
         padding-top:10px ;
      }
      .menu_selected a:visited {

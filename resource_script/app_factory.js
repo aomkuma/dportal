@@ -187,6 +187,53 @@ app.factory('HomeFactory', ['$http', '$q', function($http, $q){
     }
 }]);
 
+app.factory('LOMSFactory', ['$http', '$q', function($http, $q){
+    return {
+        getData : function(email) {
+            return $http.get(LOMSUrl + email)
+                .then(
+                    function(response){
+                        // console.log(response.data);
+                        return returnResponse(response);
+                    }, 
+                    function(errResponse){
+                        return returnErrorResponse(errResponse);
+                    }
+                );
+        },
+
+        getNotificationList : function(email, offset) {
+            return $http.get(servicesUrl + '/dpo/public/leaves/notification/get/' + email)
+                .then(
+                    function(response){
+                        // console.log(response.data);
+                        return returnResponse(response);
+                    }, 
+                    function(errResponse){
+                        //return returnErrorResponse(errResponse);
+                        return errResponse;
+                    }
+                );
+        },
+
+        updateNotificationStatus : function(ID, email) {           
+            return $http.post(servicesUrl + '/dpo/public/leaves/notification/update/seen/' , 
+                    {'ID':ID, 'email':email}
+                )
+                .then(
+                    function(response){
+                        // console.log(response.data);
+                        return returnResponse(response);
+                    }, 
+                    function(errResponse){
+                        return returnErrorResponse(errResponse);
+                    }
+                );
+        }
+
+    }
+}]);
+
 app.factory('NotificationFactory', ['$http', '$q', function($http, $q){
     return {
         getNotificationList : function(regionID, groupID, userID, offset) {

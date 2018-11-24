@@ -486,7 +486,7 @@
 				}
 				
 				NotificationService::pushNotification($notification);
-				/*
+				
 				// Send mail	
 				$mailer = new Mailer;
                 $mailer->setSubject("DPO :: แจ้งยืนยันการใช้ห้องประชุม " . $RoomInfo['RoomName'] . " พื้นที่ " . $RoomInfo['region_name'] );
@@ -566,7 +566,7 @@
 	                }
 
                 }
-				*/
+				
                 // Update notification seen
                 $NotificationTypeList = [1,6];
                 NotificationService::updateNotificationSeenData($ReserveRoomID, $NotificationTypeList);

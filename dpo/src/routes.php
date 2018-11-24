@@ -12,6 +12,7 @@ $app->post('/verifyUsername/', 'LoginController:verifyUsername');
 $app->post('/requestOTP/', 'LoginController:requestOTP');
 $app->post('/verifyOTP/', 'LoginController:verifyOTP');
 $app->post('/changePassword/', 'LoginController:changePassword');
+$app->post('/login/thirdparty/session/', 'LoginController:authenticateWithSession');
 
 // Phone Book action
 $app->get('/getPhoneBookList/{Group}/{Username}/{offset}/{RegionID}/{DepartmentID}/{LoginUserID}', 'UserController:getPhoneBookList');
@@ -163,10 +164,10 @@ $app->get('/getReserveCartypeList/', 'CarReserveController:getReserveCartypeList
 $app->get('/getCarsInRegion/{regionID}/{findDate}', 'CarReserveController:getCarsInRegion');
 
 // eHr action
-$app->post('/eHrUpdateDepartment/', 'EHRController:eHrUpdateDepartment');
-$app->post('/eHrUpdateOffice/', 'EHRController:eHrUpdateOffice');
-$app->post('/eHrUpdateDivision/', 'EHRController:eHrUpdateDivision');
-$app->post('/eHrUpdateStaff/', 'EHRController:eHrUpdateStaff');
+$app->get('/eHrUpdateDepartment/', 'EHRController:eHrUpdateDepartment');
+$app->get('/eHrUpdateOffice/', 'EHRController:eHrUpdateOffice');
+$app->get('/eHrUpdateDivision/', 'EHRController:eHrUpdateDivision');
+$app->get('/eHrUpdateStaff/', 'EHRController:eHrUpdateStaff');
 $app->get('/testMail/', 'EHRController:testMail');
 
 // Permission action
@@ -190,6 +191,15 @@ $app->post('/saveSettingManageList/', 'SystemManageController:saveSettingManageL
 
 $app->post('/person-region/get/', 'PersonRegionController:getPersonRegionList');
 $app->post('/person-region/update/', 'PersonRegionController:updatePersonRegion');
+
+// MIS Request
+$app->post('/mis/list/user/', 'UserController:getMISUserInfoList');
+$app->post('/mis/get/user/', 'UserController:getMISUserInfo');
+
+// LOMS Request
+$app->post('/leaves/notification/put/', 'LeaveController:putNotification');
+$app->get('/leaves/notification/get/{email}', 'LeaveController:getNotification');
+$app->post('/leaves/notification/update/seen/', 'LeaveController:updateSeenNotification');
 
 // Default action
 $app->get('/[{name}]', function ($request, $response, $args) {

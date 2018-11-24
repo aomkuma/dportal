@@ -1,0 +1,1 @@
+ALTER TABLE `tbl_account` ADD `LoginSession` VARCHAR(255) NOT NULL AFTER `DataID`, ADD INDEX (`LoginSession`);

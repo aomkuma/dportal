@@ -139,6 +139,60 @@
             }
             
         }
+
+        public function getMISUserInfoList($request, $response, $args){
+            try{
+
+                $parsedBody = $request->getParsedBody();
+                $Username = $parsedBody['obj_login']['Username']; 
+                //$this->logger->info('Find by id : '.$id);
+                $user = UserService::getMISUserInfoList($Username);
+                $this->data_result['DATA']['MISUserList'] = $user;
+                return $this->returnResponse(200, $this->data_result, $response);
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+
+        }
+
+        public function getMISUserInfo($request, $response, $args){
+            try{
+                error_reporting(E_ERROR);
+                error_reporting(E_ALL);
+                ini_set('display_errors','On');
+                $parsedBody = $request->getParsedBody();
+                $UserID = $parsedBody['obj_login']['UserID'];
+                //$this->logger->info('Find by id : '.$id);
+                $user = UserService::getMISUserInfo($UserID);
+                // Find office, division, department
+                $group = UserService::getGroup($user->GroupID);
+                // print_r($user);exit;
+                if($group->GroupType == 'OFFICE'){
+                    $user['Office'] = $group->GroupName;
+                }
+                else if($group->GroupType == 'DEVISION'){
+                    $user['Division'] = $group->GroupName;
+                    // find Office
+                    $OfficeGroup = UserService::getGroupByOrgID($group->UpperOrgID);
+                    $user['Office'] = $OfficeGroup->GroupName;
+                }
+                else if($group->GroupType == 'DEPARTMENT'){
+                    $user['Department'] = $group->GroupName;
+                    // find Division
+                    $DivisionGroup = UserService::getGroupByOrgID($group->UpperOrgID);
+                    $user['Division'] = $DivisionGroup->GroupName;
+                    // find Office
+                    $OfficeGroup = UserService::getGroupByOrgID($DivisionGroup->UpperOrgID);
+                    $user['Office'] = $OfficeGroup->GroupName;
+                }
+
+                $this->data_result['DATA']['MISUser'] = $user;
+                return $this->returnResponse(200, $this->data_result, $response);
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+
+        }
         
     }
 
