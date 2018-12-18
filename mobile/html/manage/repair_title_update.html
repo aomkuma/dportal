@@ -1,0 +1,90 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row form-group" style="overflow-x: hidden; padding-bottom: 0vh;">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>จัดการงานซ่อม</h2></div></div>
+		</div>
+	</div>
+</div>
+<div class="row" style="padding-bottom: 10vh; ">
+	<div class="col-lg-12">
+		<div class="page-header">
+			<h3>ประเภทงานซ่อม > หัวข้องานซ่อม</h3>
+		</div>
+	</div>
+	<div class="col-lg-12" ng-form name="updateForm">
+		<div class="row form-group">
+			<label class="col-lg-2 form-control-static">
+			หัวข้อแจ้งซ่อม
+			</label>
+			<div class="col-lg-4">
+				<input class="form-control" ng-model="Data.RepairedTitleName" ng-class="{required_field: Data.RepairedTitleName == ''}" ng-required="Data.RepairedTitleName == ''">
+			</div>
+			<label class="col-lg-2 form-control-static">
+			รหัสแจ้งซ่อม
+			</label>
+			<div class="col-lg-2">
+				<input class="form-control" ng-model="Data.RepairedTitleCode" ng-class="{required_field: Data.RepairedTitleCode == ''}" ng-required="Data.RepairedTitleCode == ''" maxlength="5">
+			</div>
+			
+		</div>
+		<div class="row form-group">
+			<label class="col-lg-2 form-control-static">
+				ฝ่ายที่รับผิดชอบ
+			</label>
+			<div class="col-lg-4">
+				<select class="form-control" ng-model="Data.DepartmentID" ng-options="dep.orgID as dep.orgName for dep in DepartmentList" ng-class="{required_field: Data.DepartmentID == ''}" ng-required="Data.DepartmentID == ''">
+					<option value="">กรุณาเลือก</option>
+				</select>
+			</div>
+			<label class="col-lg-2 form-control-static">
+			สถานะ
+			</label>
+			<div class="col-lg-4">
+				<div class="btn-group">
+                    <label class="btn btn-default btn-checkbox" ng-model="Data.ActiveStatus" uib-btn-radio="'Y'">ใช้งาน</label>
+                    <label class="btn btn-default btn-checkbox" ng-model="Data.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้งาน</label>
+                </div>
+			</div>
+			
+		</div>
+	</div>
+	<div class="col-lg-12">
+		<div class="page-header obj_center">
+			<a class="btn btn-default" href="#/manage_repair_type/{{Data.RepairedTypeID}}"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</a>
+            <button class="btn btn-primary" ng-click="updateData(Data)" ng-disabled="!updateForm.$valid"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>
+		</div>
+	</div>
+	<div class="col-lg-10 col-lg-offset-1" ng-show="Data.repair_issue != null">
+		<div class="table-responsive">
+			<caption>
+				<h3>ปัญหางานซ่อม</h3>
+				<a role="button" class="btn btn-primary" href="#/manage_repair_issue/{{Data.RepairedTypeID}}/{{Data.RepairedTitleID}}"><span class="glyphicon glyphicon-plus"></span> เพิ่มปัญหางานซ่อม</a>
+			</caption>
+        	<table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 15vh;">#</th>
+                        <th>ปัญหางานซ่อม</th>
+                        <th>สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	<tr ng-repeat="data in Data.repair_issue">
+                        <td>
+                            <a role="button" class="btn btn-primary btn-sm " href="#/manage_repair_issue/{{Data.RepairedTypeID}}/{{data.RepairedTitleID}}/{{data.RepairedIssueID}}"><span class="glyphicon glyphicon-edit"></span></a>
+                            <!--<button type="button" class="btn btn-danger btn-sm " ng-click="confirmDelete($index, data.RepairedIssueID)"><span class="glyphicon glyphicon-trash"></span></button>-->
+                        </td>
+                        <td>{{data.RepairedIssueName}}</td>
+                        <td>
+                        	<span class="glyphicon glyphicon-check" ng-show="data.ActiveStatus == 'Y'"></span>
+                            <span class="glyphicon glyphicon-remove" ng-show="data.ActiveStatus == 'N'"></span>
+                        </td>
+                   	</tr>
+                </tbody>
+            </table>
+        </div>
+	</div>
+	
+</div>
+<div ng-include src="'html/footer.html'"></div>

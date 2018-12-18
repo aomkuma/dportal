@@ -1,0 +1,1 @@
+[2018-12-18 05:35:51] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => room/monitor/ : FROM => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15 [] {"uid":"90dc6e1"}

@@ -1,0 +1,138 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row form-group">
+	<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>ตั้งค่า</h2></div></div>
+</div>
+<form name="form">
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12  col-lg-offset-3 col-md-offset-3">
+			
+			<div class="panel panel-info">
+		      <div class="panel-heading"><h4><b>Active Directory</b></h4></div>
+		      <div class="panel-body">
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Host </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.AD.AD_HOST" required /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Port </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.AD.AD_PORT" required /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Principal </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.AD.AD_PRINCIPAL" required /></div>
+		        </div>
+		        <div class="row form-group text-center">
+		            <button type="button" class="btn btn-primary" ng-click="saveSettings(Data)" ng-disabled="form.$invalid"> บันทึก</button>
+		            
+		        </div>
+		      </div>
+		    </div>
+			
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12  col-lg-offset-3 col-md-offset-3">
+			
+			<div class="panel panel-default">
+		      <div class="panel-heading"><h4><b>SMS Gateway</b></h4></div>
+		      <div class="panel-body">
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">From </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.SMS.SMS_FROM" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">URL </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.SMS.SMS_ENDPOINT" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Username </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.SMS.SMS_USERNAME" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Password </label>
+		            <div class="col-lg-9"><input type="password" class="form-control" ng-model="Data.SMS.SMS_PASSWORD" /></div>
+		        </div>
+		        <div class="row form-group text-center">
+		            <button type="button" class="btn btn-primary" ng-click="saveSettings(Data)" ng-disabled="form.$invalid"> บันทึก</button>
+		            
+		        </div>
+		      </div>
+		    </div>
+			
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12  col-lg-offset-3 col-md-offset-3">
+		
+			<div class="panel panel-warning">
+		      <div class="panel-heading"><h4><b>E-mail</b></h4></div>
+		      <div class="panel-body">
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Host </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.MAIL.MAIL_HOST" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Port </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.MAIL.MAIL_PORT" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Username </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.MAIL.MAIL_USERNAME" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Password </label>
+		            <div class="col-lg-9"><input type="password" class="form-control" ng-model="Data.MAIL.MAIL_PASSWORD" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">From Email </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.MAIL.MAIL_FROM" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">From Name </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.MAIL.MAIL_FROMNAME" /></div>
+		        </div>
+		        <div class="row form-group text-center">
+		            <button type="button" class="btn btn-primary" ng-click="saveSettings(Data)" ng-disabled="form.$invalid"> บันทึก</button>
+		            
+		        </div>
+		      </div>
+		    </div>
+		
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12  col-lg-offset-3 col-md-offset-3">
+			
+			<div class="panel panel-danger">
+		      <div class="panel-heading"><h4><b>e-Hr</b></h4></div>
+		      <div class="panel-body">
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Department URL </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.EHR.EHR_DEPARTMENT" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Division URL </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.EHR.EHR_DIVISION" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Office URL </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.EHR.EHR_OFFICE" /></div>
+		        </div>
+		        <div class="row form-group">
+		            <label class="col-lg-3 form-control-static" for="RegionName">Staff URL </label>
+		            <div class="col-lg-9"><input class="form-control" ng-model="Data.EHR.EHR_STAFF" /></div>
+		        </div>
+		        <div class="row form-group text-center">
+		            <button type="button" class="btn btn-primary" ng-click="saveSettings(Data)" ng-disabled="form.$invalid"> บันทึก</button>
+		            
+		        </div>
+		      </div>
+		    </div>
+			
+		</div>
+	</div>
+</form>
+<div class="page-header"></div>
+<div ng-include src="'html/footer.html'"></div>

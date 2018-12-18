@@ -17,6 +17,20 @@
     use Illuminate\Database\Capsule\Manager as DB;
     
     class RoomReserveService {
+
+        public  static function getRoomMonitor($RoomID, $CurDate){
+            return RoomReserve::select("StartDateTime"
+                                        , "EndDateTime"
+                                        , "TopicConference"
+                                    )
+                                // ->join('ROOM', 'ROOM.RoomID', '=', 'RESERVE_ROOM.RoomID')
+                                ->where('ReserveStatus', 'Approve')
+                                // ->where('RegionID', $RegionID)
+                                ->where('RoomID', $RoomID)
+                                ->where(DB::raw("DATE_FORMAT(StartDateTime, '%Y-%m-%d')"), '<=', $CurDate)
+                                ->where(DB::raw("DATE_FORMAT(EndDateTime, '%Y-%m-%d')"), '>=', $CurDate)
+                                ->get();
+        }
         
         public static function getReservListByRoomAndDay($roomID, $day){
             //return RoomReserve::join('ROOM','RESERVE_ROOM.RoomID','=','ROOM.RoomID')->where('RESERVE_ROOM.RoomID', $roomID)

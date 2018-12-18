@@ -4613,3 +4613,32 @@ app.controller('PersonRegionController', function($cookies, $scope, $http, $uibM
 
     IndexOverlayFactory.overlayHide();
 });
+
+app.controller('RoomMonitorController', function($cookies, $scope, $http, $uibModal, $routeParams, HTTPFactory, IndexOverlayFactory) {
+    IndexOverlayFactory.overlayShow();
+    
+    $scope.RegionID = $routeParams.region_id;
+    $scope.loadRoomMonitorList = function(action, data){
+        var params = {'RegionID' : $scope.RegionID, 'CurDate' : new Date()};
+        HTTPFactory.clientRequest('room/monitor', params).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.DataList = result.data.DATA.DataList;
+                $scope.RegionData = result.data.DATA.RegionData;
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
+    $scope.getTime = function(dateTime){
+        return dateTime.split(' ')[1].substring(0,5);
+    }
+
+    $scope.CurDateStr = convertDateToFullThaiDateIgnoreTime(new Date());
+    $scope.loadRoomMonitorList();
+
+    setInterval(function(){
+        $scope.loadRoomMonitorList();
+    },3600000);
+    
+});
+

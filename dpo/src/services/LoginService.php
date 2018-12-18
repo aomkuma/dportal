@@ -55,6 +55,22 @@
                     ->where('Username', $username)
                     ->where('LoginSession', $loginSession)
                     ->first();      
+        }      
+
+        public static function authenticateWithPIN($userID, $pin){
+            return User::select("ACCOUNT.*"
+                        ,"ACCOUNT.PositionName" 
+                        ,"REGION.RegionName" 
+                        ,DB::raw("g1.OrgName AS OrgName")
+                        ,DB::raw("g2.OrgName AS UpperOrgName")
+                    )
+                    //->join("POSITION","POSITION.PositionID", "=", "ACCOUNT.PositionID")
+                    ->join("REGION","REGION.RegionID", "=", "ACCOUNT.RegionID")
+                    ->leftJoin(DB::raw("TBL_GROUP g1"), DB::raw("g1.OrgID"), "=", "ACCOUNT.OrgID")
+                    ->leftJoin(DB::raw("TBL_GROUP g2"), DB::raw("g1.UpperOrgID"), "=", DB::raw("g2.OrgID"))
+                    ->where('PinID', $pin)
+                    ->where('UserID', $userID)
+                    ->first();      
         }                
 
         public static function verifyUsername($username){
@@ -64,6 +80,11 @@
 
         public static function getMobilePhoneNumber($username){
             return User::where('Username', $username)->first();
+        }
+
+        public static function findDuplicatePin($UserID, $PinID){
+            $user = User::where('Username', '<>', $UserID)->where('PinID', $PinID)->first();
+            return (!empty($user));
         }
 
         public static function generateOTP(){
@@ -107,6 +128,13 @@
         public static function updatePassword($username, $newPassword){
             $user = User::where('Username', $username)->first();
             $user->Password = $newPassword;
+            return $user->save();
+            //return $otpObj;
+        }
+
+        public static function updatePin($UserID, $PinID){
+            $user = User::find($UserID);
+            $user->PinID = $PinID;
             return $user->save();
             //return $otpObj;
         }

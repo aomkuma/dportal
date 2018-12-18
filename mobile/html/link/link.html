@@ -1,0 +1,38 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row form-group" style="overflow-x: hidden; padding-bottom: 0vh;">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>เชื่อมโยงระบบ</h2></div></div>
+		</div>
+		<div class="row" style="padding-bottom: 10vh; ">
+			<div class="col-lg-12">
+				
+				<div class="row">
+					<div class="col-lg-3 col-sm-3 col-xs-12" ng-repeat="data in DataList" style="border: 1px #ccc solid; padding: 1vh; height: 90px; margin: 10px;">
+						
+						<div class="row">
+							<div class="col-lg-1 col-xs-1">
+								
+							</div>
+							<div class="col-lg-10">
+								<a target="_blank" href="{{ (data.LinkUrl.startsWith('http://') || data.LinkUrl.startsWith('https://'))?data.LinkUrl:'http://' + data.LinkUrl }}">
+									<div class="col-lg-12 col-xs-12  obj_center">
+										<img ng-src="{{data.LinkIcon}}" style="height: 35px; width: auto;" />
+									</div>
+						            <div class="col-lg-12 col-xs-12 obj_center">
+						            	
+						            		<b ng-bind-html="data.LinkTopic | cut:true:80:' ...'"></b>
+						            	
+						            </div>
+						        </a>
+						    </div>
+						</div>
+						
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>

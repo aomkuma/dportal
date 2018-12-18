@@ -81,7 +81,7 @@
                             // Update current password
                             $update_pass_result = LoginService::updatePassword($username , $password);   
                         }else{
-                            $error_msg .= " in this system";    
+                            $error_msg .= " Cannot find this user in this system";    
                         }
                     }else{
                         $error_msg .= $ad_result;
@@ -140,6 +140,85 @@
                 $this->logger->info('Find by username : '. $Username . " LoginSession : " . $LoginSession);
 
                 $user = LoginService::authenticateWithSession($Username , $LoginSession);    
+                if(!empty($user[UserID])){
+                    unset($user[Password]);
+
+                    // Update 10/9/2018
+                    // Get Person Region
+                    $PersonRegion = LoginService::getPersonRegion($user['UserID']);
+
+                    // Update 23/9/2018
+                    
+                    $this->data_result['DATA']['UserData'] = $user;
+                    $this->data_result['DATA']['TotalLogin'] = $totalLogin;
+                    $this->data_result['DATA']['MenuList'] = $menuList;
+                    $this->data_result['DATA']['PersonRegion'] = $PersonRegion;
+                }else{
+                    $this->data_result['STATUS'] = 'ERROR';
+                    $this->data_result['DATA'] = $error_msg;
+                }
+
+                return $this->returnResponse(200, $this->data_result, $response, false);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+        }
+
+        public function authenticateWithPIN($request, $response, $args){
+            
+            try{
+                $loginObj = $request->getParsedBody();
+                $UserID = $loginObj['obj_login']['UserID'];
+                $PinID = $loginObj['obj_login']['PinID'];
+                
+                $this->logger->info('Find by pin : '. $PinID);
+
+                $user = LoginService::authenticateWithPIN($UserID, $PinID);    
+                if(!empty($user[UserID])){
+                    unset($user[Password]);
+
+                    // Update 10/9/2018
+                    // Get Person Region
+                    $PersonRegion = LoginService::getPersonRegion($user['UserID']);
+
+                    // Update 23/9/2018
+                    
+                    $this->data_result['DATA']['UserData'] = $user;
+                    $this->data_result['DATA']['TotalLogin'] = $totalLogin;
+                    $this->data_result['DATA']['MenuList'] = $menuList;
+                    $this->data_result['DATA']['PersonRegion'] = $PersonRegion;
+                }else{
+                    $this->data_result['STATUS'] = 'ERROR';
+                    $this->data_result['DATA'] = 'ไม่พบผู้ใช้งานนี้';
+                }
+
+                return $this->returnResponse(200, $this->data_result, $response, false);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+        }
+
+        public function pinSetting($request, $response, $args){
+            
+            try{
+                $loginObj = $request->getParsedBody();
+                $obj_setting = $loginObj['obj_setting'];
+                $PinID = $obj_setting['PinID'];
+                $UserID = $obj_setting['UserID'];
+
+                // find Duplicate pin
+                // $dup = LoginService::findDuplicatePin($UserID, $PinID);  
+                // if($dup){
+                //     $this->data_result['STATUS'] = 'ERROR';
+                //     $this->data_result['DATA'] = '';
+                //     return $this->returnResponse(200, $this->data_result, $response, false);
+                //     exit();
+                // }
+                LoginService::updatePin($UserID, $PinID);  
+
+                $user = LoginService::authenticateWithPIN($PinID);  
                 if(!empty($user[UserID])){
                     unset($user[Password]);
 

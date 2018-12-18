@@ -7,6 +7,8 @@
     use App\Service\RoomReserveService;
     use App\Service\NotificationService;
     use App\Service\UserService;
+    use App\Service\RegionService;
+    
     use App\Controller\Mailer;
     use App\Controller\SMS;
 
@@ -19,6 +21,36 @@
             $this->logger = $logger;
             $this->db = $db;
             $this->sms = $sms;
+        }
+
+        public function getRoomMonitor($request, $response, $args){
+        	try{
+        		$parsedBody = $request->getParsedBody();
+                $RegionID = $parsedBody['RegionID'];
+                $CurDate = substr($parsedBody['CurDate'], 0, 10);//str_replace('T', ' ', $parsedBody['CurDate']); // // $CurDate = substr($CurDate, 0, 19);
+                
+                // Get room list
+                $RoomList = RoomService::getAllRoomInRegion($RegionID);
+                $DataList = [];
+                foreach ($RoomList as $key => $value) {
+                	$RoomID = $value['RoomID'];
+                	$arr = [];
+                	$arr['Room'] = $value['RoomName'];
+                	$data = RoomReserveService::getRoomMonitor($RoomID, $CurDate);
+                	$arr['Reserve'] = $data;
+                	array_push($DataList, $arr);
+                }
+                
+                $RegionData = RegionService::getRegion($RegionID);
+                
+                $this->data_result['DATA']['RegionData'] = $RegionData;
+                $this->data_result['DATA']['DataList'] = $DataList;
+                
+                return $this->returnResponse(200, $this->data_result, $response);
+
+        	}catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
         }
         
         public function getRoomBookingList($request, $response, $args){

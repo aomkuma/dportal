@@ -1,0 +1,1 @@
+[2018-12-10 18:48:32] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/list/user/ : FROM => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15 [] {"uid":"3d2ef77"}

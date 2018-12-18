@@ -1,0 +1,262 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div  ng-show="showPage == 'MAIN'" class="row form-group scrollable-default" style="max-height:78vh; overflow-y: auto;  padding-bottom: 10vh;" scrolly="loadList()">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>จัดการห้องประชุม</h2></div></div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="table-responsive">
+					<caption class=""><button class="btn btn-primary pull-left" ng-click="showUpdatePage(-1, null)"><span class="glyphicon glyphicon-plus"></span> เพิ่มห้องประชุม</button></caption>
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>แก้ไข / ลบ</th>
+								<th>ห้องประชุม</th>
+								<th>พื้นที่</th>
+								<th>จำนวนที่รองรับ</th>
+								<th>สถานะ</th>
+								<th>บันทึกข้อมูลโดย</th>
+								
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in DataList">
+								<td>
+									<button type="button" class="btn btn-primary btn-sm " ng-click="showUpdatePage($index, data)"><span class="glyphicon glyphicon-edit"></span></button>
+									<!--<button type="button" class="btn btn-danger btn-sm " ng-click="confirmDelete($index, data.RoomID)"><span class="glyphicon glyphicon-trash"></span></button>-->
+								</td>
+								<td>
+									{{data.RoomName}}
+								</td>
+								<td>
+									{{data.RegionName}}
+								</td>
+								<td>
+									{{data.SeatAmount}}
+								</td>
+								<td>
+									<img src="img/checked.png" ng-show="data.ActiveStatus == 'Y'" style="width: 20px;" />
+                                    <img src="img/unchecked.png" ng-show="data.ActiveStatus == 'N'" style="width: 20px;" />
+								</td>
+								<td>
+									{{data.room_admin_firstname + ' ' + data.room_admin_lastname}}
+								</td>
+								
+							</tr>
+						</tbody>
+					</table>
+					<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-show="showPage == 'UPDATE'" class="row scrollable-default" style="max-height:100%; overflow-y: auto; padding-bottom: 10vh;" ng-form="updateForm">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;">
+				<div id='content'>
+					<h2 class='topic' ng-show="Room.RoomID == ''">เพิ่มห้องประชุม</h2>
+					<h2 class='topic' ng-show="Room.RoomID != ''">แก้ไขห้องประชุม</h2>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+
+			<div class="panel panel-info" style="width: 100%; margin-top: -20px;">
+				<div class="panel-heading">
+					<h4><b>ข้อมูลห้องประชุม</b></h4>
+				</div>
+				<div class="panel-body">
+					<div class="col-lg-7">
+						
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							พื้นที่
+							</label>
+							<div class="col-lg-10">
+								<select class="form-control" ng-model="Room.RegionID" ng-options="region.RegionID as region.RegionName for region in RegionList" required="true" ng-class="{required_field:Room.RegionID==''}">
+							    </select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							ห้อง
+							</label>
+							<div class="col-lg-10">
+								<input class="form-control" ng-model="Room.RoomName" required="true" ng-class="{required_field:Room.RoomName==''}">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							รายละเอียดห้อง
+							</label>
+							<div class="col-lg-10">
+								<textarea  class="form-control" ng-model="Room.RoomDescription"></textarea>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							จำนวนที่นั่ง
+							</label>
+							<div class="col-lg-5">
+								<input type="number" class="form-control" ng-model="Room.SeatAmount" required="true" ng-class="{required_field:Room.SeatAmount==''}" min="0">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							รูปภาพ
+							<br>
+                                (.png,.jpg,.raw ขนาดไม่เกิน 5 MB)
+							</label>
+							<div class="col-lg-5">
+								<div class="btn btn-default" ngf-select ng-model="fileimg" name="fileimg" accept="image/*" ngf-max-size="5MB" ngf-pattern="'.png,.jpg,.raw'" ngf-model-invalid="invalidMainImgFile">Select Picture</div>
+							</div>
+							<div class="col-lg-3">
+                                <img ngf-thumbnail="fileimg" style="max-width: 100%">
+                                <div class="file-alert" ng-show="invalidMainImgFile.$error === 'maxSize'">ขนาดไฟล์ต้องไม่เกิน : {{invalidMainImgFile.$errorParam}}</div>
+                            </div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							Conference
+							</label>
+							<div class="col-lg-10">
+								<div class="btn-group">
+		                            <label class="btn btn-default btn-checkbox" ng-model="Room.ConferenceType" uib-btn-radio="'Y'">มี</label>
+		                            <label class="btn btn-default btn-checkbox" ng-model="Room.ConferenceType" uib-btn-radio="'N'">ไม่มี</label>
+		                        </div>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							สถานะ
+							</label>
+							<div class="col-lg-10">
+								<div class="btn-group">
+		                            <label class="btn btn-default btn-checkbox" ng-model="Room.ActiveStatus" uib-btn-radio="'Y'">ใช้</label>
+		                            <label class="btn btn-default btn-checkbox" ng-model="Room.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้</label>
+		                        </div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-5">
+						<img src="{{Room.RoomPicture}}" style="max-width: 100%">
+						<img ngf-thumbnail="fileimg" style="max-width: 100%" ng-show="fileimg != ''">
+						
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="row">
+
+			<div class="panel panel-info" style="width: 100%; margin-top: -20px;">
+				<div class="panel-heading">
+					<h4><b>ข้อมูลเจ้าหน้าที่</b></h4>
+				</div>
+				<div class="panel-body">
+					<div class="col-lg-12">
+						
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+								เจ้าหน้าที่ดูแลห้องประชุม
+							</label>
+							<div class="col-lg-10">
+								<input class="form-control" ng-model="Room.room_admin_name" uib-typeahead="user for user in searchUserAutoComplete($viewValue, 'USER') | limitTo:20" typeahead-on-select="autocompleteUserSelected($item, $model, $label, 'ROOM')" required="true" ng-class="{required_field:Room.room_admin_name=='' || Room.room_admin_name==null}" ng-keyup="checkEmptyField('ROOM', Room.room_admin_name)" ng-paste="$event.preventDefault()">
+								<input type="hidden" ng-model="Room.RoomAdminID" required>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+								หมายเลขโทรศัพท์
+							</label>
+							<div class="col-lg-4">
+								<input class="form-control" ng-model="Room.room_admin_Mobile" readonly="true" style="background-color: #ccc;">
+							</div>
+							<label class="col-lg-1 form-control-static">
+								E-mail
+							</label>
+							<div class="col-lg-5">
+								<input class="form-control" ng-model="Room.room_admin_email" readonly="true" style="background-color: #ccc;">
+							</div>
+						</div>
+						<hr>
+
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+								เจ้าหน้าที่ดูแลด้านอุปกรณ์
+							</label>
+							<div class="col-lg-10">
+								<input class="form-control" ng-model="Room.device_admin_name" uib-typeahead="user for user in searchUserAutoComplete($viewValue, 'USER') | limitTo:20" typeahead-on-select="autocompleteUserSelected($item, $model, $label, 'DEVICE')" required="true" ng-class="{required_field:Room.device_admin_name=='' || Room.device_admin_name==null}" ng-keyup="checkEmptyField('DEVICE', Room.device_admin_name)" ng-paste="$event.preventDefault()">
+								<input type="hidden" ng-model="Room.DeviceAdminID" required>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+								หมายเลขโทรศัพท์
+							</label>
+							<div class="col-lg-4">
+								<input class="form-control" ng-model="Room.device_admin_Mobile" readonly="true" style="background-color: #ccc;">
+							</div>
+							<label class="col-lg-1 form-control-static">
+								E-mail
+							</label>
+							<div class="col-lg-5">
+								<input class="form-control" ng-model="Room.device_admin_email" readonly="true" style="background-color: #ccc;">
+							</div>
+						</div>
+						<hr>
+
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+								เจ้าหน้าที่ดูแลด้านอาหาร
+							</label>
+							<div class="col-lg-10">
+								<input class="form-control" ng-model="Room.food_admin_name" uib-typeahead="user for user in searchUserAutoComplete($viewValue, 'USER') | limitTo:20" typeahead-on-select="autocompleteUserSelected($item, $model, $label, 'FOOD')" required="true" ng-class="{required_field:Room.food_admin_name=='' || Room.food_admin_name==null}" ng-keyup="checkEmptyField('FOOD', Room.food_admin_name)" ng-paste="$event.preventDefault()">
+								<input type="hidden" ng-model="Room.FoodAdminID" required>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+								หมายเลขโทรศัพท์
+							</label>
+							<div class="col-lg-4">
+								<input class="form-control" ng-model="Room.food_admin_Mobile" readonly="true" style="background-color: #ccc;">
+							</div>
+							<label class="col-lg-1 form-control-static">
+								E-mail
+							</label>
+							<div class="col-lg-5">
+								<input class="form-control" ng-model="Room.food_admin_email" readonly="true" style="background-color: #ccc;">
+							</div>
+						</div>
+						<hr>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+		<div class="row form-group">
+			<div class="col-lg-12 obj_center">
+				<button class="btn btn-default" ng-click="showPage = 'MAIN'"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</button>
+				<button class="btn btn-primary" ng-click="upload(fileimg)" ng-disabled="!updateForm.$valid"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>
+<style>
+	#main_div_app{
+		
+	}
+</style>

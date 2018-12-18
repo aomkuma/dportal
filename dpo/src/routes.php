@@ -13,6 +13,8 @@ $app->post('/requestOTP/', 'LoginController:requestOTP');
 $app->post('/verifyOTP/', 'LoginController:verifyOTP');
 $app->post('/changePassword/', 'LoginController:changePassword');
 $app->post('/login/thirdparty/session/', 'LoginController:authenticateWithSession');
+$app->post('/login/pin/', 'LoginController:authenticateWithPIN');
+$app->post('/login/pin/setting/', 'LoginController:pinSetting');
 
 // Phone Book action
 $app->get('/getPhoneBookList/{Group}/{Username}/{offset}/{RegionID}/{DepartmentID}/{LoginUserID}', 'UserController:getPhoneBookList');
@@ -131,6 +133,7 @@ $app->get('/getNotificationListByCondition/{notificationType}/{regionID}/{adminG
 $app->post('/updateNotificationStatus/', 'NotificationController:updateNotificationStatus');
 
 //  Room reserve action
+$app->post('/room/monitor/', 'RoomReserveController:getRoomMonitor');
 $app->get('/getRoomReserveDetail/{regionID}/{findDate}', 'RoomReserveController:getRoomBookingList');
 $app->get('/getDefaultBookingRoomInfo/{userID}/{roomID}/{reserveRoomID}', 'RoomReserveController:getDefaultBookingRoomInfo');
 $app->post('/updateReserveRoomInfo/', 'RoomReserveController:updateReserveRoomInfo');

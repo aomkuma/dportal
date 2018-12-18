@@ -426,6 +426,11 @@
                             }
                         }
 
+                        $User = UserService::getUser($Repair['CreateBy']);
+                        if(!empty($User['Email'])){
+                            $mailer->setReceiver($User['Email']);    
+                        }
+
                         $mailer->sendMail();
                     }
 

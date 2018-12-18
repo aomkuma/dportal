@@ -4,6 +4,11 @@ app.config(function($routeProvider) {
         templateUrl : "html/home.html",
         controller : "HomeController"
     })
+
+    .when("/mobile", {
+        templateUrl : "../html/login/mobile.html",
+        controller : "LoginController"
+    })
     
 	.when("/logon/:redirect_url?", {
         templateUrl : "login.html",
@@ -14,10 +19,15 @@ app.config(function($routeProvider) {
         templateUrl : "html/login/forgotpass.html",
         controller : "ForgotPasswordController"
     })
-    
+
     .when("/roomconference", {
         templateUrl : "html/roomreservation/overview.html",
         controller : "RoomOverviewController"
+    })
+
+    .when("/room/monitor/:region_id", {
+        templateUrl : "html/roomreservation/monitor.html",
+        controller : "RoomMonitorController"
 	})
     
     .when("/roombooking/:userID/:roomID/:startDateTime?/:roomReserveID?/:destinationRoomID?", {

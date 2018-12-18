@@ -1,0 +1,103 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div class="row">
+	<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>รายงานตารางการใช้ห้องประชุม</h2></div></div>
+</div>
+<div class="row form-group">
+	<div class="col-lg-12">
+		<form name="search_form" class="form-inline">
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; พื้นที่ : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Region" ng-options="region.RegionName for region in RegionList track by region.RegionID" required ng-change="changeRegion(condition.Region)">
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ห้องประชุม : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Room" ng-options="room.RoomName for room in RoomList track by room.RoomID" required>
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; เดือน : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Month" ng-options="month.monthValue for month in MonthList track by month.monthText" required>
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+			<div class="form-group">
+			    <label for="exampleInputName2">&nbsp; ปี : </label>
+			    &nbsp; <select name="Year" class="form-control" ng-model="condition.Year" ng-options="year.yearValue for year in YearList track by year.yearText" required>
+					<option value="">กรุณาเลือก</option>
+				</select>
+		  	</div>
+		  	
+			<button class="btn btn-primary" ng-click="queryReport(condition)" ng-disabled="search_form.$invalid"><span class="glyphicon glyphicon-search"></span> ออกรายงาน</button>
+			<button class="btn btn-danger" ng-click="exportToPDF(condition, DataList, null)" ng-disabled="search_form.$invalid" ng-show="DataList != null"><span class="glyphicon glyphicon-download"></span> Download PDF</button>
+			<button type="submit" class="btn btn-success" ng-click="exportToExcel(condition, DataList, null)" ng-disabled="search_form.$invalid" ng-show="DataList != null"><span class="glyphicon glyphicon-download"></span> Download Excel</button>
+		</form>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="table-responsive">
+			<table class="table table-striped table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>ห้องประชุม</th>
+						<!--<th>พื้นที่</th>-->
+						<th>ผู้ทำการจอง</th>
+						<th>เริ่มประชุม</th>
+						<th>สิ้นสุดประชุม</th>
+						<th>อุปกรณ์</th>
+						<th>อาหาร</th>
+						<th>หัวข้อการประชุม</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="data in DataList">
+						<td>
+							{{data.RoomName}}
+						</td>
+						<!--<td>
+							{{data.RegionName}}
+						</td>-->
+						<td>
+							{{data.FirstName}} {{data.LastName}}
+						</td>
+						<td>
+							{{data.StartDateTime}}
+						</td>
+						<td>
+							{{data.EndDateTime}}
+						</td>
+						<td>
+							<div class="row" ng-repeat="device in data.device">
+								<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 text-left">
+									{{device.DeviceName}}
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+									{{device.Amount}}
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="row" ng-repeat="food in data.food">
+								<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 text-left">
+									{{food.FoodName}}
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 text-right">
+									{{food.Amount}}
+								</div>
+							</div>
+						</td>
+						<td>
+							{{data.TopicConference}}
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>

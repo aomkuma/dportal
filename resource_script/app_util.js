@@ -291,7 +291,7 @@ function convertDateToFullThaiDateIgnoreTime(dateObj){
         case 10 : monthTxt = 'พฤศจิกายน';break;
         case 11 : monthTxt = 'ธันวาคม';break;
     }
-    return dateObj.getDate() + ' ' + monthTxt + ' ' + (dateObj.getFullYear());
+    return dateObj.getDate() + ' ' + monthTxt + ' ' + (dateObj.getFullYear() + 543);
 }
 
 function convertDateToReportDate(dateObj){

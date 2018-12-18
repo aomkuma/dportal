@@ -8,6 +8,9 @@
         
         public static function getAllRegion(){
             return Region::all();      
+        }   
+        public static function getRegion($RegionID){
+            return Region::where('RegionID',$RegionID)->first();      
         }                
         
     }    

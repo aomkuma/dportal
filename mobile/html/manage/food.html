@@ -1,0 +1,147 @@
+<div ng-include src="'html/top_menu.html'"></div>
+<div  ng-show="showPage == 'MAIN'" class="row form-group scrollable-default" style="max-height:78vh; overflow-y: auto;  padding-bottom: 10vh;" scrolly="loadList()">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>จัดการอาหาร</h2></div></div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="table-responsive">
+					<caption class=""><button class="btn btn-primary pull-left" ng-click="showUpdatePage(-1, null)"><span class="glyphicon glyphicon-plus"></span> เพิ่มอาหาร</button></caption>
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>แก้ไข / ลบ</th>
+								<th>รูปภาพอาหาร</th>
+								<th>รายการอาหาร</th>
+								<th>พื้นที่</th>
+								<th>สถานะ</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="data in DataList">
+								<td>
+									<button type="button" class="btn btn-primary btn-sm " ng-click="showUpdatePage($index, data)"><span class="glyphicon glyphicon-edit"></span></button>
+									<!--<button type="button" class="btn btn-danger btn-sm " ng-click="confirmDelete($index, data.FoodID)"><span class="glyphicon glyphicon-trash"></span></button>-->
+								</td>
+								<td>
+									<img ng-src="{{data.FoodPicture}}" style="height: 80px;">
+								</td>
+								<td>
+									{{data.FoodName}}
+								</td>
+								<td>
+									{{data.RegionName}}
+								</td>
+								<td>
+									<img src="img/checked.png" ng-show="data.ActiveStatus == 'Y'" style="width: 20px;" />
+                                    <img src="img/unchecked.png" ng-show="data.ActiveStatus == 'N'" style="width: 20px;" />
+								</td>
+								
+							</tr>
+						</tbody>
+					</table>
+					<div class="col-lg-12" style="text-align:center;" ng-show="tableLoad"><img src="img/ellipsis.gif"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-show="showPage == 'UPDATE'" class="row scrollable-default" style="max-height:100%; overflow-y: auto; padding-bottom: 10vh;" ng-form="updateForm">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-lg-5" style="margin-top: 0px;">
+				<div id='content'>
+					<h2 class='topic' ng-show="Room.RoomID == ''">เพิ่มอาหาร</h2>
+					<h2 class='topic' ng-show="Room.RoomID != ''">แก้ไขอาหาร</h2>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+
+			<div class="panel panel-info" style="width: 100%; margin-top: -20px;">
+				<div class="panel-heading">
+					<h4><b>ข้อมูลอาหาร</b></h4>
+				</div>
+				<div class="panel-body">
+					<div class="col-lg-7">
+						
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							อ.ส.ค.
+							</label>
+							<div class="col-lg-10">
+								<select class="form-control" ng-model="Food.RegionID" ng-options="region.RegionID as region.RegionName for region in RegionList" required="true" ng-class="{required_field:Food.RegionID==''}">
+							    </select>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							ชื่ออาหาร
+							</label>
+							<div class="col-lg-10">
+								<input class="form-control" ng-model="Food.FoodName" required="true" ng-class="{required_field:Food.FoodName==''}">
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							รายละเอียด
+							</label>
+							<div class="col-lg-10">
+								<textarea  class="form-control" ng-model="Food.FoodDescription"></textarea>
+							</div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							รูปภาพ
+							<br>
+                                (.png,.jpg,.raw ขนาดไม่เกิน 5 MB)
+							</label>
+							<div class="col-lg-5">
+								<div class="btn btn-default" ngf-select ng-model="fileimg" name="fileimg" accept="image/*" ngf-max-size="5MB" ngf-pattern="'.png,.jpg,.raw'" ngf-model-invalid="invalidMainImgFile">Select Picture</div>
+							</div>
+							<div class="col-lg-3">
+                                <img ngf-thumbnail="fileimg" style="max-width: 100%">
+                                <div class="file-alert" ng-show="invalidMainImgFile.$error === 'maxSize'">ขนาดไฟล์ต้องไม่เกิน : {{invalidMainImgFile.$errorParam}}</div>
+                            </div>
+						</div>
+						<div class="row form-group">
+							<label class="col-lg-2 form-control-static">
+							สถานะ
+							</label>
+							<div class="col-lg-10">
+								<div class="btn-group">
+		                            <label class="btn btn-default btn-checkbox" ng-model="Food.ActiveStatus" uib-btn-radio="'Y'">ใช้</label>
+		                            <label class="btn btn-default btn-checkbox" ng-model="Food.ActiveStatus" uib-btn-radio="'N'">ไม่ใช้</label>
+		                        </div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-lg-5">
+						<img src="{{Food.FoodPicture}}" style="max-width: 100%">
+						<img ngf-thumbnail="fileimg" style="max-width: 100%" ng-show="fileimg != ''">
+						<br />
+						
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<div class="row form-group">
+			<div class="col-lg-12 obj_center">
+				<button class="btn btn-default" ng-click="showPage = 'MAIN'"><span class="glyphicon glyphicon-arrow-left"></span> กลับ</button>
+				<button class="btn btn-primary" ng-click="upload(fileimg)" ng-disabled="!updateForm.$valid"><span class="glyphicon glyphicon-floppy-disk"></span> บันทึก</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div ng-include src="'html/footer.html'"></div>
+<style>
+	#main_div_app{
+		
+	}
+</style>
