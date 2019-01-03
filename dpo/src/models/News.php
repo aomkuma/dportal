@@ -12,9 +12,10 @@ class News extends \Illuminate\Database\Eloquent\Model {
     $obj->NewsPicture = $parsedBody['NewsPicture'];	
     //$obj->VerifyBy = $parsedBody['VerifyBy'];  
     //$obj->VerifyDate = $parsedBody['VerifyDate'];  
-    //$obj->NewsStatus = $parsedBody['NewsStatus'];  
+    $obj->NewsStatus = $parsedBody['NewsStatus'];  
     $obj->NewsRegionID = $parsedBody['NewsRegionID'];  
     $obj->NewsType = $parsedBody['NewsType'];  
+    $obj->GlobalNews = $parsedBody['GlobalNews'];  
     $obj->LimitDisplay = $parsedBody['LimitDisplay'];  
     $obj->NewsDateTime = $parsedBody['NewsDateTime'];  
     $obj->NewsStartDateTime = $parsedBody['NewsStartDateTime']==null?NULL:$parsedBody['NewsStartDateTime']; 

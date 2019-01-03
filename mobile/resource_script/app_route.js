@@ -20,12 +20,12 @@ app.config(function($routeProvider) {
         controller : "ForgotPasswordController"
     })
     
-    .when("/roomconference/:user_session?", {
+    .when("/roomconference/:f?/:user_session?", {
         templateUrl : "html/roomreservation/overview.html",
         controller : "RoomOverviewController"
 	})
     
-    .when("/roombooking/:userID/:roomID/:startDateTime?/:roomReserveID?/:destinationRoomID?", {
+    .when("/roombooking/:userID/:roomID/:startDateTime?/:roomReserveID?/:destinationRoomID?/:user_session?", {
         templateUrl : "html/roomreservation/roombooking.html",
         controller : "RoomBookingController"
 	})
@@ -130,7 +130,7 @@ app.config(function($routeProvider) {
         controller : "NotificationListController"
     })
 
-    .when("/repair/:RepairedID?/:user_session?", {
+    .when("/repair/:RepairedID?/:f?/:user_session?", {
         templateUrl : "html/repair/repair_desc.html",
         controller : "RepairDescController"
     })

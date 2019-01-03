@@ -109,6 +109,18 @@
 			</div>-->
 			<div class="row form-group">
 				<label class="col-lg-2 form-control-static">
+				ประเภทข่าว
+				</label>
+				<div class="col-lg-5">
+					<select class="form-control" ng-model="News.GlobalNews" required="true" ng-class="{required_field:News.GlobalNews==''}">
+						<option value="">โปรดระบุ..</option>
+						<option value="N">ภายใน</option>
+						<option value="Y">ภายนอก</option>
+					</select>
+				</div>
+			</div>
+			<div class="row form-group">
+				<label class="col-lg-2 form-control-static">
 				พื้นที่
 				</label>
 				<div class="col-lg-5">

@@ -2101,7 +2101,8 @@ app.controller('NewsListController', function($cookies, $scope, $uibModal, $rout
         if($scope.continueLoad){
             $scope.tableLoad = true;
             NewsFactory.getNewsList($scope.dataOffset
-                                ,$scope.condition.RegionID 
+                                ,$scope.condition.RegionID
+                                 ,$scope.condition.GlobalNews
                                 ,$scope.condition.HideNews
                                 ,$scope.condition.CurrentNews
                                 ,$scope.condition.WaitApprove).then(function(result){
@@ -2143,7 +2144,7 @@ app.controller('NewsListController', function($cookies, $scope, $uibModal, $rout
     $scope.tableLoad = false;
     $scope.continueLoad = true;
     $scope.DataList = [];
-    $scope.condition ={'RegionID':'0','HideNews':'0','CurrentNews':'0','WaitApprove':'0'};
+    $scope.condition ={'RegionID':'0','HideNews':'0','CurrentNews':'0','WaitApprove':'0', 'GlobalNews':'-'};
 
     
     $scope.showListPage();
@@ -2508,7 +2509,7 @@ app.controller('PermissionController', function($cookies, $scope, $uibModal, $ro
 
 });
 
-app.controller('LinkManageController', function($cookies, $scope, $uibModal, $routeParams, $timeout, $interval, Upload, IndexOverlayFactory, LinkFactory) {
+app.controller('LinkManageController', function($cookies, $scope, $uibModal, $routeParams, $timeout, $interval, Upload, IndexOverlayFactory, LinkFactory, HTTPFactory) {
     IndexOverlayFactory.overlayShow();
     $scope.menu_selected = 'manage_link';
 
@@ -2529,7 +2530,7 @@ app.controller('LinkManageController', function($cookies, $scope, $uibModal, $ro
         LinkFactory.getList(mode, $scope.currentUser.UserID).then(function(result){
             IndexOverlayFactory.overlayHide();
             if(result.data.STATUS == 'OK'){
-                $scope.DataList = result.data.DATA.DataList;
+                $scope.model.list.DataList = result.data.DATA.DataList;
             }
         });
     }
@@ -2558,7 +2559,7 @@ app.controller('LinkManageController', function($cookies, $scope, $uibModal, $ro
     }
     $scope.removeLink = function (index, ID){
         if(ID == ''){
-            $scope.DataList.splice(index, 1);
+            $scope.model.list.DataList.splice(index, 1);
         }else{
             $scope.alertMessage = 'ต้องการลบการลิ้งค์นี้ ใช่หรือไม่ ?';
             var modalInstance = $uibModal.open({
@@ -2580,7 +2581,7 @@ app.controller('LinkManageController', function($cookies, $scope, $uibModal, $ro
                 LinkFactory.deleteData(ID).then(function(result){
                     IndexOverlayFactory.overlayHide();
                     if(result.data.STATUS == 'OK' && result.data.DATA){
-                        $scope.DataList.splice(index, 1);
+                        $scope.model.list.DataList.splice(index, 1);
                     }
                 });
             });
@@ -2593,6 +2594,27 @@ app.controller('LinkManageController', function($cookies, $scope, $uibModal, $ro
 
     $scope.loadList('manage');
 
+    $scope.$watch('model', function(model) {
+        $scope.modelAsJson = angular.toJson(model, true);
+    }, true);
+
+    $scope.model = {selected: null,
+        list: {"DataList": []}
+    };
+
+    $scope.dropCallback = function(DataList, index){
+        // DataList.splice($index, 1);
+        // alert('Drop!' + list.length);
+        var params = {'DataList' : DataList};
+        HTTPFactory.clientRequest('updateOrderNo', params).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.loadList('manage');
+                // $scope.DataList = result.data.DATA.DataList;
+                // $scope.RegionData = result.data.DATA.RegionData;
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
 });
 
 app.controller('LinkController', function($cookies, $scope, $uibModal, $routeParams, $timeout, $interval, Upload, IndexOverlayFactory, LinkFactory) {
@@ -2975,7 +2997,7 @@ app.controller('NewsController', function($cookies, $scope, $uibModal, $routePar
                 return false;
             }else{            
 
-                $scope.alertMessage = 'ต้องการบันทึกและส่งคำขอสร้างข่าว ใช่หรือไม่ ?';
+                $scope.alertMessage = 'ต้องการบันทึกข่าว ใช่หรือไม่ ?';
                 var modalInstance = $uibModal.open({
                     animation : true,
                     templateUrl : 'html/dialog_confirm.html',
@@ -3024,7 +3046,7 @@ app.controller('NewsController', function($cookies, $scope, $uibModal, $routePar
                         //$scope.DataList[index] = resp.data.data.DATA;
                         if($scope.News.ActiveStatus == 'Y'){
                             $scope.News.NewsID = resp.data.data.DATA.NewsID;
-                            $scope.requestNews();
+                            // $scope.requestNews();
                         }
                         IndexOverlayFactory.overlayHide();
                         $scope.showListPage();
@@ -3092,6 +3114,7 @@ app.controller('NewsController', function($cookies, $scope, $uibModal, $routePar
             $scope.tableLoad = true;
             NewsFactory.getList($scope.dataOffset
                                 ,$scope.condition.RegionID 
+                                ,$scope.condition.GlobalNews 
                                 ,$scope.condition.HideNews
                                 ,$scope.condition.CurrentNews
                                 ,$scope.condition.WaitApprove
@@ -3163,6 +3186,7 @@ app.controller('NewsController', function($cookies, $scope, $uibModal, $routePar
                     ,'NewsStatus':''
                     ,'NewsRegionID':$scope.currentUser.RegionID
                     ,'NewsType':''
+                    ,'GlobalNews':''
                     ,'LimitDisplay':'N'
                     ,'NewsDateTime':''
                     ,'NewsStartDateTime':''
@@ -3188,6 +3212,7 @@ app.controller('NewsController', function($cookies, $scope, $uibModal, $routePar
                     ,'NewsStatus':obj.NewsStatus
                     ,'NewsRegionID':obj.NewsRegionID
                     ,'NewsType':obj.NewsType
+                    ,'GlobalNews':obj.GlobalNews
                     ,'LimitDisplay':obj.LimitDisplay
                     ,'NewsDateTime':obj.NewsDateTime != null?convertDateToSQLString(obj.NewsDateTime):obj.NewsDateTime
                     // ,'NewsStartDateTime':obj.NewsStartDateTime!=null?convertDateToSQLString(obj.NewsStartDateTime):obj.NewsStartDateTime
@@ -3384,7 +3409,7 @@ app.controller('NewsController', function($cookies, $scope, $uibModal, $routePar
     $scope.tableLoad = false;
     $scope.continueLoad = true;
     $scope.DataList = [];
-    $scope.condition ={'RegionID':'0','HideNews':'0','CurrentNews':'0','WaitApprove':'0'};
+    $scope.condition ={'RegionID':'0','HideNews':'0','CurrentNews':'0','WaitApprove':'0', 'GlobalNews' : '-'};
 
     if($routeParams.newsID !== undefined){
 
@@ -4619,6 +4644,9 @@ app.controller('RoomMonitorController', function($cookies, $scope, $http, $uibMo
     
     $scope.RegionID = $routeParams.region_id;
     $scope.loadRoomMonitorList = function(action, data){
+
+        $scope.CurDateStr = convertDateToFullThaiDateIgnoreTime(new Date());
+
         var params = {'RegionID' : $scope.RegionID, 'CurDate' : new Date()};
         HTTPFactory.clientRequest('room/monitor', params).then(function (result) {
             if (result.data.STATUS == 'OK') {
@@ -4638,7 +4666,7 @@ app.controller('RoomMonitorController', function($cookies, $scope, $http, $uibMo
 
     setInterval(function(){
         $scope.loadRoomMonitorList();
-    },3600000);
+    },300000);
     
 });
 

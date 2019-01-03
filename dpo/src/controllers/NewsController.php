@@ -54,6 +54,7 @@
 
                 $offset = filter_var($request->getAttribute('offset'), FILTER_SANITIZE_NUMBER_INT);
                 $RegionID = filter_var($request->getAttribute('RegionID'), FILTER_SANITIZE_NUMBER_INT);
+                $GlobalNews = $request->getAttribute('GlobalNews');
                 $HideNews = $request->getAttribute('HideNews');
                 $CurrentNews = $request->getAttribute('CurrentNews');
                 $WaitApprove = $request->getAttribute('WaitApprove');
@@ -72,7 +73,7 @@
                     return $this->returnResponse(401, $this->data_result, $response);  
                 }
 
-                $NewsList = NewsService::getNewsList($offset,$RegionID,$HideNews,$CurrentNews,$WaitApprove);
+                $NewsList = NewsService::getNewsList($offset,$RegionID, $GlobalNews,$HideNews,$CurrentNews,$WaitApprove);
                 $this->data_result['DATA'] = $NewsList;
                 
                 return $this->returnResponse(200, $this->data_result, $response);
@@ -88,8 +89,8 @@
 
                 $offset = filter_var($request->getAttribute('offset'), FILTER_SANITIZE_NUMBER_INT);
                 $RegionID = filter_var($request->getAttribute('RegionID'), FILTER_SANITIZE_NUMBER_INT);
-
-                $NewsList = NewsService::getNewsListView($offset,$RegionID);
+                $GlobalNews = $request->getAttribute('GlobalNews');
+                $NewsList = NewsService::getNewsListView($offset,$RegionID,$GlobalNews);
                 $this->data_result['DATA'] = $NewsList;
                 
                 return $this->returnResponse(200, $this->data_result, $response);
@@ -135,7 +136,8 @@
                     }
                 }
 
-                
+                // Update 21/12/2018
+                $parsedBody['NewsStatus'] = 'Approve';
                 $News = NewsService::updateData($parsedBody);
 
                 // Insert new picture list

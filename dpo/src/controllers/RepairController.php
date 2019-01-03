@@ -520,7 +520,7 @@
             $content .= '<b>ผู้แจ้ง : </b>' . $DataMail['FirstName'] . ' ' . $DataMail['LastName'] . '<br>';
             $content .= '<b>เบอร์โทรติดต่อ : </b>' . $DataMail['Mobile'] . '<br>';
             $content .= '<b>อีเมล : </b>' . $DataMail['Email'] . '<br>';
-            
+            $content .= 'ปัญหาของคุณ จะได้รับการแก้ไขภายใน' . $DataMail['SLA'] . ' วัน';
             $content .= '<br>e-mail ฉบับนี้ถูกส่งจากระบบอัตโนมัติ กรุณาอย่าตอบกลับ (Please do not reply this e-mail)';
             return $content;
 
@@ -535,7 +535,7 @@
             $content .= '<b>รายละเอียด : </b>' . $DataMail['RepairedDetail'] . '<br>';
 
             if($status == 'Finish'){
-                $content .= '<b>ขั้นตอนการดำเนินการ : </b> ซ่อมเสร็จ วันที่ ' . $this->makeThaiDate($DataMail['CompleteDateTime']) . '<br>';
+                $content .= '<b>ขั้นตอนการดำเนินการ : </b> รายการปัญหาได้รับการแก้ไขเรียบร้อยแล้ว วันที่ ' . $this->makeThaiDate($DataMail['CompleteDateTime']) . '<br>';
             }else{
                 $content .= '<b>ขั้นตอนการดำเนินการ : </b> ระงับการดำเนินการชั่วคราว เนื่องจาก ' . $DataMail['SuspenedComment'] . '<br>';    
             }

@@ -30,7 +30,7 @@
                 $CurDate = substr($parsedBody['CurDate'], 0, 10);//str_replace('T', ' ', $parsedBody['CurDate']); // // $CurDate = substr($CurDate, 0, 19);
                 
                 // Get room list
-                $RoomList = RoomService::getAllRoomInRegion($RegionID);
+                $RoomList = RoomService::getAllRoomActiveInRegion($RegionID);
                 $DataList = [];
                 foreach ($RoomList as $key => $value) {
                 	$RoomID = $value['RoomID'];

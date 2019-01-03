@@ -412,12 +412,21 @@ app.controller('RepairDescController', function($cookies, $scope, $uibModal, $ro
     IndexOverlayFactory.overlayShow();
     var $user_session = sessionStorage.getItem('user_session');
     // alert($user_session);
+    console.log($user_session);
+    $user_session = window.atob(($routeParams.user_session));
+        console.log($user_session);
+        $user_session = decodeURIComponent($user_session);
+        console.log($user_session);
     if($user_session != null){
         $scope.$parent.currentUser = angular.fromJson($user_session);
         $scope.$parent.TotalLogin = sessionStorage.getItem('TotalLogin');
         
     }else{
-        $user_session = decodeURIComponent(window.atob($routeParams.user_session));
+
+        $user_session = window.atob(($routeParams.user_session));
+        console.log($user_session);
+        $user_session = decodeURIComponent($user_session);
+        console.log($user_session);
         // alert($user_session);
         sessionStorage.setItem('user_session', $user_session);
         $scope.$parent.currentUser = angular.fromJson($user_session);

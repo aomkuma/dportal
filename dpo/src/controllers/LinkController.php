@@ -185,6 +185,28 @@
                 return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
             }            
         }
+
+        public function updateOrderNo($request, $response, $args){
+            try{
+
+                $parsedBody = $request->getParsedBody();
+                $DataList = $parsedBody['DataList'];
+                // print_r($DataList);
+                // exit;
+                $order = 1;
+                foreach ($DataList as $key => $value) {
+                    LinkService::updateOrderNo($value['LinkID'], $order);
+                    $order++;
+                }
+
+                $this->data_result['DATA'] = $LinkPermissionID;
+                
+                return $this->returnResponse(200, $this->data_result, $response);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }   
+        }
         
     }
     

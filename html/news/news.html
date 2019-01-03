@@ -15,7 +15,15 @@
 									<option value="">ทั้งหมด</option>
 								</select>
 						  	</div>
-						  	
+						  	<div class="form-group">
+							    <label for="exampleInputName2">&nbsp; ประเภทข่าว : </label>
+							    &nbsp; <select class="form-control" ng-model="condition.GlobalNews" ng-change="setCondition()">
+									<option value="-">ทั้งหมด</option>
+									<option value="N">ภายใน</option>
+									<option value="Y">ภายนอก</option>
+								</select>
+						  	</div>
+
 						</form>
 						
 					</div>

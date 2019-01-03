@@ -44,7 +44,7 @@ class PermissionService {
                         , DB::raw('a3.AdminGroupID AS RoomAdmin')
                         , DB::raw('a4.AdminGroupID AS CarAdmin')
                         , DB::raw('a5.AdminGroupID AS DeviceAdmin')
-                        , DB::raw('a6.AdminGroupID AS NewsAdmin')
+                        , DB::raw('a6.AdminGroupID AS ConferenceAdmin')
                         , DB::raw('a7.AdminGroupID AS NewsApproveAdmin')
                         , DB::raw('a8.AdminGroupID AS RepairAdmin')
                         , DB::raw('a9.AdminGroupID AS LinkAdmin')

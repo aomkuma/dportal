@@ -166,11 +166,12 @@
                 $user = UserService::getMISUserInfo($UserID);
                 // Find office, division, department
                 $group = UserService::getGroup($user->GroupID);
-                // print_r($user);exit;
+                // print_r($group->GroupType);exit;
                 if($group->GroupType == 'OFFICE'){
                     $user['Office'] = $group->GroupName;
                 }
-                else if($group->GroupType == 'DEVISION'){
+                else if($group->GroupType == 'DIVISION'){
+                    // echo "asd";exit;
                     $user['Division'] = $group->GroupName;
                     // find Office
                     $OfficeGroup = UserService::getGroupByOrgID($group->UpperOrgID);

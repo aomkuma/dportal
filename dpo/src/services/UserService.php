@@ -255,6 +255,7 @@
                         ,"ACCOUNT.InternalContact"
                         ,"ACCOUNT.PositionName"
                         ,"ACCOUNT.IsHeader"
+                        ,"ACCOUNT.PinID"
                         ,"REGION.RegionName"
                         ,"ACCOUNT.Org AS orgName")
                     ->join("REGION", "REGION.RegionID","=","ACCOUNT.RegionID") 
@@ -281,6 +282,7 @@
             $user->Tel = $obj['Tel'];
             $user->Fax = $obj['Fax'];
             $user->InternalContact = $obj['InternalContact'];
+            $user->PinID = $obj['PinID'];
             return $user->save();
             
         }

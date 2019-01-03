@@ -34,8 +34,8 @@ $app->delete('/removeFavouriteExContact/{FavouriteID}/{UserID}', 'ExternalPhoneB
 
 // News action
 $app->get('/getNewsFeed/{RegionID}', 'NewsController:getNewsFeed');
-$app->get('/getNewsList/{offset}/{RegionID}/{HideNews}/{CurrentNews}/{WaitApprove}/{UserID}', 'NewsController:getNewsList');
-$app->get('/getNewsListView/{offset}/{RegionID}', 'NewsController:getNewsListView');
+$app->get('/getNewsList/{offset}/{RegionID}/{GlobalNews}/{HideNews}/{CurrentNews}/{WaitApprove}/{UserID}', 'NewsController:getNewsList');
+$app->get('/getNewsListView/{offset}/{RegionID}[/{GlobalNews}]', 'NewsController:getNewsListView');
 $app->get('/getNewsTypeList/', 'NewsController:getNewsTypeList');
 $app->delete('/deleteNewsData/{ID}', 'NewsController:deleteData');
 $app->post('/updateNewsData/', 'NewsController:updateData');
@@ -93,6 +93,7 @@ $app->post('/updateLink/', 'LinkController:updateData');
 $app->post('/getLinkPermission/', 'LinkController:getLinkPermission');
 $app->post('/updateLinkPermission/', 'LinkController:updateLinkPermission');
 $app->post('/setAllLinkPermission/', 'LinkController:setAllLinkPermission');
+$app->post('/updateOrderNo/', 'LinkController:updateOrderNo');
 
 // Repair action
 $app->get('/getRepairTypeList/{mode}/{UserID}', 'RepairController:getRepairTypeList');

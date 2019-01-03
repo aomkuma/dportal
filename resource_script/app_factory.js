@@ -592,8 +592,8 @@ app.factory('RegionFactory', ['$http', '$q', function($http, $q){
 app.factory('NewsFactory', ['$http', '$q', function($http, $q){
      return {
          
-        getList : function(offset,RegionID,HideNews,CurrentNews,WaitApprove, UserID) {           
-            return $http.get(servicesUrl + '/dpo/public/getNewsList/' + offset +'/' + RegionID+'/' + HideNews+'/' + CurrentNews+'/' + WaitApprove  + '/' + UserID)
+        getList : function(offset,RegionID, GlobalNews,HideNews,CurrentNews,WaitApprove, UserID) {           
+            return $http.get(servicesUrl + '/dpo/public/getNewsList/' + offset +'/' + RegionID + '/' + GlobalNews +'/' + HideNews+'/' + CurrentNews+'/' + WaitApprove  + '/' + UserID)
                 .then(
                     function(response){
                         // console.log(response.data);
@@ -605,8 +605,8 @@ app.factory('NewsFactory', ['$http', '$q', function($http, $q){
                 );
         },
 
-        getNewsList : function(offset,RegionID) {           
-            return $http.get(servicesUrl + '/dpo/public/getNewsListView/' + offset +'/' + RegionID)
+        getNewsList : function(offset,RegionID,GlobalNews) {           
+            return $http.get(servicesUrl + '/dpo/public/getNewsListView/' + offset +'/' + RegionID+'/'+GlobalNews)
                 .then(
                     function(response){
                         // console.log(response.data);

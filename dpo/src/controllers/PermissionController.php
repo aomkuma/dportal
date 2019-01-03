@@ -52,7 +52,7 @@
             
             try{
                 $PermissionTypeList = ['SuperAdmin','PermissionAdmin','RoomAdmin','CarAdmin','DeviceAdmin'
-                                    ,'NewsAdmin','NewsApproveAdmin','RepairAdmin','LinkAdmin','ExPhoneBookAdmin','CalendarAdmin'];
+                                    ,'ConferenceAdmin','RepairHeadAdmin','RepairAdmin','LinkAdmin','ExPhoneBookAdmin','CalendarAdmin'];
                 $parsedBody = $request->getParsedBody();
                 $Data = $parsedBody['data'];
                 $PermissionType = filter_var($parsedBody['permissionType'], FILTER_SANITIZE_STRING);
@@ -81,11 +81,11 @@
                 }else if($PermissionType == 'DeviceAdmin'){
                     $objUpdate['AdminGroupID'] = $Data['DeviceAdmin'];
                     $PermissionList = PermissionService::updatePermission($objUpdate);
-                }else if($PermissionType == 'NewsAdmin'){
-                    $objUpdate['AdminGroupID'] = $Data['NewsAdmin'];
+                }else if($PermissionType == 'ConferenceAdmin'){
+                    $objUpdate['AdminGroupID'] = $Data['ConferenceAdmin'];
                     $PermissionList = PermissionService::updatePermission($objUpdate);
-                }else if($PermissionType == 'NewsApproveAdmin'){
-                    $objUpdate['AdminGroupID'] = $Data['NewsApproveAdmin'];
+                }else if($PermissionType == 'RepairHeadAdmin'){
+                    $objUpdate['AdminGroupID'] = $Data['RepairHeadAdmin'];
                     $PermissionList = PermissionService::updatePermission($objUpdate);
                 }else if($PermissionType == 'RepairAdmin'){
                     $objUpdate['AdminGroupID'] = $Data['RepairAdmin'];

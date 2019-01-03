@@ -35,7 +35,7 @@
                     ->find($newsID);  
         }    
         
-        public static function getNewsList($offset,$RegionID,$HideNews,$CurrentNews,$WaitApprove){
+        public static function getNewsList($offset,$RegionID,$GlobalNews,$HideNews,$CurrentNews,$WaitApprove){
 
         	$limit = 15;
 			$skip = $offset * $limit;
@@ -45,12 +45,16 @@
 					->leftJoin("ACCOUNT", "NEWS.CreateBy","=","ACCOUNT.UserID") 
                     ->leftJoin("NEWS_TYPE", 'NEWS.NewsType' , "=" , "NEWS_TYPE.NewsTypeID")
                     ->leftJoin("REGION", 'REGION.RegionID' , "=" , "NEWS.NewsRegionID")
-                    ->where(function($query) use ($RegionID,$HideNews,$CurrentNews,$WaitApprove) {
+                    ->where(function($query) use ($RegionID,$GlobalNews,$HideNews,$CurrentNews,$WaitApprove) {
 
                             if($RegionID != '0'){
                                 // $query->where('NewsRegionID', DB::raw("'".$RegionID."'"));
                                 $query->where('NewsType', DB::raw("'".$RegionID."'"));
-                            }if($CurrentNews == 'Y'){
+                            }if($GlobalNews!='-'){
+                                // $query->where('NewsRegionID', DB::raw("'".$RegionID."'"));
+                                $query->where('GlobalNews', $GlobalNews);
+                            }
+                            if($CurrentNews == 'Y'){
                                 $currentDate = date('Y-m-d H:i:s.000');
 
                                 $query->where(function($subquery) use ($currentDate) {
@@ -101,7 +105,7 @@
 
         }
 
-        public static function getNewsListView($offset,$RegionID){
+        public static function getNewsListView($offset,$RegionID,$GlobalNews){
 
             $currentDate = date('Y-m-d H:i:s.000');
 
@@ -114,10 +118,12 @@
                     ->leftJoin("REGION", 'REGION.RegionID' , "=" , "NEWS.NewsRegionID")
                     ->where("NewsStatus","Approve")
                     ->where("ActiveStatus","Y")
-                    ->where(function($query) use ($RegionID, $currentDate) {
+                    ->where(function($query) use ($RegionID,$GlobalNews, $currentDate) {
 
                             if($RegionID != '0'){
                                 $query->where('NewsRegionID', DB::raw("'".$RegionID."'"));
+                            }if($GlobalNews != '-'){
+                                $query->where('GlobalNews', $GlobalNews);
                             }
                             /*
                             $query->orWhere(function($subquery) use ($currentDate) {

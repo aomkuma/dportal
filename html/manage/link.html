@@ -1,4 +1,5 @@
 <div ng-include src="'html/top_menu.html'"></div>
+
 <div class="row form-group" style="overflow-x: hidden; padding-bottom: 0vh;">
 	<div class="col-lg-12">
 		<div class="row">
@@ -11,8 +12,71 @@
 						<button class="btn btn-primary" ng-click="newLink()"><span class="glyphicon glyphicon-plus"></span> เพิ่มลิ้งค์</button>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-lg-4 col-sm-3 col-xs-12" ng-repeat="data in DataList" style="border: 1px #ccc solid; padding: 1vh; height: 250px;">
+
+				<div ng-repeat="(listName, list) in model.list">
+					<div dnd-list="list" 
+					 >
+						<div ng-repeat="data in list"
+							dnd-draggable="data"
+					        dnd-moved="list.splice($index, 1)"
+					        dnd-effect-allowed="move"
+					        dnd-selected="model.selected = data" 
+					        dnd-dragend="dropCallback(list)"
+					        class="col-lg-4 col-sm-3 col-xs-12" style="border: 1px #ccc solid; padding: 1vh; height: 250px;">
+					        	<div class="row">
+									<div class="col-lg-2">
+										<button class="btn btn-primary" ng-click="updateLink($index, data)" ng-disabled="data.LinkTopic == '' || data.LinkUrl == ''"><span class="glyphicon glyphicon-floppy-disk"></span></button>
+										<button class="btn btn-danger" ng-click="removeLink($index, data.LinkID)"><span class="glyphicon glyphicon-trash"></span></button>
+										<button class="btn btn-default" ng-click="goLinkPermission(data.LinkID)"><span class="glyphicon glyphicon-wrench"></span></button>
+									</div>
+									<div class="col-lg-10">
+										<div class="row form-group">
+											<label class="col-lg-2 form-control-static">หัวข้อ </label>
+											<div class="col-lg-10" >
+												<input type="text" class="form-control" ng-model="data.LinkTopic" />
+											</div>
+										</div>
+										<div class="row form-group">
+											<label class="col-lg-2 form-control-static">URL </label>
+											<div class="col-lg-10" >
+												<input type="text" class="form-control" ng-model="data.LinkUrl" />
+											</div>
+										</div>
+										<div class="row form-group">
+											<label class="col-lg-2 form-control-static">Icon </label>
+											<div class="col-lg-2" >
+												<button class="btn btn-default" ngf-select ng-model="data.UploadFile" accept="image/*" ngf-max-size="1MB" ngf-pattern="'.png,.jpg,.gif'">เลือก</button>
+											</div>
+											<div class="col-lg-2">
+												<img src="{{data.LinkIcon}}" style="max-width: 100%" ng-show="data.LinkIcon != '' && data.UploadFile == null">
+												<img ngf-thumbnail="data.UploadFile" style="max-width: 100%" ng-show="data.UploadFile != ''">
+											</div>
+											<div class="col-lg-2">
+												
+											</div>
+										</div>
+										<div class="row form-group">
+											<label class="col-lg-2 form-control-static">สถานะ </label>
+											<div class="col-lg-10" >
+												<div class="btn-group">
+													<label class="btn btn-default btn-checkbox" ng-model="data.LinkStatus" uib-btn-radio="'Y'" ng-click="checkLimitDisplay()">ใช้</label>
+								                    <label class="btn btn-default btn-checkbox" ng-model="data.LinkStatus" uib-btn-radio="'N'" ng-click="checkLimitDisplay()">ไม่ใช้</label>
+								                </div>
+											</div>
+										</div>
+									</div>
+								</div>
+					    </div>
+					</div>
+				</div>
+
+				<!--
+				<div class="row" dnd-list="DataList">
+					<div class="col-lg-4 col-sm-3 col-xs-12" ng-repeat="data in DataList" style="border: 1px #ccc solid; padding: 1vh; height: 250px;" 
+						dnd-draggable="item"
+				        dnd-moved="data.splice($index, 1)"
+				        dnd-effect-allowed="move"
+				        dnd-selected="DataList.selected = item">
 						<div class="row">
 							<div class="col-lg-2">
 								<button class="btn btn-primary" ng-click="updateLink($index, data)" ng-disabled="data.LinkTopic == '' || data.LinkUrl == ''"><span class="glyphicon glyphicon-floppy-disk"></span></button>
@@ -60,8 +124,55 @@
 					</div>
 					
 				</div>
+			-->
 			</div>
 		</div>
 	</div>
 </div>
+
 <div ng-include src="'html/footer.html'"></div>
+<style type="text/css">
+	.simpleDemo ul[dnd-list] {
+    min-height: 42px;
+    padding-left: 0px;
+}
+
+/**
+ * The dndDraggingSource class will be applied to
+ * the source element of a drag operation. It makes
+ * sense to hide it to give the user the feeling
+ * that he's actually moving it.
+ */
+.simpleDemo ul[dnd-list] .dndDraggingSource {
+    display: none;
+}
+
+/**
+ * An element with .dndPlaceholder class will be
+ * added to the dnd-list while the user is dragging
+ * over it.
+ */
+.simpleDemo ul[dnd-list] .dndPlaceholder {
+    background-color: #ddd;
+    display: block;
+    min-height: 42px;
+}
+
+.simpleDemo ul[dnd-list] li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+}
+
+/**
+ * Show selected elements in green
+ */
+.simpleDemo ul[dnd-list] li.selected {
+    background-color: #dff0d8;
+    color: #3c763d;
+}
+</style>

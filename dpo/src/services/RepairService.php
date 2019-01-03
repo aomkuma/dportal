@@ -196,6 +196,7 @@
                                 , "REPAIRED.RepairedCode"
                                 , "REPAIRED.CreateBy"
                                 , "REPAIRED_SUB_ISSUE.RepairedSubIssueName"
+                                , "REPAIRED_SUB_ISSUE.SLA"
                                 , "REPAIRED_TYPE.RepairedTypeName"
                                 , "REPAIRED_TITLE.RepairedTitleName"
                                 , "REPAIRED_TITLE.DepartmentID"

@@ -57,6 +57,7 @@
                 $username = $loginObj['obj_login']['Username'];
                 $password = $loginObj['obj_login']['Password'];
                 $use_ldap = $this->ldap['active'];
+                $this->logger->info($loginObj);
                 $this->logger->info('Find by username : '. $username . " Password : " . $password);
                 // print_r($this->ldap);
 

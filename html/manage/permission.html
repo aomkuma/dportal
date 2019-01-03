@@ -41,8 +41,8 @@
 							<th>ผู้ดูแลห้องประชุม</th>
 							<th>ผู้ดูแลยานพาหนะ</th>
 							<th>ผู้ดูแลอุปกรณ์</th>
-							<th>ผู้ดูแลข่าว</th>
-							<th>ผู้ดูแลข่าวและอนุมัติ</th>
+							<th>ผู้ดูแล Conference</th>
+							<th>หัวหน้างานซ่อม</th>
 							<th>ผู้ดูแลแจ้งซ่อม</th>
 							<th>ผู้ดูแลลิ้งค์</th>
 							<th>ผู้ดูแลสมุดโทรศัพท์ภายนอก</th>
@@ -74,10 +74,10 @@
 								<input type="checkbox" ng-model="data.DeviceAdmin" ng-true-value="4" ng-false-value="-1" ng-click="setPermission($index, data, 'DeviceAdmin')" ng-disabled="data.SuperAdmin == 0">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.NewsAdmin" ng-true-value="5" ng-false-value="-1" ng-click="setPermission($index, data, 'NewsAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.ConferenceAdmin" ng-true-value="5" ng-false-value="-1" ng-click="setPermission($index, data, 'ConferenceAdmin')" ng-disabled="data.SuperAdmin == 0">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.NewsApproveAdmin" ng-true-value="6" ng-false-value="-1" ng-click="setPermission($index, data, 'NewsApproveAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.RepairHeadAdmin" ng-true-value="6" ng-false-value="-1" ng-click="setPermission($index, data, 'RepairHeadAdmin')" ng-disabled="data.SuperAdmin == 0">
 							</td>
 							<td>
 								<input type="checkbox" ng-model="data.RepairAdmin" ng-true-value="7" ng-false-value="-1" ng-click="setPermission($index, data, 'RepairAdmin')" ng-disabled="data.SuperAdmin == 0" ng-disabled="data.SuperAdmin == 0">

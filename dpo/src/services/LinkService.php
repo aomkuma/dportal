@@ -24,10 +24,11 @@
                             
                          })
                         ->groupBy("LINK.LinkID", "LINK.LinkUrl", "LINK.LinkIcon", "LINK.LinkStatus", "LINK.CreateBy", "LINK.CreateDateTime", "LINK.LinkTopic")
-                        ->orderBy('LINK.LinkID', 'DESC')
+                        ->orderBy('LINK.OrderNo', 'ASC')
+                        // ->orderBy('LINK.LinkID', 'DESC')
     					->get();
             }else{
-                $DataList = Link::orderBy('LinkID', 'DESC')
+                $DataList = Link::orderBy('LINK.OrderNo', 'ASC')
                         ->get();
             }
 			return [ 'DataList'=>$DataList ];
@@ -43,6 +44,14 @@
             $Link = $Link->setValues($Link , $obj);
             $Link->save();
 			return $Link;
+        }
+
+        public static function updateOrderNo($LinkID, $OrderNo){
+            
+            $Link = Link::find($LinkID);
+        
+            $Link->OrderNo = $OrderNo;
+            return $Link->save();
         }
 
         public static function deleteData($ID){
