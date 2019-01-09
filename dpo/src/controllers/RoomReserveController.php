@@ -23,6 +23,24 @@
             $this->sms = $sms;
         }
 
+
+        public function findByKeyword($request, $response, $args){
+            
+            try{
+
+                $keyword = filter_var($request->getAttribute('keyword'), FILTER_SANITIZE_STRING);
+
+                $DataList = RoomReserveService::findByKeyword($keyword);
+
+                $this->data_result['DATA'] = $DataList;
+                
+                return $this->returnResponse(200, $this->data_result, $response);
+
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+        }
+
         public function getRoomMonitor($request, $response, $args){
         	try{
         		$parsedBody = $request->getParsedBody();
@@ -510,14 +528,14 @@
 				$this->data_result['DATA']['ReserveRoomID'] = $ReserveRoomID;
 
 				// Push notify
-				$notification = $this->generateNotificationMarkStatusData($ReserveRoomInfo, $RoomInfo, $ReserveRoomID, $ReserveStatus);
-				$this->logger->info(' Region ID : '.$notification['RegionID']);
-				$this->logger->info(' Room Region ID : '.$RoomInfo['RegionID']);
-				if(empty($notification['RegionID'])){
-					$notification['RegionID'] = $RoomInfo['RegionID'];	
-				}
+				// $notification = $this->generateNotificationMarkStatusData($ReserveRoomInfo, $RoomInfo, $ReserveRoomID, $ReserveStatus);
+				// $this->logger->info(' Region ID : '.$notification['RegionID']);
+				// $this->logger->info(' Room Region ID : '.$RoomInfo['RegionID']);
+				// if(empty($notification['RegionID'])){
+				// 	$notification['RegionID'] = $RoomInfo['RegionID'];	
+				// }
 				
-				NotificationService::pushNotification($notification);
+				// NotificationService::pushNotification($notification);
 				
 				// Send mail	
 				$mailer = new Mailer;
@@ -599,9 +617,17 @@
 
                 }
 				
-                // Update notification seen
+                // Update notification seen & status
                 $NotificationTypeList = [1,6];
-                NotificationService::updateNotificationSeenData($ReserveRoomID, $NotificationTypeList);
+                if($ReserveStatus == 'Approve'){
+                    $descriptions = ' (ได้รับการอนุมัติแล้ว)';
+                }else if($ReserveStatus == 'Reject'){
+                    $descriptions = ' (ไม่ได้รับการอนุมัติ)';
+                }
+                $NotificationData = NotificationService::getNotificationRoomData($ReserveRoomID, $NotificationTypeList);
+                $NotificationData['NotificationText'] .= $descriptions;
+                NotificationService::updateNotificationSeenData($ReserveRoomID, $NotificationTypeList, $NotificationData['NotificationText']);
+                
 
                 return $this->returnResponse(200, $this->data_result, $response);
             }catch(\Exception $e){

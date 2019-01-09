@@ -56,6 +56,7 @@
                     case 'summary_room' : $objPHPExcel = $this->generateExcelSummaryRoom($objPHPExcel, $condition, $data, $summary); break;
                     case 'detail_car' : $objPHPExcel = $this->generateExcelDetailCar($objPHPExcel, $condition, $data, $summary); break;
                     case 'summary_car' : $objPHPExcel = $this->generateExcelSummaryCar($objPHPExcel, $condition, $data, $summary); break;
+                    case 'summary_room_conference' : $objPHPExcel = $this->generateExcelSummaryRoomConference($objPHPExcel, $condition, $data, $summary); break;
                     default : $result = null;
                 }
                 
@@ -88,6 +89,7 @@
                     case 'summary_repair' : $result = $this->querySummaryRepair($obj); break;
                     case 'detail_room' : $result = $this->queryDetailRoom($obj); break;
                     case 'summary_room' : $result = $this->querySummaryRoom($obj); break;
+                    case 'summary_room_conference' : $result = $this->querySummaryRoomConference($obj); break;
                     case 'detail_car' : $result = $this->queryDetailCar($obj); break;
                     case 'summary_car' : $result = $this->querySummaryCar($obj); break;
                     default : $result = null;
@@ -199,8 +201,8 @@
             $RepairIssue = $condition['RepairIssue'];
             $RepairSubIssue = $condition['RepairSubIssue'];
             $dateCondition = $this->calculateFiscalYear($condition['Year']);
-            $startDate = $dateCondition['startDate'];
-            $endDate = $dateCondition['endDate'];
+            $startDate = $condition['StartDate'];
+            $endDate = $condition['EndDate'];
             // get Repair sub issue
             $RepairSubIssueList = ReportService::getRepairSubIssueList($startDate, $endDate, $RepairType, $RepairedTitle, $RepairIssue, $RepairSubIssue);
 
@@ -254,8 +256,8 @@
             $year = $condition['Year']['yearText'];
             $yearThai = $condition['Year']['yearValue'];
             $dateCondition = $this->calculateFiscalYear($year);
-            $startDate = $dateCondition['startDate'];
-            $endDate = $dateCondition['endDate'];
+            $startDate = $condition['StartDate'];
+            $endDate = $condition['EndDate'];
             // get Repair sub issue
             $RoomList = ReportService::getSummaryRoom($regionID, $startDate, $endDate, $year);
 
@@ -268,6 +270,26 @@
                 $List[] = $value;
             }
             return $List;
+        }
+
+        private function querySummaryRoomConference($condition){
+
+            $regionID = $condition['Region']['RegionID'];
+            $roomID = $condition['Room']['RoomID'];
+            
+            $startDate = $condition['StartDate'];
+            $endDate = $condition['EndDate'];
+            // get Repair sub issue
+
+            $RoomList = ReportService::getSummaryRoomConference($regionID, $roomID, $startDate, $endDate);
+            $DataList = [];
+            foreach ($RoomList as $key => $value) {
+                $ConferenceList = ReportService::getRoomConferenceList($value['ReserveRoomID']);
+                $value['ConferenceList'] = $ConferenceList;
+                array_push($DataList, $value);
+            }
+
+            return $DataList;
         }
 
         private function queryDetailRoom($condition){
@@ -643,6 +665,81 @@
             return $objPHPExcel;
         }
 
+        private function generateExcelSummaryRoomConference($objPHPExcel, $condition, $data, $summary){
+            
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'รายงานสรุปการใช้งาน ประชุมด้วย Video Conference');
+            
+            // set header
+            $header = ['พื้นที่', 'ห้องประชุม', "เริ่มประชุม", 'สิ้นสุดประชุม', 'หัวข้อการประชุม', 'ผู้ทำการจอง', 'ห้องประชุมพื้นที่เชื่อมโยง', 'พื้นที่เชื่อมโยง'];
+            
+            $objPHPExcel->getActiveSheet()->fromArray($header, NULL, 'A3' );
+            
+            // re format data
+            //$new_data = [];
+            $con_row = 4;
+            foreach ($data as $key => $value) {
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$con_row, $value['RegionName']);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$con_row, $value['RoomName']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$con_row, $value['StartDateTime']);
+                $objPHPExcel->getActiveSheet()->setCellValue('D'.$con_row, $value['EndDateTime']);
+                $objPHPExcel->getActiveSheet()->setCellValue('E'.$con_row, $value['TopicConference']);
+                $objPHPExcel->getActiveSheet()->setCellValue('F'.$con_row, $value['FirstName'] . ' ' . $value['LastName']);
+
+                $ConferenceRoom = '';
+                $ConferenceRegion = '';
+                foreach ($value['ConferenceList'] as $_key => $_value) {
+                    $ConferenceRoom[] = '- ' . $_value['RoomName'];
+                    $ConferenceRegion[] = '- ' . $_value['RegionName'];
+                }
+                $objPHPExcel->getActiveSheet()->setCellValue('G'.$con_row, implode("\n", $ConferenceRoom));
+                $objPHPExcel->getActiveSheet()->getStyle('G' . $con_row)->getAlignment()->setWrapText(true);
+                $objPHPExcel->getActiveSheet()->setCellValue('H'.$con_row, implode("\n", $ConferenceRegion));
+                $objPHPExcel->getActiveSheet()->getStyle('H' . $con_row)->getAlignment()->setWrapText(true);
+                $con_row++;
+            }
+
+            $objPHPExcel->getActiveSheet()
+            ->getStyle("A3:H" . $objPHPExcel->getActiveSheet()->getHighestRow())
+            ->applyFromArray($this->getDefaultStyle());
+
+            // set header align center
+            $objPHPExcel->getActiveSheet()
+            ->getStyle("A3:H3")
+            ->applyFromArray(array(                  
+                    'alignment' => array(
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PHPExcel_Style_Alignment::VERTICAL_TOP
+                     )
+                )
+            );
+
+            // $objPHPExcel->getActiveSheet()
+            // ->getStyle("C4:H" . $objPHPExcel->getActiveSheet()->getHighestRow())
+            // ->applyFromArray(array(                  
+            //         'alignment' => array(
+            //             'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER
+            //          )
+            //     )
+            // );
+
+            // header style
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:H1');
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+            
+            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(30);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(40);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+
+            return $objPHPExcel;
+        }
+
         private function generateExcelDetailCar($objPHPExcel, $condition, $data, $summary){
             
             $car_license = $condition['Car']['License'];
@@ -771,6 +868,26 @@
             $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(10);
 
             return $objPHPExcel;
+        }
+
+        public function getRoomDetail($request, $response, $args){
+            // error_reporting(E_ERROR);
+            // error_reporting(E_ALL);
+            // ini_set('display_errors','On');
+            try{
+                $obj = $request->getParsedBody();
+                
+                $RoomID = $obj['RoomID'];
+                $condition = $obj['condition'];
+
+                $List = ReportService::getRoomDetail($RoomID, $condition);
+                $this->data_result['DATA']['List'] = $List;
+
+                return $this->returnResponse(200, $this->data_result, $response);
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+            
         }
 
         private function getDefaultStyle(){

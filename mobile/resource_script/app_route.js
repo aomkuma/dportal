@@ -105,7 +105,7 @@ app.config(function($routeProvider) {
         controller : "ExternalPhoneBookManageController"
     })
 
-    .when("/vehicles/:reserveCarID", {
+    .when("/vehicles/:reserveCarID/:params?/:user_session?", {
         templateUrl : "html/carreservation/carbooking.html",
         controller : "CarBookingController"
     })

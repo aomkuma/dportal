@@ -287,6 +287,19 @@ app.factory('NotificationFactory', ['$http', '$q', function($http, $q){
 
 app.factory('ReserveRoomFactory', ['$http', '$q', function($http, $q){
 	 return {
+
+        findBykeyword : function(keyword) {           
+            return $http.get(servicesUrl + '/dpo/public/room-reserve/find-by-keyword/' + keyword)
+                .then(
+                    function(response){
+                        // console.log(response.data);
+                        return returnResponse(response);
+                    }, 
+                    function(errResponse){
+                        return returnErrorResponse(errResponse);
+                    }
+                );
+        },
          
     	getRoomReserveDetail : function(regionID, findDate) {           
     		return $http.get(servicesUrl + '/dpo/public/getRoomReserveDetail/' + regionID + '/' + findDate)
@@ -1940,6 +1953,19 @@ app.factory('HTTPFactory', ['$http', '$q', function($http, $q){
 
         clientRequest : function(action, data) {           
             return $http.post(servicesUrl + '/dpo/public/' + action + '/', data)
+                .then(
+                    function(response){
+                        // console.log(response.data);
+                        return returnResponse(response);
+                    }, 
+                    function(errResponse){
+                        return returnErrorResponse(errResponse);
+                    }
+                );
+        },
+
+        getRequest : function(action, data) {           
+            return $http.get(servicesUrl + '/dpo/public/' + action + '/' + data)
                 .then(
                     function(response){
                         // console.log(response.data);

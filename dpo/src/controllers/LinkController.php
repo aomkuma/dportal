@@ -207,6 +207,53 @@
                 return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
             }   
         }
+
+        public function updateVisitCount($request, $response, $args){
+            try{
+
+                $reqIPAddress = $request->getAttribute('ip_address');
+
+                $parsedBody = $request->getParsedBody();
+                $LinkID = $parsedBody['LinkID'];
+                $user_session = $parsedBody['user_session'];
+                
+                $cnt = LinkService::updateVisitCount($LinkID);
+
+                // Visit link history
+                $data = [];
+                $data['visit_name'] = $user_session['FirstName'] . ' ' . $user_session['LastName'];
+                $data['visit_datetime'] = date('Y-m-d H:i:s');
+                $data['visit_ip'] = $reqIPAddress;
+                $data['link_id'] = $LinkID;
+
+                LinkService::updateVisitLink($data);
+
+                $this->data_result['DATA']['VisitCount'] = $cnt;
+                
+                return $this->returnResponse(200, $this->data_result, $response);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }   
+        }
+        
+        public function viewDetail($request, $response, $args){
+            try{
+
+                $parsedBody = $request->getParsedBody();
+                $LinkID = $parsedBody['LinkID'];
+                $keyword = $parsedBody['keyword'];
+                
+                $List = LinkService::getVisitDetail($LinkID, $keyword);
+
+                $this->data_result['DATA']['VisitList'] = $List;
+                
+                return $this->returnResponse(200, $this->data_result, $response);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }   
+        }
         
     }
     

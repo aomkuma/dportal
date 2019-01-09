@@ -1,8 +1,10 @@
 @CHARSET "UTF-8";
 
 @font-face {
-    font-family: "THSarabunNew";
-    src: url('../fonts/THSarabunNew.ttf')
+    /*font-family: "THSarabunNew";
+    src: url('../fonts/THSarabunNew.ttf')*/
+    font-family: "SukhumvitSet-Text";
+    src: url('../fonts/SukhumvitSet-Text.ttf')
 }
 
 
@@ -10,9 +12,12 @@ body {
 	/*padding-top:50px;*/
 	background-color: #FFF;
 	overflow: auto !important;
-    font-size:2em;
-    font-family: "THSarabunNew";
-    src: url('../fonts/THSarabunNew.ttf')
+    font-size:1.2em;
+    /*font-family: "THSarabunNew";
+    src: url('../fonts/THSarabunNew.ttf')*/
+    
+    font-family: "SukhumvitSet-Text";
+    src: url('../fonts/SukhumvitSet-Text.ttf')
 }
 
 a {
@@ -213,4 +218,8 @@ h2:before, h2:after {
 
 .file-alert{
   color:red;
+}
+
+.dropdown-menu > li > a{
+  font-size: 1em;
 }

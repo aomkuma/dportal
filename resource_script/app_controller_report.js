@@ -12,6 +12,22 @@ app.controller('ReportSummaryRepairController', function($scope, $filter, IndexO
        window.location.replace('#/logon/' + $scope.menu_selected);
     }
 
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.popup2 = {
+        opened: false
+    };
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.open2 = function() {
+        
+        $scope.popup2.opened = true;
+    };
+
     // Validate zone
     $scope.filterMenu = function(MenuID){
         //console.log('MenuID = ', MenuID);
@@ -395,9 +411,11 @@ app.controller('ReportDetailRoomController', function($scope, $filter, IndexOver
 
     IndexOverlayFactory.overlayHide();
 
+
+
 });
 
-app.controller('ReportSummaryRoomController', function($scope, $filter, IndexOverlayFactory, ReportFactory, RegionFactory) {
+app.controller('ReportSummaryRoomController', function($scope, $filter, $uibModal, IndexOverlayFactory, ReportFactory, RegionFactory, HTTPFactory) {
     IndexOverlayFactory.overlayShow();
     $scope.menu_selected = 'report_summary_room';
 
@@ -409,6 +427,30 @@ app.controller('ReportSummaryRoomController', function($scope, $filter, IndexOve
         
     }else{
        window.location.replace('#/logon/' + $scope.menu_selected);
+    }
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.popup2 = {
+        opened: false
+    };
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.open2 = function() {
+        
+        $scope.popup2.opened = true;
+    };
+
+    $scope.getTotalUse = function(){
+        var totalUse = 0;
+        for(var i = 0; i < $scope.DataList.length; i++){
+            totalUse += $scope.DataList[i].CountUseRoom;
+        }
+        return totalUse;
     }
 
     // Validate zone
@@ -467,7 +509,7 @@ app.controller('ReportSummaryRoomController', function($scope, $filter, IndexOve
         headerRow.push({text: 'ห้องประชุม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
         headerRow.push({text: 'พื้นที่', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});  
         headerRow.push({text: 'จำนวนครั้งที่ใช้งาน', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
-        headerRow.push({text: 'ปี', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        // headerRow.push({text: 'ปี', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
         data_detail.push(headerRow);
         
         // set detail
@@ -477,7 +519,7 @@ app.controller('ReportSummaryRoomController', function($scope, $filter, IndexOve
           dataRow.push(sourceRow.RoomName);
           dataRow.push(sourceRow.RegionName);
           dataRow.push({text: sourceRow.CountUseRoom, alignment: 'center'});
-          dataRow.push({text: sourceRow.ReportYear, alignment: 'center'});
+          // dataRow.push({text: sourceRow.ReportYear, alignment: 'center'});
           data_detail.push(dataRow);
           row_index++;
         });
@@ -497,7 +539,7 @@ app.controller('ReportSummaryRoomController', function($scope, $filter, IndexOve
                 {
                      table: {
                         headerRows: 1,
-                        widths: [170,150,100,50],
+                        widths: [170,150,100],
                         body: data_detail
                     }
                 }
@@ -523,9 +565,39 @@ app.controller('ReportSummaryRoomController', function($scope, $filter, IndexOve
     $scope.MonthList = getThaiMonth();
     $scope.YearList = getYearList(100);
     var d = new Date();
+    $scope.DataList = [];
     $scope.condition = {'report_type':'summary_room', 'RegionID':null, 'RoomID':null, 'Month':null, 'Year':null, 'RegionName':null, 'RoomName':null, 'MonthName':null, 'YearName':null};
 
     IndexOverlayFactory.overlayHide();
+
+    $scope.viewDetail = function(RoomID, RoomName, TotalUse, condition){
+        $scope.RoomName = RoomName;
+        $scope.TotalUse = TotalUse;
+        var params = {'RoomID' : RoomID, 'condition' : condition};
+        HTTPFactory.clientRequest('report/room/detail', params).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.RoomDetail = result.data.DATA.List;
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: 'room_detail.html',
+                    size: 'md',
+                    scope: $scope,
+                    backdrop: 'static',
+                    controller: 'ModalDialogReturnFromOKBtnCtrl',
+                    resolve: {
+                        params: function () {
+                            return {};
+                        }
+                    },
+                });
+                modalInstance.result.then(function (valResult) {
+                    // $scope.updateProfile(valResult);
+                });
+
+            }
+        });
+    }
 
 });
 
@@ -1036,5 +1108,181 @@ app.controller('ReportDetailRepairController', function($scope, $uibModal, $filt
     $scope.condition = {'report_type':'detail_repair', 'RegionID':null, 'RepairedtTypeID':null ,'UserID':null, 'Day':null, 'Month':null, 'Year':null, 'RegionName':null, 'RoomName':null, 'MonthName':null, 'YearName':null};
 
     IndexOverlayFactory.overlayHide();
+
+});
+
+app.controller('ReportSummaryRoomConferenceController', function($scope, $filter, IndexOverlayFactory, ReportFactory, RegionFactory) {
+    IndexOverlayFactory.overlayShow();
+    $scope.menu_selected = 'report_summary_room_conference';
+
+    var $user_session = sessionStorage.getItem('user_session');
+    
+    if($user_session != null){
+        $scope.$parent.currentUser = angular.fromJson($user_session);
+        $scope.$parent.TotalLogin = sessionStorage.getItem('TotalLogin');
+        
+    }else{
+       window.location.replace('#/logon/' + $scope.menu_selected);
+    }
+
+    // Validate zone
+    $scope.filterMenu = function(MenuID){
+        //console.log('MenuID = ', MenuID);
+        $scope.MenuList = angular.fromJson(sessionStorage.getItem('MenuList'));
+        var result = false;
+        if(MenuID == '2'){
+            result = $filter('MenuFilter')($scope.MenuList, 6);     
+            result = $filter('MenuFilter')($scope.MenuList, 7);     
+        }else{
+            result = $filter('MenuFilter')($scope.MenuList, MenuID);
+        }
+        
+        return result;
+    }
+    if(!$scope.filterMenu(7)){
+        alert('ไม่มีสิทธิ์เข้าใช้งานในหน้านี้');
+        window.location.replace('#/');
+    }
+
+    $scope.loadRegionList = function () {
+        RegionFactory.getAllRegion().then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.RegionList = result.data.DATA;
+            }
+        });
+    }
+
+    $scope.loadRoomListByRegion = function (regionID) {
+        console.log(regionID);
+        ReportFactory.loadRoomListByRegion(regionID).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.RoomList = result.data.DATA;
+            }
+        });
+    }
+
+    $scope.changeRegion = function(region){
+        $scope.loadRoomListByRegion(region.RegionID)
+    }
+
+    $scope.queryReport = function (condition){
+        //IndexOverlayFactory.overlayShow();
+        ReportFactory.queryReport(condition).then(function(result){
+            IndexOverlayFactory.overlayHide();
+            if(result.data.STATUS == 'OK'){
+                $scope.DataList = result.data.DATA;
+            }
+        });
+    }
+
+    $scope.exportToExcel = function (condition, data, summary){
+        IndexOverlayFactory.overlayShow();
+        ReportFactory.exportExcel(condition, data, summary).then(function(result){
+            IndexOverlayFactory.overlayHide();
+            if(result.data.STATUS == 'OK'){
+                window.location.href="downloads/" + result.data.DATA;
+            }
+        });
+    }
+
+    $scope.exportToPDF = function(condition, data, summary) {
+        IndexOverlayFactory.overlayShow();
+        var data_detail = [];
+        var headerRow = [];
+        // set header
+        //headerRow.push('ห้องประชุม');
+        headerRow.push({text: 'พื้นที่', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});  
+        headerRow.push({text: 'ห้องประชุม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'เริ่มประชุม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'สิ้นสุดประชุม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'หัวข้อการประชุม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'ผู้ทำการจอง', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'ห้องประชุมพื้นที่เชื่อมโยง', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'พื้นที่เชื่อมโยง', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        data_detail.push(headerRow);
+        
+        // set detail
+        var row_index = 1;
+        data.forEach(function(sourceRow) {
+          var dataRow = [];
+          var ConRoom = '';
+          var ConRegion = '';
+          for(var i = 0; i < sourceRow.ConferenceList.length; i++){
+            ConRoom += "- " + sourceRow.ConferenceList[i].RoomName + "\n";
+            ConRegion += "- " + sourceRow.ConferenceList[i].RegionName + "\n";
+          }
+          dataRow.push(sourceRow.RegionName);
+          dataRow.push(sourceRow.RoomName);
+          dataRow.push(sourceRow.StartDateTime);
+          dataRow.push(sourceRow.EndDateTime);
+          dataRow.push(sourceRow.TopicConference);
+          dataRow.push(sourceRow.FirstName + ' ' + sourceRow.LastName);
+          dataRow.push(ConRoom);
+          dataRow.push(ConRegion);
+          data_detail.push(dataRow);
+          row_index++;
+        });
+
+        //return ;
+        pdfMake.fonts = {
+            SriSuriwongse: {
+                
+                normal: 'SRISURYWONGSE.ttf'
+                ,bold: 'SRISURYWONGSE-Bold.ttf'
+            }
+        };
+        
+        var dd = {
+            content: [
+                {text: 'รายงานสรุปการใช้งาน ประชุมด้วย Video Conference ', style: 'header', alignment:'center',margin: [0,10,0,0]},
+                {
+                     table: {
+                        headerRows: 1,
+                        widths: [100,90,50,50, 100, 50, 100, 90],
+                        body: data_detail
+                    }
+                }
+            ],
+            styles: {
+                header: {
+                    bold: true,
+                    fontSize: 18
+                }
+            },
+            defaultStyle: {
+                fontSize: 12,
+                font:'SriSuriwongse'
+            },
+            pageOrientation: 'landscape' 
+        }
+
+         pdfMake.createPdf(dd).download('summary_room_conference.pdf');
+         IndexOverlayFactory.overlayHide();
+    }
+
+    // Prepare variable
+    $scope.loadRegionList();
+    $scope.MonthList = getThaiMonth();
+    $scope.YearList = getYearList(100);
+    var d = new Date();
+    $scope.condition = {'report_type':'summary_room_conference'};
+
+    IndexOverlayFactory.overlayHide();
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.popup2 = {
+        opened: false
+    };
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.open2 = function() {
+        
+        $scope.popup2.opened = true;
+    };
 
 });

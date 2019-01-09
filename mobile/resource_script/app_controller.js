@@ -661,30 +661,16 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, $
        // window.location.replace('#/logon/' + $scope.menu_selected);
     }
     
-    // All variables
-    $scope.regionSelected = '';
-    $scope.RegionList = [];
-    $scope.ReserveList = [];
-    var curDate = new Date();
-    var curMonth = (parseInt(curDate.getMonth()) + 1);
-    curMonth = curMonth.toString().length==1?'0'+curMonth:curMonth;
-    var curDay = curDate.getDate().length==1?'0'+curDate.getDate():curDate.getDate();
-    $scope.dateSelected = curDate.getFullYear() + '-' + curMonth + '-' + curDay;
-    //console.log($scope.dateSelected);
-    $scope.dateRange = [];
-    $scope.dateRangeDisplay = [];
-    $scope.timeList = ['07:00:00.000','08:00:00.000','09:00:00.000','10:00:00.000','11:00:00.000','12:00:00.000'
-                        ,'13:00:00.000','14:00:00.000','15:00:00.000','16:00:00.000','17:00:00.000','18:00:00.000'
-                        ,'19:00:00.000','20:00:00.000'];  
-                        
-    // End All variables
-    $scope.isFirstOpen = true;
+
+    
     // Load Region List
-    RegionFactory.getAllRegion().then(function (obj){
-        //console.log(obj);
-        IndexOverlayFactory.overlayHide();
-        $scope.RegionList = obj.data.DATA;
-    });
+    $scope.loadRegionList = function(){
+        RegionFactory.getAllRegion().then(function (obj){
+            //console.log(obj);
+            IndexOverlayFactory.overlayHide();
+            $scope.RegionList = obj.data.DATA;
+        });
+    }
     // End Load Region List
     
     // Accordion Zone
@@ -741,9 +727,6 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, $
         }
     }
     
-    // Set default date range
-    $scope.generateDateRange($scope.dateSelected);
-    
     // Load Reserve List
     $scope.loadReserveList = function(regionID){
         
@@ -751,7 +734,7 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, $
             $scope.regionSelected = regionID;
         }
         
-        IndexOverlayFactory.overlayShow();
+        // IndexOverlayFactory.overlayShow();
         ReserveRoomFactory.getRoomReserveDetail(regionID, $scope.dateSelected).then(function(obj) {
             //console.log(obj);
             IndexOverlayFactory.overlayHide();
@@ -821,9 +804,7 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, $
             
         });
     }
-    setTimeout(function(){
-        $scope.loadReserveList($scope.currentUser.RegionID);
-    },300);
+    
     // End Load Reserve List
     
     // Generate Reserve List                     
@@ -883,7 +864,7 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, $
     // End Generate Reserve List
     //console.log($scope.$parent.currentUser);
     $scope.gotoBookingRoom = function (userID, roomID, currentTime, ReserveList) {
-        IndexOverlayFactory.overlayShow();
+        // IndexOverlayFactory.overlayShow();
         //console.log(userID, roomID);
         if(currentTime!== undefined && ReserveList !== undefined){
             var curDateTime = makeDate($scope.dateSelected + ' ' + currentTime);
@@ -895,21 +876,46 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, $
                 
                 if((reserveStartDate.getTime() == curDateTime.getTime()) || (reserveEndDate.getTime() > curDateTime.getTime() && curDateTime.getTime() > reserveStartDate.getTime())){
                     create_bool = false;
-                    window.location.href = '#/roombooking/' + userID + '/' + roomID +'/' + null + '/' + ReserveList[i].ReserveRoomID;
+                    window.location.href = '#/roombooking/' + userID + '/' + roomID +'/' + null + '/' + ReserveList[i].ReserveRoomID ;
                     
                 }
             }
 
             if(create_bool){
                 console.log('create page');
-                window.location.href = '#/roombooking/' + userID + '/' + roomID + '/' + $scope.dateSelected + ' ' + currentTime + '/-1';        
+                window.location.href = '#/roombooking/' + userID + '/' + roomID + '/' + $scope.dateSelected + ' ' + currentTime + '/-1//'+$routeParams.user_session;        
             }
             
         }else{
-            window.location.href = '#/roombooking/' + userID + '/' + roomID +'/' + null + '/-1';    
+            window.location.href = '#/roombooking/' + userID + '/' + roomID +'/' + null + '/-1//'+$routeParams.user_session;    
         }
         
     }
+
+    // All variables
+    $scope.regionSelected = '';
+    $scope.RegionList = [];
+    $scope.ReserveList = [];
+    var curDate = new Date();
+    var curMonth = (parseInt(curDate.getMonth()) + 1);
+    curMonth = curMonth.toString().length==1?'0'+curMonth:curMonth;
+    var curDay = curDate.getDate().length==1?'0'+curDate.getDate():curDate.getDate();
+    $scope.dateSelected = curDate.getFullYear() + '-' + curMonth + '-' + curDay;
+    //console.log($scope.dateSelected);
+    $scope.dateRange = [];
+    $scope.dateRangeDisplay = [];
+    $scope.timeList = ['07:00:00.000','08:00:00.000','09:00:00.000','10:00:00.000','11:00:00.000','12:00:00.000'
+                        ,'13:00:00.000','14:00:00.000','15:00:00.000','16:00:00.000','17:00:00.000','18:00:00.000'
+                        ,'19:00:00.000','20:00:00.000'];  
+    $scope.isFirstOpen = true;                    
+    
+    // End All variables
+    // Set default date range
+    $scope.loadRegionList();                    
+    $scope.generateDateRange($scope.dateSelected);
+    setTimeout(function(){
+        $scope.loadReserveList($scope.currentUser.RegionID);
+    },300);
 });
 
 app.controller('RoomBookingController', function($scope, $location, $http, $filter, $uibModal, $routeParams, IndexOverlayFactory, ReserveRoomFactory, $routeParams) {

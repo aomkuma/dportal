@@ -3,14 +3,27 @@ app.controller('CarBookingController', function($scope, $location, $http, $filte
     $scope.$parent.menu_selected = 'vehicles';
     IndexOverlayFactory.overlayShow();
     var $user_session = sessionStorage.getItem('user_session');
+    // alert($user_session);
+    // console.log($user_session);
     
     if($user_session != null){
-		$scope.$parent.currentUser = angular.fromJson($user_session);
+        $scope.$parent.currentUser = angular.fromJson($user_session);
         $scope.$parent.TotalLogin = sessionStorage.getItem('TotalLogin');
         
-	}else{
-        window.location.replace('#/logon/vehicles');
-	}
+    }else{
+
+        $user_session = window.atob(($routeParams.user_session));
+        console.log($user_session);
+        $user_session = decodeURIComponent($user_session);
+        console.log($user_session);
+        // alert($user_session);
+        sessionStorage.setItem('user_session', $user_session);
+        $scope.$parent.currentUser = angular.fromJson($user_session);
+        // alert($user_session);
+        //
+       // window.location.replace('#/logon/' + $scope.menu_selected);
+    }
+    
     IndexOverlayFactory.overlayHide();
 
     RegionFactory.getAllRegion().then(function (obj){

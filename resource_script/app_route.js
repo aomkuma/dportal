@@ -159,6 +159,11 @@ app.config(function($routeProvider) {
         templateUrl : "html/manage/permission.html",
         controller : "PermissionController"
     })
+    
+    .when("/report_summary_room_conference", {
+        templateUrl : "html/report/summary_room_conference.html",
+        controller : "ReportSummaryRoomConferenceController"
+    })
 
     .when("/report_summary_room", {
         templateUrl : "html/report/summary_room.html",

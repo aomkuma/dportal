@@ -18,6 +18,18 @@
     
     class RoomReserveService {
 
+        public  static function findByKeyword($keyword){
+            return RoomReserve::select("RoomName"
+                                        , "StartDateTime"
+                                        , "EndDateTime"
+                                        , "TopicConference"
+                                    )
+                                ->join('ROOM', 'ROOM.RoomID', '=', 'RESERVE_ROOM.RoomID')
+                                ->where('TopicConference', 'LIKE', DB::raw("'%" . $keyword . "%'"))
+                                ->orderBy("StartDateTime" , 'DESC')
+                                ->get();
+        }
+
         public  static function getRoomMonitor($RoomID, $CurDate){
             return RoomReserve::select("StartDateTime"
                                         , "EndDateTime"

@@ -1,27 +1,69 @@
 <div ng-include src="'html/top_menu.html'"></div>
+
 <div class="row">
     <div class="col-lg-12">
         <div class="row">
             <div class="col-lg-5"  style="margin-top: 0px;"><div id='content'><h2 class='topic'>ตารางการจองห้องประชุม</h2></div>
             </div>
-            <div class="row visible-lg visible-md" style="margin-top: 0px; text-align: center;">
+            <div class="col-lg-7">&nbsp;</div>
+        </div>
+            <div class="row form-group" style="text-align: center;">
+                <div class="col-lg-8">
+                    <p class="input-group" style="margin: 0 0 0px;">
+                        <input type="text" readonly="true" class="form-control" uib-datepicker-popup="yyyy-MM-dd" ng-model="CalendarDate" is-open="popup1.opened" datepicker-options="dateOptions1" ng-required="true" close-text="Close" ng-show="true" style="width: 0px; padding:0px; margin: 0px;" ng-change="changeDate(CalendarDate)" />
+                        <span class="input-group-btn" style="float: left;">
+                            <button class="btn btn-default btn-block" style="width: 80px; font-weight: bolder;" ng-click="open1()"><span class="glyphicon glyphicon-calendar"></span> เลือกวัน</button>
+                        </span>
+                    </p>
+                </div>
+                <div class="col-lg-4">
+                    <div class="input-group" style="padding-top: 5px;">
+                        <input type="text" class="form-control"  ng-model="keyword" placeholder="ค้นหา..." name="srch-term" id="srch-term" style="border: 1px solid #31b0d5;">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit" style="border: 1px solid #31b0d5;" ng-click="search(keyword)" ng-disabled="keyword == null || keyword == ''"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row visible-lg visible-md" style="margin-top: 0px; text-align: center;"  ng-show="!ShowSearch">
                 <div class="col-lg-12 col-lg-offset-1 col-xs-12  col-xs-offset-1" style="text-align: center;">
                     <div class="col-lg-1 col-xs-1  date_rang_block default_bg_color" style="text-align: right;   color: #FFF; width:5%; height: 100px;"><h4><a ng-click="setDateRange(2)"  style="color: #FFF;"><</a></h4></div>
                     <div class="col-lg-1 col-xs-1  date_rang_block default_bg_color"  style="width: 10%;  height: 100px;" ng-repeat="date in dateRangeDisplay"><h4><a ng-class="{active_date:$index == 3,normal_date:$index != 3}" ng-click="setDateRange($index)">{{date}}</a></h4></div>
                     <div class="col-lg-1 col-xs-1  date_rang_block default_bg_color" style="text-align: left; width:5%;  height: 100px;"><h4><a ng-click="setDateRange(4)"  style="color: #FFF;">&gt;</a></h4></div>
                 </div>
             </div>
-            <div class="row visible-xs visible-sm" style="margin-top: 0px; text-align: center;">
+            <div class="row visible-xs visible-sm" style="margin-top: 0px; text-align: center;"  ng-show="!ShowSearch">
                 <div class="col-lg-12 col-xs-12 " style="text-align: center; margin-left: 12px;">
                     <div class="col-lg-1 col-xs-1  date_rang_block default_bg_color" style="text-align: right;   color: #FFF; width:4.5%; height: 100px;"><h4><a ng-click="setDateRange(2)"  style="color: #FFF;"><</a></h4></div>
                     <div class="col-lg-10 col-xs-10  date_rang_block default_bg_color" ng-show="$index == 3"  style="  height: 100px;" ng-repeat="date in dateRangeDisplay"><h4><a class="normal_date" ng-click="setDateRange($index)">{{date}}</a></h4></div>
                     <div class="col-lg-1 col-xs-1  date_rang_block default_bg_color" style="text-align: left; width:4.5%;  height: 100px;"><h4><a ng-click="setDateRange(4)"  style="color: #FFF;">&gt;</a></h4></div>
                 </div>
             </div>
-        </div>
-
         
-        <div class="row">
+
+        <div class="row" ng-show="ShowSearch">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <caption><button class="btn btn-info" ng-click="ShowSearch = false"><span class="glyphicon glyphicon-calendar"></span> กลับไปยังรูปแบบตาราง</button></caption>
+                    <thead>
+                        <tr>
+                            <th>ห้องประชุม</th>
+                            <th>วันที่ / เวลาที่ประชุม</th>
+                            <th>หัวข้อประชุม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in FindList">
+                            <td>{{data.RoomName}}</td>
+                            <td>{{ convertDate(data.StartDateTime) }} - {{ convertDate(data.EndDateTime) }}</td>
+                            <td>{{data.TopicConference}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="row" ng-show="!ShowSearch">
             <div class="col-lg-12">
                 <uib-accordion close-others="oneAtATime">
                     <div uib-accordion-group class="panel custom_tabs" ng-repeat="region in RegionList" >

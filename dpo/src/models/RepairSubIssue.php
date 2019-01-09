@@ -8,7 +8,8 @@ class RepairSubIssue extends \Illuminate\Database\Eloquent\Model {
 	public function setValues($obj, $parsedBody){
 		$obj->RepairedIssueID = $parsedBody['RepairedIssueID'];
 		$obj->RepairedSubIssueName = $parsedBody['RepairedSubIssueName'];
-		$obj->SLA = $parsedBody['SLA'];
+		$obj->SLAHour = $parsedBody['SLAHour'];
+		$obj->SLAMinute = $parsedBody['SLAMinute'];
 		$obj->ActiveStatus = $parsedBody['ActiveStatus'];
 		$obj->CreateBy = $parsedBody['CreateBy'];
 		$obj->CreateDateTime = $parsedBody['CreateDateTime']==''?date('Y-m-d H:i:s.000'):$parsedBody['CreateDateTime'];

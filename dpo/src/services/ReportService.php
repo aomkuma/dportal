@@ -10,7 +10,8 @@
     use App\Model\User;
     use App\Model\FoodForRoom;
     use App\Model\DeviceForRoom;
-
+    use App\Model\RoomDestination;
+    
 	use Illuminate\Database\Capsule\Manager as DB;
 
 	class ReportService {
@@ -167,6 +168,44 @@
                     ->get();
         }
 
+        public static function getRoomConferenceList($ReserveRoomID){
+            return RoomDestination::select("ROOM.RoomID"
+                                ,"ROOM.RoomName"
+                                ,"REGION.RegionName"
+                                )
+                    ->join("RESERVE_ROOM", "RESERVE_ROOM.ReserveRoomID", "=", "DESTINATION_CONFERENCE_ROOM.ReserveRoomID")
+                    ->join("ROOM", "ROOM.RoomID", "=", "DESTINATION_CONFERENCE_ROOM.RoomID")
+                    ->join("REGION", "REGION.RegionID", "=", "ROOM.RegionID")
+                    ->where("RESERVE_ROOM.ReserveRoomID" , DB::raw("'" . $ReserveRoomID. "'"))
+                    ->orderBy("ROOM.RoomName", 'ASC')
+                    ->get();
+        }
+
+        public static function getSummaryRoomConference($regionID, $roomID, $startDate, $endDate){
+            return Room::select("ROOM.RoomID"
+                                ,"ROOM.RoomName"
+                                ,"REGION.RegionName"
+                                ,"RESERVE_ROOM.ReserveRoomID"
+                                ,"RESERVE_ROOM.TopicConference"
+                                ,"RESERVE_ROOM.StartDateTime"
+                                ,"RESERVE_ROOM.EndDateTime"
+                                // ,DB::raw("CONCAT(ACCOUNT.FirstName , ' ', ACCOUNT.LastName) AS RequestPerson")
+                                ,"ACCOUNT.*"
+                                )
+                    ->join("REGION", "REGION.RegionID", "=", "ROOM.RegionID")
+                    ->join("RESERVE_ROOM", "RESERVE_ROOM.RoomID", "=", "ROOM.RoomID")
+                    ->join("ACCOUNT", "ACCOUNT.UserID", "=", "RESERVE_ROOM.CreateBy")
+                    ->where("RESERVE_ROOM.ReserveStatus" , 'Approve')
+                    ->where("ROOM.RegionID" , DB::raw("'" . $regionID. "'"))
+                    ->where("ROOM.RoomID" , DB::raw("'" . $roomID. "'"))
+                    ->where(function($query) use ($startDate,$endDate){
+                                $query->whereBetween('RESERVE_ROOM.StartDateTime' , [$startDate , $endDate]);
+                                $query->orWhereBetween('RESERVE_ROOM.EndDateTime' , [$startDate , $endDate]);
+                            })
+                    ->orderBy("RESERVE_ROOM.StartDateTime", 'ASC')
+                    ->get();
+        }
+
         public static function countSummaryRoom($roomID, $startDate, $endDate){
             return RoomReserve::where(function($query) use ($startDate,$endDate){
                                 $query->whereBetween('StartDateTime' , [$startDate , $endDate]);
@@ -266,6 +305,22 @@
                                 }
                                 $query->whereBetween('REPAIRED.CreateDateTime' , [$startDate , $endDate]);
                             })
+                    ->get();
+        }
+
+        public static function getRoomDetail($RoomID, $condition){
+            return RoomReserve::select("StartDateTime"
+                                ,"EndDateTime"
+                                ,"TopicConference"
+                                ,"ACCOUNT.*"
+                                )
+                    ->join("ACCOUNT", "ACCOUNT.UserID", "=", "RESERVE_ROOM.CreateBy")
+                    ->where("RESERVE_ROOM.RoomID" , $RoomID)
+                    ->where(function($query) use ($condition){
+                                $query->whereBetween('StartDateTime' , [$condition['StartDate'] , $condition['EndDate']]);
+                                $query->orWhereBetween('EndDateTime' , [$condition['StartDate'] , $condition['EndDate']]);
+                            })
+                    ->orderBy("StartDateTime", 'ASC')
                     ->get();
         }
 

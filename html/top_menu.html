@@ -109,7 +109,7 @@
                     <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'roomconference' || menu_selected == 'vehicles'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>การจอง</b> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li class="menu-item dropdown dropdown-submenu"><a href="#/roomconference" class="dropdown-toggle" data-toggle="dropdown">ห้องประชุม</a></li>
-                            <!--<li class="menu-item dropdown dropdown-submenu"><a href="#/vehicles/-1" class="dropdown-toggle" data-toggle="dropdown">พาหนะ</a></li>-->
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/vehicles/-1" class="dropdown-toggle" data-toggle="dropdown">พาหนะ</a></li>
                         </ul>
                     </li>
                     <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'news' || menu_selected == 'calendar'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>ประชาสัมพันธ์</b> <b class="caret"></b></a>
@@ -134,6 +134,7 @@
                     <!--<li ng-show="currentUser.GroupID == '1'"><a href="#/management"><b>จัดการ</b></a></li>-->
                     <li ng-show="filterHeadMenu('2,3,7')" class="menu-item dropdown"  ng-class="{'menu_selected' : (menu_selected.indexOf('report_') != -1) }"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>รายงาน</b> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
+                            <li  ng-show="filterMenu(2)" class="menu-item dropdown dropdown-submenu"><a href="#/report_summary_room_conference" class="dropdown-toggle" data-toggle="dropdown">สรุปการใช้งาน ประชุมด้วย Video Conference</a></li>
                             <li  ng-show="filterMenu(2)" class="menu-item dropdown dropdown-submenu"><a href="#/report_summary_room" class="dropdown-toggle" data-toggle="dropdown">สรุปการใช้งานห้องประชุม</a></li>
                             <li  ng-show="filterMenu(2)" class="menu-item dropdown dropdown-submenu"><a href="#/report_detail_room" class="dropdown-toggle" data-toggle="dropdown">ตารางการใช้งานห้องประชุม</a></li>
                             <li ng-show="filterMenu(3)" class="menu-item dropdown dropdown-submenu"><a href="#/report_summary_car" class="dropdown-toggle" data-toggle="dropdown">สรุปการใช้ยานพาหนะ</a></li>

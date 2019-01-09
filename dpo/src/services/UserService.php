@@ -60,7 +60,7 @@
                     $query->orWhere('PERMISSION.AdminGroupID', DB::raw('0'));
                  })
                  ->where('PERSON_REGION.RegionID',$regionID)
-                 ->where('ACCOUNT.UserID' , '<>', $ownerID)
+                 // ->where('ACCOUNT.UserID' , '<>', $ownerID)
                  ->groupBy("ACCOUNT.UserID")
                  ->groupBy("PERSON_REGION.RegionID")
                  ->groupBy("ACCOUNT.FirstName")

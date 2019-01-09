@@ -150,12 +150,26 @@
             return $notification->NotificationID;
         }
 
-        public static function updateNotificationSeenData($NotificationKeyID, $NotificationTypeList){
+        public static function updateNotificationSeenData($NotificationKeyID, $NotificationTypeList, $NotificationText = ''){
             $update['NotificationStatus'] = 'Seen';
+
+            if(!empty($NotificationText)){
+                $update['NotificationText'] = $NotificationText;
+            }
             $notification = Notification::where('NotificationKeyID', $NotificationKeyID)
                             ->whereIn('NotificationType', $NotificationTypeList)
                             ->update($update)
                             ;
+            // $obj['NotificationStatus'] = 'Seen';
+            // $notification = $notification->setValues($notification , $obj);
+            // $notification->save();
+        }
+
+        public static function getNotificationRoomData($NotificationKeyID, $NotificationTypeList){
+            
+            return Notification::where('NotificationKeyID', $NotificationKeyID)
+                            ->whereIn('NotificationType', $NotificationTypeList)
+                            ->first();
             // $obj['NotificationStatus'] = 'Seen';
             // $notification = $notification->setValues($notification , $obj);
             // $notification->save();

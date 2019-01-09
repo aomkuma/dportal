@@ -1176,6 +1176,42 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, I
         }
         
     }
+
+    $scope.CalendarDate = new Date();
+    $scope.dateOptions1 = {
+        // minDate: new Date(),
+        // showWeeks: true
+      };
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.changeDate = function(d){
+        $scope.dateSelected = makeSQLDate(d);
+        $scope.generateDateRange($scope.dateSelected);
+    }
+
+    $scope.search = function(keyword){
+        IndexOverlayFactory.overlayShow();
+        // alert(keyword);
+        ReserveRoomFactory.findBykeyword(keyword).then(function(obj) {
+            $scope.FindList = obj.data.DATA;
+            $scope.ShowSearch = true;
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
+    $scope.convertDate = function(date){
+        return convertSQLDateTimeToReportDateTime(date);
+    }
+
+    $scope.ShowSearch = false;
+
 });
 
 app.controller('RoomBookingController', function($scope, $location, $http, $filter, $uibModal, $routeParams, IndexOverlayFactory, ReserveRoomFactory, $routeParams) {
@@ -2342,7 +2378,7 @@ app.controller('LogManageController', function($cookies, $scope, $filter, $uibMo
 
 });
 
-app.controller('SettingManageController', function($cookies, $scope, $filter, $uibModal, $routeParams, IndexOverlayFactory, SettingFactory) {
+app.controller('SettingManageController', function($cookies, $scope, $filter, $uibModal, $routeParams, IndexOverlayFactory, SettingFactory, HTTPFactory) {
     IndexOverlayFactory.overlayShow();
     $scope.menu_selected = 'manage_setting';
 
@@ -2389,6 +2425,21 @@ app.controller('SettingManageController', function($cookies, $scope, $filter, $u
                 alert('Update success');
             }
         });
+    }
+
+    $scope.ehrGetData = function(){
+
+        var arr = ['eHrUpdateStaff', 'eHrUpdateOffice', 'eHrUpdateDivision', 'eHrUpdateDepartment'];
+        IndexOverlayFactory.overlayShow();
+        for(var i = 0; i < arr.length; i++){
+            HTTPFactory.getRequest(arr[i], '').then(function (result) {
+                if (result.data.STATUS == 'OK') {
+                    
+                }
+                
+            });
+        }
+        IndexOverlayFactory.overlayHide();
     }
 
     $scope.loadList();
@@ -2465,8 +2516,8 @@ app.controller('PermissionController', function($cookies, $scope, $uibModal, $ro
             $scope.DataList[index].RoomAdmin = 2;
             $scope.DataList[index].CarAdmin = 3;
             $scope.DataList[index].DeviceAdmin = 4;
-            $scope.DataList[index].NewsAdmin = 5;
-            $scope.DataList[index].NewsApproveAdmin = 6;
+            $scope.DataList[index].ConferenceAdmin = 5;
+            $scope.DataList[index].RepairHeadAdmin = 6;
             $scope.DataList[index].RepairAdmin = 7;
             $scope.DataList[index].LinkAdmin = 8;
             $scope.DataList[index].ExPhoneBookAdmin = 9;
@@ -2476,8 +2527,8 @@ app.controller('PermissionController', function($cookies, $scope, $uibModal, $ro
             $scope.DataList[index].RoomAdmin = -1;
             $scope.DataList[index].CarAdmin = -1;
             $scope.DataList[index].DeviceAdmin = -1;
-            $scope.DataList[index].NewsAdmin = -1;
-            $scope.DataList[index].NewsApproveAdmin = -1;
+            $scope.DataList[index].ConferenceAdmin = -1;
+            $scope.DataList[index].RepairHeadAdmin = -1;
             $scope.DataList[index].RepairAdmin = -1;
             $scope.DataList[index].LinkAdmin = -1;
             $scope.DataList[index].ExPhoneBookAdmin = -1;
@@ -2617,7 +2668,7 @@ app.controller('LinkManageController', function($cookies, $scope, $uibModal, $ro
     }
 });
 
-app.controller('LinkController', function($cookies, $scope, $uibModal, $routeParams, $timeout, $interval, Upload, IndexOverlayFactory, LinkFactory) {
+app.controller('LinkController', function($cookies, $scope, $uibModal, $routeParams, $timeout, $interval, Upload, IndexOverlayFactory, LinkFactory, HTTPFactory) {
     IndexOverlayFactory.overlayShow();
     $scope.menu_selected = 'link';
 
@@ -2637,6 +2688,7 @@ app.controller('LinkController', function($cookies, $scope, $uibModal, $routePar
             if(result.data.STATUS == 'OK'){
                 $scope.DataList = result.data.DATA.DataList;
                 $scope.DataList.push({
+                    "LinkID":"",
                     "LinkUrl": "http://172.23.10.224/MIS/web/#/thirdparty/authen/" + $scope.$parent.currentUser.Username + "/" + $scope.$parent.currentUser.LoginSession,
                     "LinkIcon": "img/link/logo_mis.png",
                     "LinkStatus": "Y",
@@ -2657,6 +2709,34 @@ app.controller('LinkController', function($cookies, $scope, $uibModal, $routePar
 
     $scope.loadList('view');
 
+    //
+    $scope.updateVisitCount = function(id, data){
+        var params = {'LinkID' : id, 'user_session' : $scope.currentUser};
+        HTTPFactory.clientRequest('link/updateVisitCount', params).then(function (result) {
+            console.log(result);
+            if(result.data.STATUS == 'OK'){
+                data.TotalVisit = result.data.DATA.VisitCount;
+            }
+        });
+    }
+
+    $scope.viewDetail = function(data){
+        $scope.Data = angular.copy(data);
+        $scope.getVisitList(data.LinkID);
+        $scope.VisitKeyword = '';
+        $scope.PAGE = 'DETAIL';
+    }
+
+    $scope.getVisitList = function(id){
+        var params = {'LinkID' : id, 'keyword' : $scope.VisitKeyword};
+        HTTPFactory.clientRequest('link/viewDetail', params).then(function (result) {
+            if(result.data.STATUS == 'OK'){
+                $scope.VisitList = result.data.DATA.VisitList;
+            }
+        });
+    }
+
+    $scope.PAGE = 'MAIN';
 });
 
 app.controller('LinkPermissionController', function($cookies, $scope, $uibModal, $routeParams, IndexOverlayFactory, LinkFactory, RegionFactory, DepartmentFactory) {

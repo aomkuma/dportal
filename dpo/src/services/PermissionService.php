@@ -23,7 +23,7 @@ class PermissionService {
             $permission->UserID = $obj['UserID'];
         }
 
-        $permission->AdminGroupID = $obj['AdminGroupID'];
+        $permission->AdminGroupID = ($obj['AdminGroupID']);
         $permission->RegionID = $obj['RegionID'];
         $permission->UpdateBy = 1;
         $permission->UpdateDateTime = date('Y-m-d H:i:s.000');
@@ -45,7 +45,7 @@ class PermissionService {
                         , DB::raw('a4.AdminGroupID AS CarAdmin')
                         , DB::raw('a5.AdminGroupID AS DeviceAdmin')
                         , DB::raw('a6.AdminGroupID AS ConferenceAdmin')
-                        , DB::raw('a7.AdminGroupID AS NewsApproveAdmin')
+                        , DB::raw('a7.AdminGroupID AS RepairHeadAdmin')
                         , DB::raw('a8.AdminGroupID AS RepairAdmin')
                         , DB::raw('a9.AdminGroupID AS LinkAdmin')
                         , DB::raw('a10.AdminGroupID AS ExPhoneBookAdmin')

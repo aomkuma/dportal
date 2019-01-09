@@ -520,7 +520,7 @@
             $content .= '<b>ผู้แจ้ง : </b>' . $DataMail['FirstName'] . ' ' . $DataMail['LastName'] . '<br>';
             $content .= '<b>เบอร์โทรติดต่อ : </b>' . $DataMail['Mobile'] . '<br>';
             $content .= '<b>อีเมล : </b>' . $DataMail['Email'] . '<br>';
-            $content .= 'ปัญหาของคุณ จะได้รับการแก้ไขภายใน' . $DataMail['SLA'] . ' วัน';
+            $content .= 'ปัญหาของคุณ จะได้รับการแก้ไขภายใน' . $DataMail['SLAHour'] . ' ชัวโมง '. $DataMail['SLAMinute'] . ' นาที';
             $content .= '<br>e-mail ฉบับนี้ถูกส่งจากระบบอัตโนมัติ กรุณาอย่าตอบกลับ (Please do not reply this e-mail)';
             return $content;
 

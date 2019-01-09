@@ -4,18 +4,78 @@
 		<div class="row">
 			<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>เชื่อมโยงระบบ</h2></div></div>
 		</div>
-		<div class="row" style="padding-bottom: 10vh; ">
+		<div class="row" style="padding-bottom: 10vh; " ng-show="PAGE == 'DETAIL'">
+			<div class="row">
+				<div class="col-lg-1 col-xs-1">
+					
+				</div>
+				<div class="col-lg-12">
+					
+						<div class="col-lg-12 col-xs-12  obj_center">
+							<img ng-src="{{Data.LinkIcon}}" style="height: 35px; width: auto;" />
+						</div>
+			            <div class="col-lg-12 col-xs-12 obj_center">
+			            	
+			            		<b ng-bind-html="Data.LinkTopic | cut:true:80:' ...'"></b>
+			            	
+			            </div>
+			        
+			    </div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					จำนวนผู้เข้าใช้งาน {{Data.TotalVisit}} ครั้ง
+					<br>
+					<button class="btn btn-primary" ng-click="PAGE = 'MAIN'"> กลับหน้าหลัก</button>
+				</div>
+			</div>
+
+			<div class="table-responsive">
+				<caption>
+					<div class="row">
+						<div class="col-lg-3">
+							<div class="input-group" style="padding-top: 5px;">
+		                        <input type="text" class="form-control"  ng-model="VisitKeyword" placeholder="ค้นหา..." name="srch-term" id="srch-term" style="border: 1px solid #31b0d5;">
+		                        <div class="input-group-btn">
+		                            <button class="btn btn-default" type="submit" style="border: 1px solid #31b0d5;" ng-click="getVisitList(Data.LinkID)" ng-disabled="VisitKeyword == null || VisitKeyword == ''"><span class="glyphicon glyphicon-search"></span></button>
+		                        </div>
+		                    </div>					
+		                </div>
+		            </div>
+				</caption>
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>ลำดับ</th>
+							<th>วันที่</th>
+							<th>ชื่อ - สกุล</th>
+							<th>IP Address</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="data in VisitList">
+							<td>{{$index + 1}}</td>
+							<td>{{data.visit_datetime}}</td>
+							<td>{{data.visit_name}}</td>
+							<td>{{data.visit_ip}}</td>
+						</tr>
+					</tbody>	
+				</table>
+			</div>
+		</div>
+
+		<div class="row" style="padding-bottom: 10vh; " ng-show="PAGE == 'MAIN'">
 			<div class="col-lg-12">
 				
 				<div class="row">
-					<div class="col-lg-3 col-sm-3 col-xs-12" ng-repeat="data in DataList" style="border: 1px #ccc solid; padding: 1vh; height: 90px; margin: 10px;">
+					<div class="col-lg-3 col-sm-3 col-xs-12" ng-repeat="data in DataList" style="border: 1px #ccc solid; padding: 1vh; height: 110px; margin: 10px;">
 						
 						<div class="row">
 							<div class="col-lg-1 col-xs-1">
 								
 							</div>
-							<div class="col-lg-10">
-								<a target="_blank" href="{{ (data.LinkUrl.startsWith('http://') || data.LinkUrl.startsWith('https://'))?data.LinkUrl:'http://' + data.LinkUrl }}">
+							<div class="col-lg-12">
+								<a target="_blank" href="{{ (data.LinkUrl.startsWith('http://') || data.LinkUrl.startsWith('https://'))?data.LinkUrl:'http://' + data.LinkUrl }}" ng-click="updateVisitCount(data.LinkID, data)">
 									<div class="col-lg-12 col-xs-12  obj_center">
 										<img ng-src="{{data.LinkIcon}}" style="height: 35px; width: auto;" />
 									</div>
@@ -27,7 +87,11 @@
 						        </a>
 						    </div>
 						</div>
-						
+						<div class="row" ng-show="data.LinkID != ''">
+							<div class="col-lg-12 text-center">
+								จำนวนผู้เข้าใช้งาน <a ng-click="viewDetail(data)">{{data.TotalVisit}}</a> ครั้ง
+							</div>
+						</div>
 					</div>
 					
 				</div>

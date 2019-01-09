@@ -59,37 +59,37 @@
 								{{data.RegionName}}
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.SuperAdmin" ng-true-value="0" ng-false-value="-1" ng-click="setPermission($index, data, 'SuperAdmin')">
+								<input type="checkbox" ng-model="data.SuperAdmin" ng-true-value="0" ng-false-value="-1" ng-click="setPermission($index, data, 'SuperAdmin')" ng-disabled="currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.PermissionAdmin" ng-true-value="1" ng-false-value="-1" ng-click="setPermission($index, data, 'PermissionAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.PermissionAdmin" ng-true-value="1" ng-false-value="-1" ng-click="setPermission($index, data, 'PermissionAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.RoomAdmin" ng-true-value="2" ng-false-value="-1" ng-click="setPermission($index, data, 'RoomAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.RoomAdmin" ng-true-value="2" ng-false-value="-1" ng-click="setPermission($index, data, 'RoomAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.CarAdmin" ng-true-value="3" ng-false-value="-1" ng-click="setPermission($index, data, 'CarAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.CarAdmin" ng-true-value="3" ng-false-value="-1" ng-click="setPermission($index, data, 'CarAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.DeviceAdmin" ng-true-value="4" ng-false-value="-1" ng-click="setPermission($index, data, 'DeviceAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.DeviceAdmin" ng-true-value="4" ng-false-value="-1" ng-click="setPermission($index, data, 'DeviceAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.ConferenceAdmin" ng-true-value="5" ng-false-value="-1" ng-click="setPermission($index, data, 'ConferenceAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.ConferenceAdmin" ng-true-value="5" ng-false-value="-1" ng-click="setPermission($index, data, 'ConferenceAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.RepairHeadAdmin" ng-true-value="6" ng-false-value="-1" ng-click="setPermission($index, data, 'RepairHeadAdmin')" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.RepairHeadAdmin" ng-true-value="6" ng-false-value="-1" ng-click="setPermission($index, data, 'RepairHeadAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.RepairAdmin" ng-true-value="7" ng-false-value="-1" ng-click="setPermission($index, data, 'RepairAdmin')" ng-disabled="data.SuperAdmin == 0" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.RepairAdmin" ng-true-value="7" ng-false-value="-1" ng-click="setPermission($index, data, 'RepairAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.LinkAdmin" ng-true-value="8" ng-false-value="-1" ng-click="setPermission($index, data, 'LinkAdmin')" ng-disabled="data.SuperAdmin == 0" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.LinkAdmin" ng-true-value="8" ng-false-value="-1" ng-click="setPermission($index, data, 'LinkAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.ExPhoneBookAdmin" ng-true-value="9" ng-false-value="-1" ng-click="setPermission($index, data, 'ExPhoneBookAdmin')" ng-disabled="data.SuperAdmin == 0" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.ExPhoneBookAdmin" ng-true-value="9" ng-false-value="-1" ng-click="setPermission($index, data, 'ExPhoneBookAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 							<td>
-								<input type="checkbox" ng-model="data.CalendarAdmin" ng-true-value="10" ng-false-value="-1" ng-click="setPermission($index, data, 'CalendarAdmin')" ng-disabled="data.SuperAdmin == 0" ng-disabled="data.SuperAdmin == 0">
+								<input type="checkbox" ng-model="data.CalendarAdmin" ng-true-value="10" ng-false-value="-1" ng-click="setPermission($index, data, 'CalendarAdmin')" ng-disabled="data.SuperAdmin == 0 || currentUser.UserID == data.UserID">
 							</td>
 						</tr>
 					</tbody>

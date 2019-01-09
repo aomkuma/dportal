@@ -6,7 +6,8 @@
     use App\Model\LinkPermission;
     use App\Model\Permission;
     use App\Model\User;
-
+    use App\Model\VisitLink;
+    
     use Illuminate\Database\Capsule\Manager as DB;    
     
     class LinkService {
@@ -213,6 +214,33 @@
             $Link->save();
             return $Link->LinkPermissionID;
         }
+
+        public static function updateVisitCount($LinkID){
+            $Link = Link::find($LinkID);
+            
+            $Link->TotalVisit = $Link->TotalVisit + 1;
+            
+            return $Link->TotalVisit;
+            
+        }
+
+        public static function updateVisitLink($obj){
+            $Link = VisitLink::create($obj);
+        }
+
+        public static function getVisitDetail($LinkID, $keyword){
+            return VisitLink::where('link_id', $LinkID)
+                    ->where(function($query) use ($keyword){
+                            if(!empty($keyword)){
+                                $query->where('visit_name', 'LIKE', DB::raw("'%".$keyword."%'"));
+                                $query->orWhere('visit_ip', 'LIKE', DB::raw("'%".$keyword."%'"));
+                            }
+                            
+                         })
+                    ->get();
+        }
+
+        
     }    
 
 ?>

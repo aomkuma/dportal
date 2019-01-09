@@ -94,6 +94,10 @@ $app->post('/getLinkPermission/', 'LinkController:getLinkPermission');
 $app->post('/updateLinkPermission/', 'LinkController:updateLinkPermission');
 $app->post('/setAllLinkPermission/', 'LinkController:setAllLinkPermission');
 $app->post('/updateOrderNo/', 'LinkController:updateOrderNo');
+$app->post('/link/updateVisitCount/', 'LinkController:updateVisitCount');
+$app->post('/link/viewDetail/', 'LinkController:viewDetail');
+
+
 
 // Repair action
 $app->get('/getRepairTypeList/{mode}/{UserID}', 'RepairController:getRepairTypeList');
@@ -134,6 +138,7 @@ $app->get('/getNotificationListByCondition/{notificationType}/{regionID}/{adminG
 $app->post('/updateNotificationStatus/', 'NotificationController:updateNotificationStatus');
 
 //  Room reserve action
+$app->get('/room-reserve/find-by-keyword/{keyword}', 'RoomReserveController:findByKeyword');
 $app->post('/room/monitor/', 'RoomReserveController:getRoomMonitor');
 $app->get('/getRoomReserveDetail/{regionID}/{findDate}', 'RoomReserveController:getRoomBookingList');
 $app->get('/getDefaultBookingRoomInfo/{userID}/{roomID}/{reserveRoomID}', 'RoomReserveController:getDefaultBookingRoomInfo');
@@ -186,6 +191,8 @@ $app->get('/loadCarListByRegion/{regionID}', 'ReportController:loadCarListByRegi
 $app->get('/loadUserListByRegion/{regionID}', 'ReportController:loadUserListByRegion');
 $app->get('/loadUserListByRegionAndRole/{regionID}', 'ReportController:loadUserListByRegionAndRole');
 $app->get('/loadPDF/{pdfName}', 'ReportController:loadPDF');
+$app->post('/report/room/detail/', 'ReportController:getRoomDetail');
+
 
 // System Manage action
 $app->get('/getLogManageList/', 'SystemManageController:getLogManageList');
