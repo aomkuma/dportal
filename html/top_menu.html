@@ -106,10 +106,11 @@
                 <div class="col-lg-9  col-md-9 col-sm-12 col-xs-12">
                   <ul class="nav navbar-nav"  style="text-align: center;">
                     <li ng-class="{'menu_selected':menu_selected == ''}"><a href="#/"><b ng-class="{'font_menu_selected':menu_selected == ''}">หน้าหลัก</b></a></li>
-                    <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'roomconference' || menu_selected == 'vehicles'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>การจอง</b> <b class="caret"></b></a>
+                    <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'roomconference' || menu_selected == 'vehicles' || menu_selected == 'car-reserve-detail'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>การจอง</b> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li class="menu-item dropdown dropdown-submenu"><a href="#/roomconference" class="dropdown-toggle" data-toggle="dropdown">ห้องประชุม</a></li>
                             <li class="menu-item dropdown dropdown-submenu"><a href="#/vehicles/-1" class="dropdown-toggle" data-toggle="dropdown">พาหนะ</a></li>
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/car-reserve-detail" class="dropdown-toggle" data-toggle="dropdown">รายละเอียดการจองพาหนะ</a></li>
                         </ul>
                     </li>
                     <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'news' || menu_selected == 'calendar'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>ประชาสัมพันธ์</b> <b class="caret"></b></a>

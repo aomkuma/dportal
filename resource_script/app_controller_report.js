@@ -482,7 +482,14 @@ app.controller('ReportSummaryRoomController', function($scope, $filter, $uibModa
 
     $scope.queryReport = function (condition){
         //IndexOverlayFactory.overlayShow();
-        ReportFactory.queryReport(condition).then(function(result){
+        var con = angular.copy(condition);
+        if(con.StartDate != null && con.StartDate != undefined && con.StartDate != ''){
+            con.StartDate = makeSQLDate(con.StartDate);
+        }
+        if(con.EndDate != null && con.EndDate != undefined && con.EndDate != ''){
+            con.EndDate = makeSQLDate(con.EndDate);
+        }
+        ReportFactory.queryReport(con).then(function(result){
             IndexOverlayFactory.overlayHide();
             if(result.data.STATUS == 'OK'){
                 $scope.DataList = result.data.DATA;
@@ -1167,7 +1174,14 @@ app.controller('ReportSummaryRoomConferenceController', function($scope, $filter
 
     $scope.queryReport = function (condition){
         //IndexOverlayFactory.overlayShow();
-        ReportFactory.queryReport(condition).then(function(result){
+        var con = angular.copy(condition);
+        if(con.StartDate != null && con.StartDate != undefined && con.StartDate != ''){
+            con.StartDate = makeSQLDate(con.StartDate);
+        }
+        if(con.EndDate != null && con.EndDate != undefined && con.EndDate != ''){
+            con.EndDate = makeSQLDate(con.EndDate);
+        }
+        ReportFactory.queryReport(con).then(function(result){
             IndexOverlayFactory.overlayHide();
             if(result.data.STATUS == 'OK'){
                 $scope.DataList = result.data.DATA;

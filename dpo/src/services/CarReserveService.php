@@ -13,6 +13,33 @@
     use Illuminate\Database\Capsule\Manager as DB;    
     
     class CarReserveService {
+
+        public static function getCarListDetail($condition){
+            // print_r($condition);exit;
+            return CarReserve::select("RESERVE_CAR.*"
+                                    , DB::raw('a1.ProvinceName')
+                                    ,'RegionName'
+                                    ,DB::raw("CONCAT(acc1.FirstName, ' ', acc1.LastName) AS RequestName ")
+                                    ,DB::raw("CONCAT(acc2.FirstName, ' ', acc2.LastName) AS ApproveName ")
+                                )
+                    ->leftJoin(DB::raw('TBL_PROVINCE as a1'), 'RESERVE_CAR.ProvinceID', '=', DB::raw('a1.ProvinceID'))
+                    ->join("REGION", "RESERVE_CAR.RegionID", '=', 'REGION.RegionID')
+                    ->leftJoin(DB::raw('TBL_ACCOUNT as acc1'), 'RESERVE_CAR.CreateBy', '=', DB::raw('acc1.UserID'))
+                    ->leftJoin(DB::raw('TBL_ACCOUNT as acc2'), 'RESERVE_CAR.AdminID', '=', DB::raw('acc2.UserID'))
+                    ->where(function($query) use ($condition){
+                        if(!empty($condition['Region']['RegionID'])){
+                            $query->where('RESERVE_CAR.RegionID', $condition['Region']['RegionID']);
+                        }
+                        if(!empty($condition['StartDate']) && !empty($condition['EndDate'])){
+                            $condition['StartDate'] = substr($condition['StartDate'], 0,10) . ' 00:00:00';
+                            $condition['EndDate'] = substr($condition['EndDate'], 0,10) . ' 23:59:59';
+                            // $query->where('StartDateTime' ,'<=', $condition['StartDate']);
+                            // $query->where('EndDateTime' ,'>=', $condition['EndDate']);    
+                            $query->whereBetween('RESERVE_CAR.CreateDateTime' , [$condition['StartDate'] , $condition['EndDate']]);
+                        }
+                    })
+                    ->get();
+        }
         
         public static function getCarReserveDetail($ReserveCarID){
             return CarReserve::select("RESERVE_CAR.*", DB::raw('a1.ProvinceName'))

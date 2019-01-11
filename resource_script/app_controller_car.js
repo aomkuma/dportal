@@ -1506,6 +1506,68 @@ app.controller('CartypeController', function ($cookies, $scope, $http, $uibModal
 
 });
 
+app.controller('CarReserveDetailController', function($cookies, $scope, $http, $uibModal, $routeParams, HTTPFactory, RegionFactory, IndexOverlayFactory) {
+    $scope.$parent.menu_selected = '';
+    IndexOverlayFactory.overlayShow();
+    var $user_session = sessionStorage.getItem('user_session');
+    
+    if($user_session != null){
+        $scope.$parent.currentUser = angular.fromJson($user_session);
+        $scope.$parent.TotalLogin = sessionStorage.getItem('TotalLogin');
+        
+    }else{
+        window.location.replace('#/logon/doc/' + $routeParams.doc_type);
+    }
+    IndexOverlayFactory.overlayHide();
+
+    $scope.loadList = function(){
+        var con = angular.copy($scope.condition);
+        if(con.StartDate != null && con.StartDate != undefined && con.StartDate != ''){
+            con.StartDate = makeSQLDate(con.StartDate);
+        }
+        if(con.EndDate != null && con.EndDate != undefined && con.EndDate != ''){
+            con.EndDate = makeSQLDate(con.EndDate);
+        }
+        var params = {'condition' : con};
+        HTTPFactory.clientRequest('carreserve/list/detail', params).then(function (result) {
+            
+            if (result.data.STATUS == 'OK') {
+                $scope.DataList = result.data.DATA.List;
+            }
+
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+
+    $scope.loadRegionList = function () {
+        RegionFactory.getAllRegion().then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.RegionList = result.data.DATA;
+            }
+        });
+    }
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.popup2 = {
+        opened: false
+    };
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.open2 = function() {
+        
+        $scope.popup2.opened = true;
+    };
+
+    $scope.loadRegionList();
+
+    // $scope.loadList();
+});
+
 app.filter('FindUserByName', function () {
     return function (input, FirstName, LastName) {
         if (input !== undefined && input !== null) {

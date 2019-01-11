@@ -214,6 +214,8 @@
                                 }
                             })
                     ->where(function($query) use ($startDate,$endDate){
+                                $startDate = substr($startDate, 0,10) . ' 00:00:00';
+                                $endDate = substr($endDate, 0,10) . ' 23:59:59';
                                 $query->whereBetween('RESERVE_ROOM.StartDateTime' , [$startDate , $endDate]);
                                 $query->orWhereBetween('RESERVE_ROOM.EndDateTime' , [$startDate , $endDate]);
                             })
@@ -224,6 +226,8 @@
 
         public static function countSummaryRoom($roomID, $startDate, $endDate){
             return RoomReserve::where(function($query) use ($startDate,$endDate){
+                                $startDate = substr($startDate, 0,10) . ' 00:00:00';
+                                $endDate = substr($endDate, 0,10) . ' 23:59:59';
                                 $query->whereBetween('StartDateTime' , [$startDate , $endDate]);
                                 $query->orWhereBetween('EndDateTime' , [$startDate , $endDate]);
                             })
@@ -333,6 +337,8 @@
                     ->join("ACCOUNT", "ACCOUNT.UserID", "=", "RESERVE_ROOM.CreateBy")
                     ->where("RESERVE_ROOM.RoomID" , $RoomID)
                     ->where(function($query) use ($condition){
+                                $condition['StartDate'] = substr($condition['StartDate'], 0,10) . ' 00:00:00';
+                                $condition['EndDate'] = substr($condition['EndDate'], 0,10) . ' 23:59:59';
                                 $query->whereBetween('StartDateTime' , [$condition['StartDate'] , $condition['EndDate']]);
                                 $query->orWhereBetween('EndDateTime' , [$condition['StartDate'] , $condition['EndDate']]);
                             })

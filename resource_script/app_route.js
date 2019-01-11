@@ -10,6 +10,11 @@ app.config(function($routeProvider) {
         controller : "LoginController"
     })
 
+    .when("/car-reserve-detail", {
+        templateUrl : "html/carreservation/car-reserve-detail.html",
+        controller : "CarReserveDetailController"
+    })
+
     .when("/docs/:doc_type", {
         templateUrl : "html/docs/docs.html",
         controller : "DocsController"

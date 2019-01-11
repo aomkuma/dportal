@@ -15,6 +15,22 @@
             $this->db = $db;
         }
 
+        public function getCarListDetail($request, $response, $args){
+            try{
+                $parsedBody = $request->getParsedBody();
+                $condition = $parsedBody['condition'];
+
+                $ReserveCarInfo = CarReserveService::getCarListDetail($condition);
+                
+                $this->data_result['DATA']['List'] = $ReserveCarInfo;
+                
+                return $this->returnResponse(200, $this->data_result, $response, false);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }    
+        }
+
         public function getCarReserveDetail($request, $response, $args){
             try{
                 $reserveCarID = filter_var($request->getAttribute('reserveCarID'), FILTER_SANITIZE_NUMBER_INT);

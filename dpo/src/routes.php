@@ -73,6 +73,8 @@ $app->get('/getCarList/{offset}/{UserID}', 'CarController:getCarList');
 $app->delete('/deleteCarData/{ID}', 'CarController:deleteData');
 $app->post('/updateCarData/', 'CarController:updateData');
 
+
+
 // Region action
 $app->get('/allRegion/', 'RegionController:getRegionList');
 
@@ -171,6 +173,7 @@ $app->post('/requestReserveCar/', 'CarReserveController:requestReserveCar');
 $app->post('/adminUpdateCarStatus/', 'CarReserveController:adminUpdateCarStatus');
 $app->get('/getReserveCartypeList/', 'CarReserveController:getReserveCartypeList');
 $app->get('/getCarsInRegion/{regionID}/{findDate}', 'CarReserveController:getCarsInRegion');
+$app->post('/carreserve/list/detail/', 'CarReserveController:getCarListDetail');
 
 // eHr action
 $app->get('/eHrUpdateDepartment/', 'EHRController:eHrUpdateDepartment');
