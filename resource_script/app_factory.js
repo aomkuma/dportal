@@ -1948,7 +1948,7 @@ app.factory('SettingFactory', ['$http', '$q', function($http, $q){
     };
 }])
 
-app.factory('HTTPFactory', ['$http', '$q', function($http, $q){
+app.factory('HTTPFactory', ['$http', '$q', 'Upload', function($http, $q, Upload){
     return {
 
         clientRequest : function(action, data) {           
@@ -1976,6 +1976,20 @@ app.factory('HTTPFactory', ['$http', '$q', function($http, $q){
                     }
                 );
         },
+
+        uploadRequest : function(action, obj) {
+            return Upload.upload({
+                url: servicesUrl + '/dpo/public/' + action + '/',
+                data: obj
+            }).then(
+                function(response){
+                    return returnResponse(response);                    
+                }, 
+                function(errResponse){
+                    return returnErrorResponse(errResponse);
+                }
+            );
+        }
 
     };
 }])

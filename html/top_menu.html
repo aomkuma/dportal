@@ -29,7 +29,7 @@
         <div class="col-lg-6 col-md-6">
             <a style="cursor: pointer;" uib-popover-template="'notificationTemplate.html'" popover-placement="bottom" popover-class="popover-notification" ng-click="checkNotificationBoxStatus()">
             <img class="" src="img/notification.png" ng-class="{'img-alert-unseen':totalNewNotifications > 0}" style="max-width: 80%;  margin-left:45%; margin-top: 15%; padding: 0px; border: none;" /><!-- border-radius:25px 25px 25px 25px;-->
-            <span ng-show="totalNewNotifications > 0" style=" margin-left:70%; margin-top: -45%; position: absolute; font-weight: 800; color: red; font-size : 1.3em; width: 50px; text-align: center;">{{totalNewNotifications}}</span>
+            <span ng-show="totalNewNotifications > 0" style=" margin-left:80%; margin-top: -45%; position: absolute; font-weight: 800; color: red; font-size : 1.3em; width: 50px; text-align: center;">{{totalNewNotifications}}</span>
             </a>
         </div>
     </div>
@@ -158,11 +158,14 @@
                             <li ng-show="filterMenu(9)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_telephonebook" class="dropdown-toggle" data-toggle="dropdown">สมุดโทรศัพท์ภายนอก</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_department" class="dropdown-toggle" data-toggle="dropdown">พื้นที่แผนก</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_person_region" class="dropdown-toggle" data-toggle="dropdown">พื้นที่แผนกของบุคคล</a></li>
+                            <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_docs/rule1" class="dropdown-toggle" data-toggle="dropdown">ระเบียบ ข้อบังคับ</a></li>
+                            <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_docs/doc1" class="dropdown-toggle" data-toggle="dropdown">เอกสารเผยแพร่</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_log" class="dropdown-toggle" data-toggle="dropdown">Log</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_setting" class="dropdown-toggle" data-toggle="dropdown">ตั้งค่า</a></li>
                         </ul>
                         </li>
-<li ng-class="{'menu_selected':menu_selected == 'rule'}"><a href="#/rule"><b ng-class="{'font_menu_selected':menu_selected == 'rule'}">ระเบียบ ข้อบังคับ</b></a></li>
+                        <li ng-class="{'menu_selected':menu_selected == 'rule'}"><a href="#/docs/rule"><b ng-class="{'font_menu_selected':menu_selected == 'rule'}">ระเบียบ ข้อบังคับ</b></a></li>
+                        <li ng-class="{'menu_selected':menu_selected == 'doc'}"><a href="#/docs/doc"><b ng-class="{'font_menu_selected':menu_selected == 'docs'}">เอกสารเผยแพร่</b></a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">

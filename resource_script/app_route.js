@@ -9,6 +9,41 @@ app.config(function($routeProvider) {
         templateUrl : "../html/login/mobile.html",
         controller : "LoginController"
     })
+
+    .when("/docs/:doc_type", {
+        templateUrl : "html/docs/docs.html",
+        controller : "DocsController"
+    })
+
+    .when("/manage_docs/doc1", {
+        templateUrl : "html/manage-docs/docs1.html",
+        controller : "Docs1Controller"
+    })
+
+    .when("/manage_docs/doc2/:parent_id/:id?", {
+        templateUrl : "html/manage-docs/docs2.html",
+        controller : "Docs2Controller"
+    })
+
+    .when("/manage_docs/doc3/:parent_id/:id?", {
+        templateUrl : "html/manage-docs/docs3.html",
+        controller : "Docs3Controller"
+    })
+
+    .when("/manage_docs/rule1", {
+        templateUrl : "html/manage-rules/rules1.html",
+        controller : "Rules1Controller"
+    })
+
+    .when("/manage_docs/rule2", {
+        templateUrl : "html/manage-rules/rules2.html",
+        controller : "Rules2Controller"
+    })
+
+    .when("/manage_docs/rule3", {
+        templateUrl : "html/manage-rules/rules3.html",
+        controller : "Rules3Controller"
+    })
     
 	.when("/logon/:redirect_url?", {
         templateUrl : "login.html",

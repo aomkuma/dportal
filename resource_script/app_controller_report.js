@@ -1175,6 +1175,10 @@ app.controller('ReportSummaryRoomConferenceController', function($scope, $filter
         });
     }
 
+    $scope.getTotalUse = function(){
+        return $scope.DataList.length;
+    }
+
     $scope.exportToExcel = function (condition, data, summary){
         IndexOverlayFactory.overlayShow();
         ReportFactory.exportExcel(condition, data, summary).then(function(result){

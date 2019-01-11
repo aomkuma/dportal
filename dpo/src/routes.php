@@ -212,6 +212,12 @@ $app->post('/leaves/notification/put/', 'LeaveController:putNotification');
 $app->get('/leaves/notification/get/{email}', 'LeaveController:getNotification');
 $app->post('/leaves/notification/update/seen/', 'LeaveController:updateSeenNotification');
 
+// Docs Request
+$app->post('/docs/list/view/', 'DocsController:getListView');
+$app->post('/docs/list/', 'DocsController:getList');
+$app->post('/docs/get/', 'DocsController:getData');
+$app->post('/docs/update/', 'DocsController:updateData');
+
 // Default action
 $app->get('/[{name}]', function ($request, $response, $args) {
     // Sample log message

@@ -163,7 +163,12 @@
                                 ,"REGION.RegionName"
                                 )
                     ->join("REGION", "REGION.RegionID", "=", "ROOM.RegionID")
-                    ->where("ROOM.RegionID" , DB::raw("'" . $regionID. "'"))
+                    // ->where("ROOM.RegionID" , DB::raw("'" . $regionID. "'"))
+                    ->where(function($query) use ($regionID){
+                                if(!empty($regionID)){
+                                    $query->where("ROOM.RegionID" , DB::raw("'" . $regionID. "'"));
+                                }
+                            })
                     ->orderBy("ROOM.RoomName", 'ASC')
                     ->get();
         }
@@ -192,16 +197,27 @@
                                 // ,DB::raw("CONCAT(ACCOUNT.FirstName , ' ', ACCOUNT.LastName) AS RequestPerson")
                                 ,"ACCOUNT.*"
                                 )
+
                     ->join("REGION", "REGION.RegionID", "=", "ROOM.RegionID")
                     ->join("RESERVE_ROOM", "RESERVE_ROOM.RoomID", "=", "ROOM.RoomID")
                     ->join("ACCOUNT", "ACCOUNT.UserID", "=", "RESERVE_ROOM.CreateBy")
+                    ->join('DESTINATION_CONFERENCE_ROOM', 'DESTINATION_CONFERENCE_ROOM.ReserveRoomID', '=', 'RESERVE_ROOM.ReserveRoomID')
                     ->where("RESERVE_ROOM.ReserveStatus" , 'Approve')
-                    ->where("ROOM.RegionID" , DB::raw("'" . $regionID. "'"))
-                    ->where("ROOM.RoomID" , DB::raw("'" . $roomID. "'"))
+                    // ->where("ROOM.RegionID" , DB::raw("'" . $regionID. "'"))
+                    // ->where("ROOM.RoomID" , DB::raw("'" . $roomID. "'"))
+                    ->where(function($query) use ($regionID,$roomID){
+                                if(!empty($regionID)){
+                                    $query->where('ROOM.RegionID' , $regionID);
+                                }
+                                if(!empty($roomID)){
+                                    $query->where('ROOM.RoomID' , $roomID);
+                                }
+                            })
                     ->where(function($query) use ($startDate,$endDate){
                                 $query->whereBetween('RESERVE_ROOM.StartDateTime' , [$startDate , $endDate]);
                                 $query->orWhereBetween('RESERVE_ROOM.EndDateTime' , [$startDate , $endDate]);
                             })
+                    ->groupBy('DESTINATION_CONFERENCE_ROOM.ReserveRoomID')
                     ->orderBy("RESERVE_ROOM.StartDateTime", 'ASC')
                     ->get();
         }

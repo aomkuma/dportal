@@ -145,3 +145,7 @@ $container['PersonRegionController'] = function ($c) {
 $container['LeaveController'] = function ($c) {
     return new \App\Controller\LeaveController($c->get('logger'), $c->get('db'));
 };
+
+$container['DocsController'] = function ($c) {
+    return new \App\Controller\DocsController($c->get('logger'), $c->get('db'));
+};

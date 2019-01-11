@@ -1,0 +1,78 @@
+<div ng-include src="'html/top_menu.html'"></div>
+	<div class="row form-group scrollable-default" style="max-height:78vh; overflow-y: auto;  padding-bottom: 10vh;">
+		<div class="col-lg-12 col-md-12 visible-lg visible-md">
+			<div class="row">
+				<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>หัวข้อกฎ ระเบียบ ข้อบังคับ</h2></div></div>
+			</div>
+			<hr>
+
+			<div class="row form-group">
+				<label class="form-control-static col-lg-2">
+					หัวข้อ
+				</label>
+				<div class="col-lg-4">
+					<input class="form-control" ng-model="Data.doc_name">
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<label class="form-control-static col-lg-2">
+					ประเภท
+				</label>
+				<div class="col-lg-4">
+					<select class="form-control" ng-model="Data.file_type">
+						<option value="">กรุณาเลือก..</option>
+						<option value="LINK">เชื่อมโยงลิ้งค์ภายนอก</option>
+						<option value="FILE">แนบไฟล์</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="row form-group" ng-show="Data.file_type == 'LINK'">
+				<label class="form-control-static col-lg-2">
+					Link URL
+				</label>
+				<div class="col-lg-4">
+					<input class="form-control" ng-model="Data.doc_file" maxlength="512">
+				</div>
+			</div>
+
+			<div class="row form-group" ng-show="Data.file_type == 'FILE'">
+				<label class="form-control-static col-lg-2">
+					ไฟล์อัพโหลด
+				</label>
+				<div class="col-lg-3">
+					<p class="input-group">
+		              <input type="text" readonly="true" class="form-control" ng-model="AttachFile.name" />
+		              <span class="input-group-btn">
+		                <button class="btn btn-default" ngf-select ng-model="AttachFile" ngf-max-size="25MB"  ngf-model-invalid="AttachFile.invalidFile" ngf-pattern="'.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf'">เลือก</button>
+		              </span>
+		            </p>
+				</div>
+				<div class="col-lg-3">
+					<div class="file-alert" ng-show="AttachFile.invalidFile.$error === 'maxSize'">ขนาดไฟล์ต้องไม่เกิน : {{AttachFile.invalidFile.$errorParam}}</div>
+					{{AttachFile.invalidFile.$errorParam}}
+				</div>
+				
+			</div>
+
+			<div class="row form-group">
+				<label class="col-lg-2 col-md-2 col-sm-12 col-xs-12 form-control-static">
+					สถานะ
+				</label>
+				<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" >
+					<div class="btn-group">
+						<label class="btn btn-default btn-checkbox" ng-model="Data.actives" uib-btn-radio="'Y'" >ใช้</label>
+			            <label class="btn btn-default btn-checkbox" ng-model="Data.actives" uib-btn-radio="'N'" >ไม่ใช้</label>
+			        </div>
+				</div>
+			</div>
+
+			<div class="page-header text-center">
+				<button class="btn btn-info" ng-click="saveData(Data, AttachFile)">บันทึก</button>
+				<button class="btn btn-default" ng-click="cancelUpdate('MAIN')">ยกเลิก</button>
+			</div>
+
+		</div>
+	</div>
+<div ng-include src="'html/footer.html'"></div>

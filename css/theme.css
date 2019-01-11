@@ -25,7 +25,7 @@ a {
 }
 
 .form-control {
-  font-size: 16px;
+  /*font-size: 16px;*/
 }
 
 .form-mobile {
@@ -38,7 +38,9 @@ a {
 	background-color: #FFF;
     overflow-x: hidden;
     overflow-y: hidden;
-    width: 1350px;
+    /*width: 1350px;*/
+    width: 100%;
+
 }
 
 .required_field {
@@ -48,6 +50,10 @@ a {
 .form-control[readonly],.form-control[disabled]
 {
     background-color:#f5f5f5;
+}
+
+.btn{
+  font-size: 12px;
 }
 
 .navbar-inverse{

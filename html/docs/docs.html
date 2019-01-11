@@ -1,0 +1,29 @@
+<div ng-include src="'html/top_menu.html'"></div>
+	<!--
+	<div class="row" ng-show="doc_type == 'doc'">
+		<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>เอกสารเผยแพร่</h2></div></div>
+	</div>
+
+	<div class="row" ng-show="doc_type == 'rule'">
+		<div class="col-lg-5" style="margin-top: 0px;"><div id='content'><h2 class='topic'>กฎระเบียบ ข้อบังคับ</h2></div></div>
+	</div>
+	-->
+	<div class="row form-group" ng-repeat="data in DataList">
+		<div class="col-lg-6" style="margin-top: 0px;"><div id='content'><h2 class='topic'>{{data.doc_name }}</h2></div></div>
+		<div class="col-lg-12">
+			
+			<ul>
+				<li ng-repeat="sub_data1 in data.docs2">
+					{{sub_data1.doc_name}}
+					<ul>
+						<li ng-repeat="sub_data2 in sub_data1.docs3">
+							<a href="{{sub_data2.doc_file}}" target="_blank" ng-show="sub_data2.file_type == 'LINK'">{{sub_data2.doc_name}}</a>
+							<a href="../{{sub_data2.doc_file}}" target="_blank" ng-show="sub_data2.file_type == 'FILE'">{{sub_data2.doc_name}}</a>
+						</li>						
+					</ul>
+					
+				</li>
+			</ul>
+		</div>
+	</div>
+<div ng-include src="'html/footer.html'"></div>
