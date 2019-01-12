@@ -52,6 +52,7 @@
                 switch($condition['report_type']){
                     case 'detail_repair' : $objPHPExcel = $this->generateExcelDetailRepair($objPHPExcel, $condition, $data, $summary); break;
                     case 'summary_repair' : $objPHPExcel = $this->generateExcelSummaryRepair($objPHPExcel, $condition, $data, $summary); break;
+                    case 'summary_repair_case' : $objPHPExcel = $this->generateExcelSummaryRepairCase($objPHPExcel, $condition, $data, $summary); break;
                     case 'detail_room' : $objPHPExcel = $this->generateExcelDetailRoom($objPHPExcel, $condition, $data, $summary); break;
                     case 'summary_room' : $objPHPExcel = $this->generateExcelSummaryRoom($objPHPExcel, $condition, $data, $summary); break;
                     case 'detail_car' : $objPHPExcel = $this->generateExcelDetailCar($objPHPExcel, $condition, $data, $summary); break;
@@ -87,6 +88,7 @@
                 switch($obj['report_type']){
                     case 'detail_repair' : $result = $this->queryDetailRepair($obj); break;
                     case 'summary_repair' : $result = $this->querySummaryRepair($obj); break;
+                    case 'summary_repair_case' : $result = $this->querySummaryRepairCase($obj); break;
                     case 'detail_room' : $result = $this->queryDetailRoom($obj); break;
                     case 'summary_room' : $result = $this->querySummaryRoom($obj); break;
                     case 'summary_room_conference' : $result = $this->querySummaryRoomConference($obj); break;
@@ -248,6 +250,63 @@
             $summary = ['name'=>'รวม','sumTotal'=>$sumTotal, 'sumFinish'=>$sumFinish, 'sumHold'=>$sumHold, 'sumCancel'=>$sumCancel, 'sumPassSLA'=>$sumPassSLA, 'sumFailSLA'=>$sumFailSLA];
 
             return ['result'=>$result,'summary'=>$summary];
+        }
+
+        private function querySummaryRepairCase($condition){
+            $RepairType = $condition['RepairType'];
+            $RepairedTitle = $condition['RepairedTitle'];
+            $RepairIssue = $condition['RepairIssue'];
+            $RepairSubIssue = $condition['RepairSubIssue'];
+            $dateCondition = $this->calculateFiscalYear($condition['Year']);
+            $startDate = $condition['StartDate'];
+            $endDate = $condition['EndDate'];
+            // get Repair sub issue
+            $RepairSubIssueList = ReportService::getRepairSubIssueList($startDate, $endDate, $RepairType, $RepairedTitle, $RepairIssue, $RepairSubIssue);
+
+            /*
+            $result = [];
+
+            $sumTotal = 0;
+            $sumFinish = 0;
+            $sumHold = 0;
+            $sumCancel = 0;
+            $sumPassSLA = 0;
+            $sumFailSLA = 0;
+
+            foreach ($RepairSubIssueList as $key => $value) {
+                // Count total notify
+                $countTotalRepairNotify = ReportService::countTotalRepairNotify($value['RepairedSubIssueID'], $startDate, $endDate);
+                $value['countTotal'] = $countTotalRepairNotify;
+                // count finish
+                $countFinish = ReportService::countRepairFinish($value['RepairedSubIssueID'], $startDate, $endDate);
+                $value['countFinish'] = $countFinish;
+                // count hold 
+                $countHold = ReportService::countRepairHold($value['RepairedSubIssueID'], $startDate, $endDate);
+                $value['countHold'] = $countHold;
+                // count cancel 
+                $countCancel = ReportService::countRepairCancel($value['RepairedSubIssueID'], $startDate, $endDate);
+                $value['countCancel'] = $countCancel;
+                // count sla pass
+                $countSLAPass = ReportService::countSLAPass($value['RepairedSubIssueID'], $startDate, $endDate);
+                $value['countSLAPass'] = $countSLAPass;
+                // count sla pass
+                $countSLAFailed = ReportService::countSLAFailed($value['RepairedSubIssueID'], $startDate, $endDate);
+                $value['countSLAFailed'] = $countSLAFailed;
+
+                $sumTotal += intval($countTotalRepairNotify);
+                $sumFinish += intval($countFinish);
+                $sumHold += intval($countHold);
+                $sumCancel += intval($countCancel);
+                $sumPassSLA += intval($countSLAPass);
+                $sumFailSLA += intval($countSLAFailed);
+
+                $result[] = $value;
+            }
+            */
+            // set summary
+            $summary = ['name'=>'รวม','sumTotal'=>$sumTotal, 'sumFinish'=>$sumFinish, 'sumHold'=>$sumHold, 'sumCancel'=>$sumCancel, 'sumPassSLA'=>$sumPassSLA, 'sumFailSLA'=>$sumFailSLA];
+
+            return ['result'=>$RepairSubIssueList,'summary'=>$summary];
         }
 
         private function querySummaryRoom($condition){
@@ -517,6 +576,67 @@
             $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(16);
             $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(16);
             $objPHPExcel->getActiveSheet()->getColumnDimension('J')->setWidth(16);
+
+            $objPHPExcel->getActiveSheet()->getStyle('A'.$lastRow)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            return $objPHPExcel;
+        }
+
+        private function generateExcelSummaryRepairCase($objPHPExcel, $condition, $data, $summary){
+
+            $condition['StartDate'] = substr($condition['StartDate'], 0,10);
+            $condition['StartDate'] = $this->getReportDate($condition['StartDate']);
+
+            $condition['EndDate'] = substr($condition['EndDate'], 0,10);
+            $condition['EndDate'] = $this->getReportDate($condition['EndDate']);
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A1', 'สรุปการแจ้งซ่อม ช่วงวันที่ ' . ($condition['StartDate']) . ' ถึง ' . $condition['EndDate']);
+
+            // set header
+            $header = ['วันที่','รหัสแจ้งซ่อม','ประเภทงานซ่อม', 'หัวข้องานซ่อม', 'ปัญหางานซ่อม','ปัญหาย่อยงานซ่อม', 'สถานะงานซ่อม', 'ผ่าน / ไม่ผ่าน SLA', 'ผู้อนุมัติ'];
+            $objPHPExcel->getActiveSheet()->fromArray($header, NULL, 'A3' );
+
+            // re format data
+            //$new_data = [];
+            $con_row = 4;
+            foreach ($data as $key => $value) {
+                //$new_data[] = [$value['RepairedSubIssueName'], $value['countTotal'],$value['countFinish'],$value['countHold'],$value['countCancel'],0,0];
+                $value['CreateDateTime'] = substr($value['CreateDateTime'], 0,10);
+                $value['CreateDateTime'] = $this->getReportDate($value['CreateDateTime']);
+                $objPHPExcel->getActiveSheet()->setCellValue('A'.$con_row, $value['CreateDateTime']);
+                $objPHPExcel->getActiveSheet()->setCellValue('B'.$con_row, $value['RepairedCode']);
+                $objPHPExcel->getActiveSheet()->setCellValue('C'.$con_row, $value['RepairedTypeName']);
+                $objPHPExcel->getActiveSheet()->setCellValue('D'.$con_row, $value['RepairedTitleName']);
+                $objPHPExcel->getActiveSheet()->setCellValue('E'.$con_row, $value['RepairedIssueName']);
+                $objPHPExcel->getActiveSheet()->setCellValue('F'.$con_row, $value['RepairedSubIssueName']);
+                $objPHPExcel->getActiveSheet()->setCellValue('G'.$con_row, $value['RepairedStatus']);
+                $objPHPExcel->getActiveSheet()->setCellValue('H'.$con_row, $value['SLAStatus']);
+                $objPHPExcel->getActiveSheet()->setCellValue('I'.$con_row, $value['ApproveName']);
+                $con_row++;
+            }
+
+            //$objPHPExcel->getActiveSheet()->fromArray($new_data, NULL, 'A4' );
+            
+            $objPHPExcel->getActiveSheet()
+            ->getStyle("A3:I" . $objPHPExcel->getActiveSheet()->getHighestRow())
+            ->applyFromArray($this->getDefaultStyle());
+
+            // header style
+            $objPHPExcel->getActiveSheet()->mergeCells('A1:J1');
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle('A1')->getFont()->setSize(14);
+
+            // detail style
+            $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(24);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(24);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(24);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(24);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(16);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(16);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+            $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(20);
 
             $objPHPExcel->getActiveSheet()->getStyle('A'.$lastRow)->getAlignment()->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 

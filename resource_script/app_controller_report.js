@@ -122,7 +122,14 @@ app.controller('ReportSummaryRepairController', function($scope, $filter, IndexO
     }
     $scope.queryReport = function (condition){
     	IndexOverlayFactory.overlayShow();
-        ReportFactory.queryReport(condition).then(function(result){
+        var con = angular.copy(condition);
+        if(con.StartDate != null && con.StartDate != undefined && con.StartDate != ''){
+            con.StartDate = makeSQLDate(con.StartDate);
+        }
+        if(con.EndDate != null && con.EndDate != undefined && con.EndDate != ''){
+            con.EndDate = makeSQLDate(con.EndDate);
+        }
+        ReportFactory.queryReport(con).then(function(result){
             IndexOverlayFactory.overlayHide();
             if(result.data.STATUS == 'OK'){
                 $scope.DataList = result.data.DATA.result;
@@ -223,6 +230,262 @@ app.controller('ReportSummaryRepairController', function($scope, $filter, IndexO
 		}
 
 		 pdfMake.createPdf(dd).download('summary_repair.pdf');
+         IndexOverlayFactory.overlayHide();
+    }
+
+    // Prepare variable
+    $scope.YearList = getYearList(100);
+    var d = new Date();
+    //console.log(d.getFullYear());
+    $scope.refresh();
+
+    IndexOverlayFactory.overlayHide();
+
+});
+
+app.controller('ReportSummaryRepairCaseController', function($scope, $filter, IndexOverlayFactory, ReportFactory, RepairFactory) {
+    IndexOverlayFactory.overlayShow();
+    $scope.menu_selected = 'report_summary_repair_case';
+
+    var $user_session = sessionStorage.getItem('user_session');
+    
+    if($user_session != null){
+        $scope.$parent.currentUser = angular.fromJson($user_session);
+        $scope.$parent.TotalLogin = sessionStorage.getItem('TotalLogin');
+        
+    }else{
+       window.location.replace('#/logon/' + $scope.menu_selected);
+    }
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    $scope.popup2 = {
+        opened: false
+    };
+    $scope.open1 = function() {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.open2 = function() {
+        
+        $scope.popup2.opened = true;
+    };
+
+    // Validate zone
+    $scope.filterMenu = function(MenuID){
+        //console.log('MenuID = ', MenuID);
+        $scope.MenuList = angular.fromJson(sessionStorage.getItem('MenuList'));
+        var result = false;
+        if(MenuID == '6'){
+            result = $filter('MenuFilter')($scope.MenuList, 6);     
+            result = $filter('MenuFilter')($scope.MenuList, 7);     
+        }else{
+            result = $filter('MenuFilter')($scope.MenuList, MenuID);
+        }
+        
+        return result;
+    }
+    if(!$scope.filterMenu(7)){
+        alert('ไม่มีสิทธิ์เข้าใช้งานในหน้านี้');
+        window.location.replace('#/');
+    }
+
+
+    $scope.refresh = function(){
+        $scope.condition = {'report_type':'summary_repair_case','Year':null};
+
+        $scope.getRepairType();
+        $scope.getRepairTitle();
+        $scope.getRepairIssue();
+        $scope.getRepairSubIssue();
+        $scope.DataList = null;
+        $scope.Summary = null;
+    }
+
+    $scope.getRepairType = function(){
+        IndexOverlayFactory.overlayShow();
+        RepairFactory.getRepairTypeList('view', $scope.currentUser.UserID).then(function (obj){
+            IndexOverlayFactory.overlayHide();
+            $scope.RepairTypeList = obj.data.DATA.DataList;
+        });
+    }
+
+    $scope.getRepairTitle = function(RepairedTypeID){
+        IndexOverlayFactory.overlayShow();
+        RepairFactory.getRepairTitleList('view', RepairedTypeID).then(function (obj){
+            IndexOverlayFactory.overlayHide();
+            $scope.RepairTitleList = obj.data.DATA.DataList;
+        });
+    }
+
+    $scope.getRepairIssue = function(RepairedTitleID){
+        IndexOverlayFactory.overlayShow();
+        RepairFactory.getRepairIssueList('view', RepairedTitleID).then(function (obj){
+            IndexOverlayFactory.overlayHide();
+            $scope.RepairIssueList = obj.data.DATA.DataList;
+        });
+    }
+
+    $scope.getRepairSubIssue = function(RepairedIssueID){
+
+        IndexOverlayFactory.overlayShow();
+        RepairFactory.getRepairSubIssueList('view', RepairedIssueID).then(function (obj){
+            IndexOverlayFactory.overlayHide();
+            $scope.RepairSubIssueList = obj.data.DATA.DataList;
+        });
+    }
+
+    $scope.setRepairType = function(RepairedTypeID){
+        console.log(RepairedTypeID);
+        $scope.RepairTititleList = [];
+        $scope.RepairIssueList = [];
+        $scope.RepairSubIssueList = [];
+        // load Title
+        if(RepairedTypeID != null){
+            $scope.getRepairTitle(RepairedTypeID);
+        }   
+    }
+
+    $scope.setRepairTitle = function(RepairedTitleID){
+        console.log(RepairedTitleID);
+        $scope.RepairIssueList = [];
+        $scope.RepairSubIssueList = [];
+        // load Issue
+        if(RepairedTitleID != null){
+            $scope.getRepairIssue(RepairedTitleID);
+        }
+    }
+
+    $scope.setRepairIssue = function(RepairedIssueID){
+        $scope.RepairSubIssueList = [];
+        // load Sub Issue
+        if(RepairedIssueID != null){
+            $scope.getRepairSubIssue(RepairedIssueID);
+        }
+    }
+    $scope.queryReport = function (condition){
+        IndexOverlayFactory.overlayShow();
+        var con = angular.copy(condition);
+        if(con.StartDate != null && con.StartDate != undefined && con.StartDate != ''){
+            con.StartDate = makeSQLDate(con.StartDate);
+        }
+        if(con.EndDate != null && con.EndDate != undefined && con.EndDate != ''){
+            con.EndDate = makeSQLDate(con.EndDate);
+        }
+        ReportFactory.queryReport(con).then(function(result){
+            IndexOverlayFactory.overlayHide();
+            if(result.data.STATUS == 'OK'){
+                $scope.DataList = result.data.DATA.result;
+                for(var i = 0; i < $scope.DataList.length; i++){
+                    $scope.DataList[i].RepairedStatus = $scope.getRepairedStatusTH($scope.DataList[i].RepairedStatus);
+                    $scope.DataList[i].SLAStatus = $scope.getSLAStatusTH($scope.DataList[i].SLAStatus);
+                }
+            }
+        });
+    }
+
+    $scope.getRepairedStatusTH = function(status){
+        if(status == 'Suspend'){
+            return 'ระงับการซ่อม';
+        }else if(status == 'Finish'){
+            return 'ซ่อมเสร็จสิ้น';
+        }else if(status == 'Cancel'){
+            return 'ยกเลิกการซ่อม';
+        }
+
+    }
+
+    $scope.getSLAStatusTH = function(status){
+        if(status == 1){
+            return 'ผ่าน';
+        }else if(status == 0){
+            return 'ไม่ผ่าน';
+        }else{
+            return '';
+        }
+    }
+
+    $scope.exportToExcel = function (condition, data, summary){
+        IndexOverlayFactory.overlayShow();
+        ReportFactory.exportExcel(condition, data, summary).then(function(result){
+            IndexOverlayFactory.overlayHide();
+            if(result.data.STATUS == 'OK'){
+                window.location.href="downloads/" + result.data.DATA;
+            }
+        });
+    }
+
+    $scope.exportToPDF = function(condition, data) {
+
+        var dateRange = convertDateToFullThaiDateIgnoreTime(condition.StartDate) + ' ถึง ' + convertDateToFullThaiDateIgnoreTime(condition.EndDate);
+
+        IndexOverlayFactory.overlayShow();
+        var data_detail = [];
+        var headerRow = [];
+        // set header 
+        headerRow.push({text: 'วันที่', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'รหัสแจ้งซ่อม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'ประเภทงานซ่อม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'หัวข้องานซ่อม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'ปัญหางานซ่อม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});                
+        headerRow.push({text: 'ปัญหาย่อยงานซ่อม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'สถานะงานซ่อม', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true}); 
+        headerRow.push({text: 'ผ่าน / ไม่ผ่าน SLA', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true});
+        headerRow.push({text: 'ผู้อนุมัติ', style: 'tableHeader', /*rowSpan: 2,*/ alignment: 'center', fontSize: 12, bold: true}); 
+        data_detail.push(headerRow)
+
+        // set detail
+        data.forEach(function(sourceRow) {
+          var dataRow = [];
+          dataRow.push(convertSQLDateTimeToReportDate(sourceRow.CreateDateTime));
+          dataRow.push(sourceRow.RepairedCode);
+          dataRow.push(sourceRow.RepairedTypeName);
+          dataRow.push(sourceRow.RepairedTitleName);
+          dataRow.push(sourceRow.RepairedIssueName);
+          dataRow.push(sourceRow.RepairedSubIssueName);
+          dataRow.push(sourceRow.RepairedStatus);
+          dataRow.push(sourceRow.SLAStatus==null?'':sourceRow.SLAStatus);
+          dataRow.push(sourceRow.ApproveName);
+          data_detail.push(dataRow)
+        });
+        console.log(data_detail);
+        
+        //return ;
+        pdfMake.fonts = {
+            SriSuriwongse: {
+                
+                normal: 'SRISURYWONGSE.ttf'
+                ,bold: 'SRISURYWONGSE-Bold.ttf'
+            }
+        };
+        
+        var dd = {
+            content: [
+                {text: 'สรุปการแจ้งซ่อม ช่วงวันที่ ' + dateRange , style: 'header', alignment:'center',margin: [0,10,0,0]},
+                {
+                     table: {
+                        headerRows: 1,
+                        widths: [70,70, 80,80, 80, 80,70,70, 60],
+                        body: data_detail
+                    }
+                }
+            ],
+            styles: {
+                header: {
+                    bold: true,
+                    fontSize: 18
+                }
+            },
+            defaultStyle: {
+                fontSize: 12,
+                font:'SriSuriwongse'
+            },
+            pageOrientation: 'landscape'
+        }
+
+         pdfMake.createPdf(dd).download('summary_repair_case.pdf');
          IndexOverlayFactory.overlayHide();
     }
 
@@ -580,7 +843,15 @@ app.controller('ReportSummaryRoomController', function($scope, $filter, $uibModa
     $scope.viewDetail = function(RoomID, RoomName, TotalUse, condition){
         $scope.RoomName = RoomName;
         $scope.TotalUse = TotalUse;
-        var params = {'RoomID' : RoomID, 'condition' : condition};
+        var con = angular.copy(condition);
+        if(con.StartDate != null && con.StartDate != undefined && con.StartDate != ''){
+            con.StartDate = makeSQLDate(con.StartDate);
+        }
+        if(con.EndDate != null && con.EndDate != undefined && con.EndDate != ''){
+            con.EndDate = makeSQLDate(con.EndDate);
+        }
+        
+        var params = {'RoomID' : RoomID, 'condition' : con};
         HTTPFactory.clientRequest('report/room/detail', params).then(function (result) {
             if (result.data.STATUS == 'OK') {
                 $scope.RoomDetail = result.data.DATA.List;

@@ -219,7 +219,7 @@
             $Link = Link::find($LinkID);
             
             $Link->TotalVisit = $Link->TotalVisit + 1;
-            
+            $Link->save();
             return $Link->TotalVisit;
             
         }

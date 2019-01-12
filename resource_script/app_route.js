@@ -40,12 +40,12 @@ app.config(function($routeProvider) {
         controller : "Rules1Controller"
     })
 
-    .when("/manage_docs/rule2", {
+    .when("/manage_docs/rule2/:parent_id/:id?", {
         templateUrl : "html/manage-rules/rules2.html",
         controller : "Rules2Controller"
     })
 
-    .when("/manage_docs/rule3", {
+    .when("/manage_docs/rule3/:parent_id/:id?", {
         templateUrl : "html/manage-rules/rules3.html",
         controller : "Rules3Controller"
     })
@@ -228,6 +228,11 @@ app.config(function($routeProvider) {
     .when("/report_summary_repair", {
         templateUrl : "html/report/summary_repair.html",
         controller : "ReportSummaryRepairController"
+    })
+
+    .when("/report_summary_repair_case", {
+        templateUrl : "html/report/summary_repair_case.html",
+        controller : "ReportSummaryRepairCaseController"
     })
 
     .when("/report_detail_repair", {

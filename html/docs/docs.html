@@ -18,7 +18,7 @@
 					<ul>
 						<li ng-repeat="sub_data2 in sub_data1.docs3">
 							<a href="{{sub_data2.doc_file}}" target="_blank" ng-show="sub_data2.file_type == 'LINK'">{{sub_data2.doc_name}}</a>
-							<a href="../{{sub_data2.doc_file}}" target="_blank" ng-show="sub_data2.file_type == 'FILE'">{{sub_data2.doc_name}}</a>
+							<a href="{{sub_data2.doc_file}}" target="_blank" ng-show="sub_data2.file_type == 'FILE'">{{sub_data2.doc_name}}</a>
 						</li>						
 					</ul>
 					

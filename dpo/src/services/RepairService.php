@@ -196,7 +196,7 @@
                                 , "REPAIRED.RepairedCode"
                                 , "REPAIRED.CreateBy"
                                 , "REPAIRED_SUB_ISSUE.RepairedSubIssueName"
-                                , DB::raw("CONCAT(TBL_REPAIRED_SUB_ISSUE.SLAHour, ' ชั่วโมง ', TBL_REPAIRED_SUB_ISSUE.SLAMinuteม , ' นาที ') AS SLA")
+                                , DB::raw("CONCAT(TBL_REPAIRED_SUB_ISSUE.SLAHour, ' ชั่วโมง ', TBL_REPAIRED_SUB_ISSUE.SLAMinute , ' นาที ') AS SLA")
                                 , "REPAIRED_TYPE.RepairedTypeName"
                                 , "REPAIRED_TITLE.RepairedTitleName"
                                 , "REPAIRED_TITLE.DepartmentID"

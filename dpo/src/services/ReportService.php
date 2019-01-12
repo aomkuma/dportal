@@ -51,11 +51,18 @@
                                                 ,"REPAIRED_TYPE.RepairedTypeName"
                                                 ,"REPAIRED_TITLE.RepairedTitleName"
                                                 ,"REPAIRED_ISSUE.RepairedIssueName"
-                                                ,"REPAIRED_SUB_ISSUE.RepairedSubIssueName")
+                                                ,"REPAIRED_SUB_ISSUE.RepairedSubIssueName"
+                                                ,"REPAIRED.RepairedStatus"
+                                                ,"REPAIRED.SLAStatus"
+                                                ,"REPAIRED.CreateDateTime"
+                                                ,"REPAIRED.RepairedCode"
+                                                ,DB::raw("CONCAT(TBL_ACCOUNT.FirstName, ' ', TBL_ACCOUNT.LastName) AS ApproveName")
+                                            )
             		->join("REPAIRED" , "REPAIRED.RepairedSubIssueID" , "=", "REPAIRED_SUB_ISSUE.RepairedSubIssueID")
                     ->join("REPAIRED_TYPE" , "REPAIRED.RepairedTypeID" , "=", "REPAIRED_TYPE.RepairedTypeID")
                     ->join("REPAIRED_TITLE" , "REPAIRED.RepairedTitleID" , "=", "REPAIRED_TITLE.RepairedTitleID")
                     ->join("REPAIRED_ISSUE" , "REPAIRED.RepairedIssueID" , "=", "REPAIRED_ISSUE.RepairedIssueID")
+                    ->join("ACCOUNT" , "ACCOUNT.UserID" , "=", "REPAIRED.AdminID")
             		->whereBetween('REPAIRED.CreateDateTime', [$startDate, $endDate])
             		->where("REPAIRED.RepairedStatus" , '<>', 'Request')
                     ->where(function($query) use ($RepairType, $RepairedTitle, $RepairIssue, $RepairSubIssue){
@@ -334,7 +341,7 @@
                                 ,"TopicConference"
                                 ,"ACCOUNT.*"
                                 )
-                    ->join("ACCOUNT", "ACCOUNT.UserID", "=", "RESERVE_ROOM.CreateBy")
+                    ->leftJoin("ACCOUNT", "ACCOUNT.UserID", "=", "RESERVE_ROOM.CreateBy")
                     ->where("RESERVE_ROOM.RoomID" , $RoomID)
                     ->where(function($query) use ($condition){
                                 $condition['StartDate'] = substr($condition['StartDate'], 0,10) . ' 00:00:00';
@@ -342,6 +349,8 @@
                                 $query->whereBetween('StartDateTime' , [$condition['StartDate'] , $condition['EndDate']]);
                                 $query->orWhereBetween('EndDateTime' , [$condition['StartDate'] , $condition['EndDate']]);
                             })
+                    ->groupBy("RESERVE_ROOM.ReserveRoomID")
+                    ->where("ReserveStatus" , 'Approve')
                     ->orderBy("StartDateTime", 'ASC')
                     ->get();
         }
