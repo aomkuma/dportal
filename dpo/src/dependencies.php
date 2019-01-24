@@ -149,3 +149,7 @@ $container['LeaveController'] = function ($c) {
 $container['DocsController'] = function ($c) {
     return new \App\Controller\DocsController($c->get('logger'), $c->get('db'));
 };
+
+$container['InboxController'] = function ($c) {
+    return new \App\Controller\InboxController($c->get('logger'), $c->get('db'));
+};

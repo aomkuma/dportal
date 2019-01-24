@@ -209,6 +209,7 @@ $app->post('/person-region/update/', 'PersonRegionController:updatePersonRegion'
 // MIS Request
 $app->post('/mis/list/user/', 'UserController:getMISUserInfoList');
 $app->post('/mis/get/user/', 'UserController:getMISUserInfo');
+$app->post('/mis/get/org/header/', 'UserController:getOrgHeader');
 
 // LOMS Request
 $app->post('/leaves/notification/put/', 'LeaveController:putNotification');
@@ -220,6 +221,17 @@ $app->post('/docs/list/view/', 'DocsController:getListView');
 $app->post('/docs/list/', 'DocsController:getList');
 $app->post('/docs/get/', 'DocsController:getData');
 $app->post('/docs/update/', 'DocsController:updateData');
+
+// Inbox Request
+$app->post('/inbox/list/', 'InboxController:getInboxList');
+$app->post('/inbox/list/manage/', 'InboxController:getInboxListManage');
+$app->post('/inbox/get/', 'InboxController:getInboxByID');
+$app->post('/inbox/update/', 'InboxController:updateData');
+$app->post('/inbox/picture/delete/', 'InboxController:deleteInboxPictureData');
+$app->post('/inbox/attach-file/delete/', 'InboxController:deleteInboxAttachFile');
+$app->post('/inbox/notification/push/', 'InboxController:pushNotification');
+$app->post('/inbox/notification/list/', 'InboxController:getListNotification');
+$app->post('/inbox/notification/count/', 'InboxController:getUnseen');
 
 // Default action
 $app->get('/[{name}]', function ($request, $response, $args) {

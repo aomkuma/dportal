@@ -7,8 +7,8 @@
         protected $data_result = array('STATUS'=>'OK','DATA'=>null);
         
         public function returnResponse($status, $data, $response, $check_numeric = true){
-            ob_end_clean();
-            ob_end_flush();
+            ob_clean();
+            ob_flush();
             if($check_numeric){
                 return $response
                         ->withHeader('Content-Type', 'application/json')

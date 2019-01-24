@@ -194,7 +194,34 @@
             }
 
         }
+
         
+        public function getOrgHeader($request, $response, $args){
+            try{
+                // error_reporting(E_ERROR);
+                // error_reporting(E_ALL);
+                // ini_set('display_errors','On');
+                $parsedBody = $request->getParsedBody();
+                $Type = $parsedBody['Type'];
+                $OrgID = $parsedBody['OrgID'];
+                $this->logger->info('getOrgHeader :: Find by OrgID : '.$OrgID);
+                // find upper org id
+                $group = UserService::getGroupByOrgID($OrgID);  
+                if(empty($Type)){
+                    $user = UserService::getOrgHeader($group['UpperOrgID']);
+                }else{
+                    $user = UserService::getOrgHeader($group['OrgID']);
+                    $user['OrgType'] = $group['GroupType'];
+                }
+                
+                $this->data_result['DATA']['Header'] = $user;
+                return $this->returnResponse(200, $this->data_result, $response);
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }
+
+        }
+
     }
 
 ?>

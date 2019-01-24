@@ -17,7 +17,7 @@ class LogMiddleware
     	$userAgent = $request->getHeader('HTTP_USER_AGENT');
 
     	if(strpos($path , 'getNotificationList') === false){
-    		$this->container->logger->info('IP => '.$ipAddress .' : METHOD => '. $request->getMethod() . ' : ACTION => '. $path . " : FROM => " . $userAgent[0]);
+    		$this->container->logger->info('IP => '.$ipAddress .' : METHOD => '. $request->getMethod() . ' : ACTION => '. $path . " : FROM => " . (empty($userAgent[0])?'':$userAgent[0]) );
 		}
         
         $response = $next($request, $response);

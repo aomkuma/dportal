@@ -113,10 +113,11 @@
                             <li class="menu-item dropdown dropdown-submenu"><a href="#/car-reserve-detail" class="dropdown-toggle" data-toggle="dropdown">รายละเอียดการจองพาหนะ</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'news' || menu_selected == 'calendar'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>ประชาสัมพันธ์</b> <b class="caret"></b></a>
+                    <li class="menu-item dropdown"  ng-class="{'menu_selected' : menu_selected == 'news' || menu_selected == 'calendar'  || menu_selected == 'inbox'}"><a href="" class="dropdown-toggle" data-toggle="dropdown"><b>ประชาสัมพันธ์ <span style="color: red;" ng-show="countUnseenInbox > 0">{{countUnseenInbox}}</span></b> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li class="menu-item dropdown dropdown-submenu"><a href="#/news/na" class="dropdown-toggle" data-toggle="dropdown">ข่าวประชาสัมพันธ์</a></li>
                             <li class="menu-item dropdown dropdown-submenu"><a href="#/calendar" class="dropdown-toggle" data-toggle="dropdown">ปฏิทิน</a></li>
+                            <li class="menu-item dropdown dropdown-submenu"><a href="#/inbox" class="dropdown-toggle">ข่าว Inbox</a></li>
                         </ul>
                     </li>
                     <!--<li ng-class="{'menu_selected':menu_selected == 'roomconference'}"><a href="#/roomconference"><b ng-class="{'font_menu_selected':menu_selected == 'roomconference'}">จองห้องประชุม</b></a></li>
@@ -162,12 +163,14 @@
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_person_region" class="dropdown-toggle" data-toggle="dropdown">พื้นที่แผนกของบุคคล</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_docs/rule1" class="dropdown-toggle" data-toggle="dropdown">ระเบียบ ข้อบังคับ</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_docs/doc1" class="dropdown-toggle" data-toggle="dropdown">เอกสารเผยแพร่</a></li>
+                            <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_inbox" class="dropdown-toggle" data-toggle="dropdown">Inbox</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_log" class="dropdown-toggle" data-toggle="dropdown">Log</a></li>
                             <li ng-show="filterMenu(0)" class="menu-item dropdown dropdown-submenu"><a href="#/manage_setting" class="dropdown-toggle" data-toggle="dropdown">ตั้งค่า</a></li>
                         </ul>
                         </li>
                         <li ng-class="{'menu_selected':menu_selected == 'rule'}"><a href="#/docs/rule"><b ng-class="{'font_menu_selected':menu_selected == 'rule'}">ระเบียบ ข้อบังคับ</b></a></li>
                         <li ng-class="{'menu_selected':menu_selected == 'doc'}"><a href="#/docs/doc"><b ng-class="{'font_menu_selected':menu_selected == 'docs'}">เอกสารเผยแพร่</b></a></li>
+                        
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">

@@ -15,6 +15,21 @@ app.config(function($routeProvider) {
         controller : "CarReserveDetailController"
     })
 
+    .when("/inbox", {
+        templateUrl : "html/inbox/inbox.html",
+        controller : "InboxController"
+    })
+
+    .when("/inbox/detail/:InboxID", {
+        templateUrl : "html/inbox/detail.html",
+        controller : "InboxDetailController"
+    })
+
+    .when("/manage_inbox", {
+        templateUrl : "html/manage/inbox.html",
+        controller : "InboxManageController"
+    })
+
     .when("/docs/:doc_type", {
         templateUrl : "html/docs/docs.html",
         controller : "DocsController"

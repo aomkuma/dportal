@@ -10,6 +10,12 @@
     use Illuminate\Database\Capsule\Manager as DB;
 
     class UserService {
+
+        public static function getOrgHeader($OrgID){
+            return User::where('OrgID', $OrgID)
+                    ->where('IsHeader', '1')
+                    ->first();
+        }
                         
         public static function getUser($id){
             return User::select("ACCOUNT.*"
@@ -369,6 +375,7 @@
                             }
                         }
                     })
+                ->groupBy('ACCOUNT.UserID')
                 ->orderBy('ACCOUNT.UpdateDateTime', 'DESC')
                 ->get();
         }

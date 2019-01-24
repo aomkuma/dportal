@@ -1,10 +1,21 @@
-app.controller('AppController', ['$cookies','$scope', '$filter', '$uibModal','IndexOverlayFactory', 'PhoneBookFactory', 'LOMSFactory', function($cookies, $scope, $filter, $uibModal, IndexOverlayFactory, PhoneBookFactory, LOMSFactory) {
+app.controller('AppController', ['$cookies','$scope', '$filter', '$uibModal','IndexOverlayFactory', 'PhoneBookFactory', 'LOMSFactory', 'HTTPFactory', function($cookies, $scope, $filter, $uibModal, IndexOverlayFactory, PhoneBookFactory, LOMSFactory, HTTPFactory) {
 	$scope.overlay = IndexOverlayFactory;
 	$scope.overlayShow = false;
 	$scope.currentUser = null;
     $scope.TotalLogin = 0;
     $scope.menu_selected = '';
+    $scope.countUnseenInbox = 0;
 
+    $scope.countUnseen = function(){
+        
+        var params = {'UserID' : $scope.currentUser.UserID, 'OrgID' : $scope.currentUser.OrgID};
+            HTTPFactory.clientRequest('inbox/notification/count', params).then(function (result) {
+                if (result.data.STATUS == 'OK') {
+                    $scope.countUnseenInbox = result.data.DATA.Unseen;
+                }
+                IndexOverlayFactory.overlayHide();
+            });
+    }
     
     $scope.logout = function(){
         sessionStorage.removeItem('user_session');
@@ -253,7 +264,7 @@ app.controller('NotificationController', function($scope, NotificationFactory, I
             $scope.showLeaveNotificationBox = true;
         }
     }
-
+    $scope.countUnseen();
     $scope.getLeaveNotifications($scope.$parent.currentUser.Email);
     $scope.getNotifications($scope.$parent.currentUser.RegionID, $scope.$parent.currentUser.GroupID, $scope.$parent.currentUser.UserID, false);
 
