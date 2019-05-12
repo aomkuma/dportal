@@ -10,6 +10,11 @@ app.config(function($routeProvider) {
         controller : "LoginController"
     })
 
+    .when("/organization", {
+        templateUrl : "html/organization.html",
+        controller : "OrganizationController"
+    })
+
     .when("/car-reserve-detail", {
         templateUrl : "html/carreservation/car-reserve-detail.html",
         controller : "CarReserveDetailController"

@@ -1,0 +1,23 @@
+[2019-02-08 01:14:30] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"2aac562"}
+[2019-02-08 01:14:30] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"2aac562"}
+[2019-02-08 01:17:17] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"16ca963"}
+[2019-02-08 01:17:17] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"16ca963"}
+[2019-02-08 01:17:32] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"61b998e"}
+[2019-02-08 01:17:32] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"61b998e"}
+[2019-02-08 01:17:52] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => login/ : FROM => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.2 Safari/605.1.15 [] {"uid":"e905b69"}
+[2019-02-08 01:17:52] slim-app.INFO: Array [] {"uid":"e905b69"}
+[2019-02-08 01:17:52] slim-app.INFO: Find by username : pakorn.j@dpo.go.th Password : pakorn.j@dpo.go.th [] {"uid":"e905b69"}
+[2019-02-08 01:17:52] slim-app.INFO: {"UserID":993,"GroupID":195,"RegionID":3,"PositionID":4,"Username":"pakorn.j@dpo.go.th","Password":"pakorn.j@dpo.go.th","FirstName":"\u0e1b\u0e01\u0e23\u0e13\u0e4c","LastName":"\u0e08\u0e34\u0e23\u0e30\u0e44\u0e0a\u0e22\u0e40\u0e02\u0e37\u0e48\u0e2d\u0e19\u0e02\u0e31\u0e19\u0e18\u0e4c","Email":"pakorn.j@dpo.go.th","Mobile":"0832692266","Tel":null,"Fax":null,"Picture":"dtvv31tnj5kwwg0.jpg","CreateBy":1,"CreateDateTime":"2018-04-05 20:11:24","UpdateBy":1,"UpdateDateTime":"2019-01-04 13:30:03","InternalContact":null,"PositionName":"\u0e19\u0e31\u0e01\u0e1a\u0e23\u0e34\u0e2b\u0e32\u0e23","IsHeader":"1","IsConsult":"0","IsActing":"0","Rank":"7","SegID":"0071","Org":"\u0e01\u0e2d\u0e07\u0e40\u0e17\u0e04\u0e42\u0e19\u0e42\u0e25\u0e22\u0e35\u0e2a\u0e32\u0e23\u0e2a\u0e19\u0e40\u0e17\u0e28","OrgID":"11","StaffID":"59024","DataID":1305,"LoginSession":"OTkzOjoyMDE5MDIwMzIxNTk1MDo6TVVMUUVGVURFSlhIT0lYVVNQUFVRV1ZMVk1JR04=","PinID":null,"RegionName":"\u0e2d.\u0e2a.\u0e04. \u0e2a\u0e33\u0e19\u0e31\u0e01\u0e07\u0e32\u0e19\u0e20\u0e32\u0e04\u0e01\u0e25\u0e32\u0e07","OrgName":"\u0e01\u0e2d\u0e07\u0e40\u0e17\u0e04\u0e42\u0e19\u0e42\u0e25\u0e22\u0e35\u0e2a\u0e32\u0e23\u0e2a\u0e19\u0e40\u0e17\u0e28","UpperOrgName":"\u0e1d\u0e48\u0e32\u0e22\u0e19\u0e42\u0e22\u0e1a\u0e32\u0e22\u0e41\u0e25\u0e30\u0e41\u0e1c\u0e19\u0e07\u0e32\u0e19"} [] {"uid":"e905b69"}
+[2019-02-08 01:21:02] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"38bdbd0"}
+[2019-02-08 01:21:02] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"38bdbd0"}
+[2019-02-08 01:26:57] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"6485a99"}
+[2019-02-08 01:26:57] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"6485a99"}
+[2019-02-08 01:27:58] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"c6e5612"}
+[2019-02-08 01:27:58] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"c6e5612"}
+[2019-02-08 01:56:57] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/list/user/ : FROM => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.2 Safari/605.1.15 [] {"uid":"8471149"}
+[2019-02-08 02:39:59] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"5995fef"}
+[2019-02-08 02:39:59] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"5995fef"}
+[2019-02-08 03:26:01] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"cb0b1dc"}
+[2019-02-08 03:26:01] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"cb0b1dc"}
+[2019-02-08 03:27:46] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"408005f"}
+[2019-02-08 03:27:46] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"408005f"}

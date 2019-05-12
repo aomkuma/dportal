@@ -16,6 +16,20 @@
             $this->logger = $logger;
             $this->db = $db;
         }
+
+        public function getNewsPublic($request, $response, $args){
+            
+            try{
+                
+                $NewsList = NewsService::getNewsPublic();
+                $this->data_result['DATA'] = $NewsList;
+                
+                return $this->returnResponse(200, $this->data_result, $response);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }            
+        }
         
         public function getNewsFeed($request, $response, $args){
             

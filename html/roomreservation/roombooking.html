@@ -300,7 +300,7 @@
          
         </fieldset>
         <div ng-form='verify_form'>
-            <div class="row form-group" ng-show=" ReserveRoomInfo.ReserveStatus == 'Request'">
+            <div class="row form-group" ng-show="IsAdmin && ReserveRoomInfo.ReserveStatus == 'Request'">
                 <div class="page-header"><!-- currentUser.UserID != ReserveRoomInfo.CreateBy && -->
                     <h3>ห้องประชุมต้นทาง</h3> 
                 </div>

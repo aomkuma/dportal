@@ -10,6 +10,16 @@
     use Illuminate\Database\Capsule\Manager as DB;
 
     class NewsService {
+
+        public static function getNewsPublic(){
+            
+            return News::where('ActiveStatus','Y')
+                    ->where('GlobalNews','Y')
+                    ->where('GlobalVisible','Y')
+                    ->orderBy('CreateDateTime', 'DESC')->skip(0)->take(8)->get();      
+                    
+             //return News::where('NewsID', DB::raw("'2'"))->get();
+        } 
         
         public static function getNewsFeed($RegionID){
             

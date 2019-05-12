@@ -72,6 +72,7 @@ class PersonRegionService {
                             }
 	                    }
                     })
+                ->groupBy('ACCOUNT.UserID')
                 ->orderBy('ACCOUNT.FirstName', 'ASC')
                 ->get();
 	}

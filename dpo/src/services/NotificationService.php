@@ -33,6 +33,7 @@
                                 //->
                                 where('ToSpecificPersonID', $userID)
                                 ->groupBy('ToSpecificPersonID')
+                                ->groupBy('NotificationType')
                                 ->groupBy('PushDateTime')
                                 ->orderBy('PushDateTime', 'DESC')
                                 ->skip($skip)

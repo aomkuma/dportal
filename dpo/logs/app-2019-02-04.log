@@ -1,0 +1,17 @@
+[2019-02-04 00:08:26] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"82af908"}
+[2019-02-04 00:08:26] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"82af908"}
+[2019-02-04 00:13:12] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"4d05a05"}
+[2019-02-04 00:13:12] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"4d05a05"}
+[2019-02-04 00:13:35] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"43a9deb"}
+[2019-02-04 00:13:35] slim-app.INFO: getOrgHeader :: Find by OrgID : 11 [] {"uid":"43a9deb"}
+[2019-02-04 00:13:47] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"2559d30"}
+[2019-02-04 00:13:47] slim-app.INFO: getOrgHeader :: Find by OrgID : 6 [] {"uid":"2559d30"}
+[2019-02-04 01:31:51] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"cbd6a8d"}
+[2019-02-04 01:31:51] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"cbd6a8d"}
+[2019-02-04 01:37:57] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"c1e4491"}
+[2019-02-04 01:37:57] slim-app.INFO: getOrgHeader :: Find by OrgID : 204 [] {"uid":"c1e4491"}
+[2019-02-04 01:38:03] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/list/user/ : FROM => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.2 Safari/605.1.15 [] {"uid":"4102023"}
+[2019-02-04 01:38:17] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"5c8b85e"}
+[2019-02-04 01:38:17] slim-app.INFO: getOrgHeader :: Find by OrgID : 11 [] {"uid":"5c8b85e"}
+[2019-02-04 01:38:26] slim-app.INFO: IP => 127.0.0.1 : METHOD => POST : ACTION => mis/get/org/header/ : FROM =>  [] {"uid":"80ecf77"}
+[2019-02-04 01:38:26] slim-app.INFO: getOrgHeader :: Find by OrgID : 6 [] {"uid":"80ecf77"}

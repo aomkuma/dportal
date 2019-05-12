@@ -1374,6 +1374,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
                     }
                 }
             }
+            console.log($scope.RoomDestinationAdminIndex, $scope.destinationRoomID);
             //console.log($scope.destinationRoomID);
             if($scope.destinationRoomID != undefined && $scope.RoomDestinationAdminIndex != -1){
                 if($scope.currentUser.UserID == $scope.RoomDestinationList[$scope.RoomDestinationAdminIndex].VerifyBy){
@@ -1386,31 +1387,39 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
 
             if($scope.ReserveRoomInfo.ReserveRoomID != '' && $scope.ReserveRoomInfo.ReserveStatus == ''){
                 timeoutReserve = setTimeout(function(){
-                    ReserveRoomFactory.cancelRoom($scope.ReserveRoomInfo.ReserveRoomID).then(function(result){
+                    console.log('Begin timeout cancel room..');
+                    if($scope.ReserveRoomInfo.ReserveRoomID != '' && $scope.ReserveRoomInfo.ReserveStatus == ''){
+                        
                         // IndexOverlayFactory.overlayHide();
-                        if(result.data.STATUS == 'OK'){
-                            $scope.alertMessage = '<b>SessionTimeout</b><br>การทำรายการจองห้องประชุมถูกยกเลิกเนื่องจากเกินเวลา 5 นาที';
-                            var modalInstance = $uibModal.open({
-                                animation : true,
-                                templateUrl : 'html/custom_alert.html',
-                                size : 'md',
-                                scope : $scope,
-                                backdrop : 'static',
-                                controller : 'ModalDialogCtrl',
-                                resolve : {
-                                    params : function() {
-                                        return {};
-                                    } 
-                                },
+                        
+                        $scope.alertMessage = '<b>SessionTimeout</b><br>การทำรายการจองห้องประชุมถูกยกเลิกเนื่องจากเกินเวลา 5 นาที';
+                        var modalInstance = $uibModal.open({
+                            animation : true,
+                            templateUrl : 'html/custom_alert.html',
+                            size : 'md',
+                            scope : $scope,
+                            backdrop : 'static',
+                            controller : 'ModalDialogCtrl',
+                            resolve : {
+                                params : function() {
+                                    return {};
+                                } 
+                            },
+                        });
+                        
+                        modalInstance.result.then(function (valResult) {
+                            //console.log(valResult);
+                            ReserveRoomFactory.cancelRoom($scope.ReserveRoomInfo.ReserveRoomID).then(function(result){
+                                if(result.data.STATUS == 'OK'){
+                                    window.location.replace('#/');
+                                }
                             });
                             
-                            modalInstance.result.then(function (valResult) {
-                                //console.log(valResult);
-                                window.location.replace('#/');
-                            }, function () {});
+                        }, function () {});
                             
-                        }
-                    });
+                        
+                        
+                    }
                     //alert('Session timeout!');
                 }, 300000);
             }
@@ -1423,7 +1432,14 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     });    
     // End Variables zone
 
+    $scope.IsAdmin = false;
+    $scope.checkAdminPermission = function(){
+        // if($scope.currentUser.UserID == )
+        // $scope.IsAdmin = false;
+    }
+
     $scope.addExternalAdtendee = function (obj) {
+        window.clearTimeout(timeoutReserve);
         var res = $scope.ExternalAttendeeList.forEach(function(data) {
             console.log(data.AttendeeName , obj.Name);
             if(data.AttendeeName == obj.Name){
@@ -1437,6 +1453,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     }
     
     $scope.saveDraft = function (){
+        window.clearTimeout(timeoutReserve);
         IndexOverlayFactory.overlayShow();
         if($scope.ReserveRoomInfo.Breakfast && $scope.ReserveRoomInfo.Lunch){
             $scope.ReserveRoomInfo.SnackStatus = 'Both';
@@ -1470,6 +1487,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     }
 
     $scope.markStatus = function(ReserveRoomID, ReserveStatus, AdminComment){
+        window.clearTimeout(timeoutReserve);
         $scope.alertMessage = 'ต้องการ '+(ReserveStatus=='Approve'?'อนุมัติ':'ไม่อนุมัติ')+' การจองห้องประชุมนี้ ใช่หรือไม่ ?';
         var modalInstance = $uibModal.open({
             animation : true,
@@ -1525,6 +1543,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     }
 
     $scope.markStatusRoomDestination = function(ReserveRoomID, ReserveStatus, AdminComment){
+        window.clearTimeout(timeoutReserve);
         $scope.alertMessage = 'ต้องการ '+(ReserveStatus=='Approve'?'อนุมัติ':'ไม่อนุมัติ')+' การจองห้องประชุมนี้ ใช่หรือไม่ ?';
         var modalInstance = $uibModal.open({
             animation : true,
@@ -1555,6 +1574,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     
     $autocompleteUserResult = [];
     $scope.searchUserAutoComplete = function (val, qtype){
+        window.clearTimeout(timeoutReserve);
 		val = encodeURIComponent(val);
 		return $http.get(servicesUrl + "/dpo/public/autocomplete/" + qtype + "/" + val).then(function(response){
 		  
@@ -1610,6 +1630,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     }
 
     $scope.autocompleteExUserSelected = function ($item, $model, $label){
+        window.clearTimeout(timeoutReserve);
         console.log($item);
         //IndexOverlayFactory.overlayShow();
         var itemSplit = $item.split(':');
@@ -1630,6 +1651,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     }
     
     $scope.deleteInternalAttendee = function (index, userID, reserveRoomID){
+        window.clearTimeout(timeoutReserve);
         //console.log(userID, reserveRoomID);
         IndexOverlayFactory.overlayShow();
         ReserveRoomFactory.deleteAttendee(userID,reserveRoomID).then(function(result){
@@ -1640,6 +1662,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     }
     
     $scope.addExternalAdtendee = function (AttendeeExt){
+        window.clearTimeout(timeoutReserve);
         //console.log(AttendeeExt);
         if(AttendeeExt == undefined || AttendeeExt.Name == ''){
             //alert('กรุณากรอกชื่อผู้เข้าร่วมประชุม');
@@ -1876,6 +1899,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
     
     // Room Destination zone
     $scope.roomDestEvent = function (index, room){
+        window.clearTimeout(timeoutReserve);
         //console.log(room.selected_room);
         var status = room.selected_room?'เลือก':'ยกเลิก';
         if(confirm('คุณต้องการ' + status + 'ห้องประชุมปลายทางนี้ ใช่หรือไม่ ?')){
@@ -1921,6 +1945,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
         });
         modalInstance.result.then(function (valResult) {
             IndexOverlayFactory.overlayShow();
+            window.clearTimeout(timeoutReserve);
             ReserveRoomFactory.cancelRoom(reserveRoomID).then(function(result){
                 IndexOverlayFactory.overlayHide();
                 if(result.data.STATUS == 'OK'){
@@ -4758,6 +4783,20 @@ app.controller('RoomMonitorController', function($cookies, $scope, $http, $uibMo
     setInterval(function(){
         $scope.loadRoomMonitorList();
     },300000);
+    
+});
+
+app.controller('OrganizationController', function($cookies, $scope, $http, $uibModal, $routeParams, HTTPFactory, IndexOverlayFactory) {
+    
+    $scope.$parent.menu_selected = 'organization';
+    var $user_session = sessionStorage.getItem('user_session');
+    
+    if($user_session != null){
+        $scope.$parent.currentUser = angular.fromJson($user_session);
+        $scope.$parent.TotalLogin = sessionStorage.getItem('TotalLogin');
+    }else{
+       window.location.replace('#/logon/' + $scope.menu_selected);
+    }
     
 });
 

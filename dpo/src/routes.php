@@ -46,6 +46,8 @@ $app->get('/getNewsByID/{newsID}', 'NewsController:getNewsByID');
 $app->post('/adminUpdateNewsStatus/', 'NewsController:adminUpdateNewsStatus');
 $app->get('/viewNews/{newsID}', 'NewsController:viewNews');
 $app->get('/searchNews/{keyword}', 'NewsController:searchNews');
+$app->get('/getNewsPublic/', 'NewsController:getNewsPublic');
+
 
 // Room action
 $app->get('/getRoomList/{offset}/{UserID}', 'RoomController:getRoomList');
