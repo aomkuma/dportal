@@ -176,6 +176,15 @@
             // $notification->save();
         }
 
+         public static function checkAdminPermission($UserID, $ReserveRoomID, $NotificationType){
+            return Notification::where('ToSpecificPersonID', $UserID)
+                            ->where('NotificationKeyID', $ReserveRoomID)
+                            ->where('NotificationType', $NotificationType)
+                            ->first();
+        }
+
+
+
         public static function getRoom($keyID){
             return RoomReserve::find($keyID);
         }

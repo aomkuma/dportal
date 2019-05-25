@@ -47,6 +47,15 @@
                     ->find($ReserveCarID);
         }
 
+        public static function checkSameDestination($ReserveCarID, $RegionID, $ProvinceID, $StartDateTime){
+            return CarReserve::
+                    //where('ReserveCarID', '<>', $ReserveCarID)
+                    where('RegionID', $RegionID)
+                    ->where('ProvinceID', $ProvinceID)
+                    ->where('StartDateTime', $StartDateTime)
+                    ->get();
+        }
+
         public static function getCarDetail($CarID){
             return Car::select("CAR.*"
                         , DB::raw('a1.FirstName')
@@ -265,6 +274,15 @@
             $externalDriver->setValues($externalDriver, $obj);
             $externalDriver->save();
             return $externalDriver->ReserveCarID;
+        }
+
+        public static function updateTotalTraveller($ReserveCarID, $TotalTraveller){
+            
+            $carReserve = CarReserve::find($ReserveCarID);
+        
+            $carReserve->TravelerAmount = ($carReserve->TravelerAmount + $TotalTraveller);
+            $carReserve->save();
+            return $carReserve->ReserveCarID;
         }
     }
 

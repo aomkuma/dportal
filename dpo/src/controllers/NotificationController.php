@@ -116,6 +116,23 @@
                 return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
             } 
 		}
+
+        public function checkAdminPermission($request, $response, $args){
+            try{
+                
+                $parsedBody = $request->getParsedBody();
+                $UserID = $parsedBody['UserID'];
+                $ReserveRoomID = $parsedBody['ReserveRoomID'];
+                $NotificationType =  $parsedBody['NotificationType'];
+                
+                $result = NotificationService::checkAdminPermission($UserID, $ReserveRoomID, $NotificationType);
+
+                $this->data_result['DATA']['IsAdmin'] = (!empty($result)?true:false);
+                return $this->returnResponse(200, $this->data_result, $response);
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            } 
+        }
         
     }
     

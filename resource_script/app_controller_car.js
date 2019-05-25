@@ -1,4 +1,4 @@
-app.controller('CarBookingController', function($scope, $location, $http, $filter, $uibModal, $routeParams, IndexOverlayFactory, ReserveCarFactory, RegionFactory, $routeParams) {
+app.controller('CarBookingController', function($scope, $location, $http, $filter, $uibModal, $routeParams, IndexOverlayFactory, ReserveCarFactory, RegionFactory, $routeParams, HTTPFactory) {
 	//console.log(BookingRoomInfo.data.DATA);
     $scope.$parent.menu_selected = 'vehicles';
     IndexOverlayFactory.overlayShow();
@@ -18,6 +18,18 @@ app.controller('CarBookingController', function($scope, $location, $http, $filte
         IndexOverlayFactory.overlayHide();
         $scope.RegionList = obj.data.DATA;
     });
+
+    $scope.IsAdmin = false;
+    $scope.checkAdminPermission = function(){
+        var params = {'UserID' : $scope.currentUser.UserID, 'ReserveRoomID' : $routeParams.reserveCarID, 'NotificationType' : '9'};
+        HTTPFactory.clientRequest('checkAdminPermission', params).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.IsAdmin = result.data.DATA.IsAdmin;
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+    $scope.checkAdminPermission();
 
     $scope.MaxSeatAmount = 0;
     $scope.getMaxSeatAmount = function (){
@@ -349,6 +361,77 @@ app.controller('CarBookingController', function($scope, $location, $http, $filte
             return false;
         }
 
+        //check to server with destination and date time condition
+        var Data = angular.copy($scope.ReserveCarInfo);
+        Data.StartDateTime = concatDateTimeSQL(Data.StartDate, Data.StartTime);
+        Data.EndDateTime = concatDateTimeSQL(Data.EndDate, Data.EndTime);
+        var params = {'Data' : Data};
+        HTTPFactory.clientRequest('checkSameDestination', params).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.SameDestinationList = result.data.DATA;
+                if($scope.SameDestinationList.length > 0){
+                    $scope.choose_destiny = {
+                        name: '0'
+                      };
+                    // $scope.choose_destiny ='0';
+                    var modalInstance = $uibModal.open({
+                        animation : true,
+                        templateUrl : 'choose_destiny.html',
+                        size : 'md',
+                        scope : $scope,
+                        backdrop : 'static',
+                        controller : 'ModalDialogCtrl',
+                        resolve : {
+                            params : function() {
+                                return {};
+                            } 
+                        },
+                    });
+                    modalInstance.result.then(function (valResult) {
+                        console.log($scope.choose_destiny);
+                        if($scope.choose_destiny.name == '0'){
+                            $scope.callRequestReserve();
+                        }else{
+
+                            $scope.alertMessage = 'ต้องการร่วมเดินทางกับพาหนะดังกล่าว ใช่หรือไม่ ?';
+                            var modalInstance = $uibModal.open({
+                                animation : true,
+                                templateUrl : 'html/dialog_confirm.html',
+                                size : 'sm',
+                                scope : $scope,
+                                backdrop : 'static',
+                                controller : 'ModalDialogCtrl',
+                                resolve : {
+                                    params : function() {
+                                        return {};
+                                    } 
+                                },
+                            });
+
+                            modalInstance.result.then(function (valResult) {
+                                IndexOverlayFactory.overlayShow();
+                                var params = {'TravellerList' : $scope.TravellerList, 'choose_destiny' : $scope.choose_destiny.name};
+                                HTTPFactory.clientRequest('chooseSameDestination', params).then(function (result) {
+                                    if (result.data.STATUS == 'OK') {
+                                        window.location.replace('#/');
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+                }else{
+                    $scope.callRequestReserve();
+                }
+                console.log($scope.SameDestinationList);
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+        
+            
+    }
+
+    $scope.callRequestReserve = function(){
         $scope.alertMessage = 'ต้องการส่งคำขอการจองพาหนะ ใช่หรือไม่ ?';
         var modalInstance = $uibModal.open({
             animation : true,
@@ -414,7 +497,7 @@ app.controller('CarBookingController', function($scope, $location, $http, $filte
                 }
             });
         }, function () {});
-            
+                    
     }
 
     $scope.checkSelectDateTime = function (startDate, startTime, endDate, endTime){
@@ -531,6 +614,7 @@ app.controller('CarBookingController', function($scope, $location, $http, $filte
         });
         modalInstance.result.then(function (valResult) {
             IndexOverlayFactory.overlayShow();
+            $scope.ReserveCarInfo.AdminID = $scope.currentUser.UserID;
             ReserveCarFactory.adminUpdateCarStatus($scope.ReserveCarInfo
                                                 , $scope.TravellerList
                                                 ,$scope.InternalDriver

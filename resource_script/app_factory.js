@@ -352,7 +352,7 @@ app.factory('ReserveRoomFactory', ['$http', '$q', function($http, $q){
                                         ,DeviceList
                                         ,FoodList
                                         ,RequestUser
-                                        , ReserveRoomID, ReserveStatus, AdminComment) {           
+                                        , ReserveRoomID, ReserveStatus, AdminComment, AdminID) {           
             return $http.post(servicesUrl + '/dpo/public/markStatus/' , 
                     {'ReserveRoomInfo':ReserveRoomInfo
                     ,'RoomInfo':RoomInfo
@@ -364,6 +364,7 @@ app.factory('ReserveRoomFactory', ['$http', '$q', function($http, $q){
                     ,'ReserveRoomID':ReserveRoomID
                     ,'ReserveStatus':ReserveStatus
                     ,'AdminComment':AdminComment
+                    ,'AdminID':AdminID
                     }
                 )
                 .then(
@@ -377,13 +378,14 @@ app.factory('ReserveRoomFactory', ['$http', '$q', function($http, $q){
                 );
         },
 
-        markStatusRoomDestination : function(ReserveRoomInfo, RoomInfo, ReserveRoomID, ReserveStatus, AdminComment) {           
+        markStatusRoomDestination : function(ReserveRoomInfo, RoomInfo, ReserveRoomID, ReserveStatus, AdminComment, AdminID) {           
             return $http.post(servicesUrl + '/dpo/public/markStatusRoomDestination/' , 
                     {'ReserveRoomInfo':ReserveRoomInfo
                     ,'RoomInfo':RoomInfo
                     ,'ReserveRoomID':ReserveRoomID
                     ,'ReserveStatus':ReserveStatus
                     ,'AdminComment':AdminComment
+                    ,'AdminID':AdminID
                     }
                 )
                 .then(

@@ -326,12 +326,14 @@
             }
         }
 
-        public static function markStatus($ReserveRoomID, $ReserveStatus, $AdminComment){
+        public static function markStatus($ReserveRoomID, $ReserveStatus, $AdminComment, $AdminID){
             $roomReserve = RoomReserve::find($ReserveRoomID);
             if($roomReserve != null){
                 $roomReserve->ReserveStatus = $ReserveStatus;
                 $roomReserve->AdminComment = $AdminComment;
+                $roomReserve->AdminID = $AdminID;
                 $roomReserve->MarkStatusDateTime = date('Y-m-d H:i:s.000');
+
                 $roomReserve->save();
                 return $roomReserve;
             }else{
@@ -361,6 +363,14 @@
             }else{
                 return null;
             }
+        }
+
+        public static function cancelRoomFromReject($RoomID, $TopicConference, $StartDateTime, $EndDateTime){
+            RoomReserve::where('RoomID' , $RoomID)
+                    ->where('TopicConference' , $TopicConference)
+                    ->where('StartDateTime' , $StartDateTime)
+                    ->where('EndDateTime' , $EndDateTime)
+                    ->delete();
         }
 
         public static function cancelRoomReserve($reserveRoomID){

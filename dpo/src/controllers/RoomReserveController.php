@@ -511,6 +511,7 @@
                 $ReserveRoomID = $parsedBody['ReserveRoomID'];
                 $ReserveStatus = $parsedBody['ReserveStatus'];
 				$AdminComment = $parsedBody['AdminComment'];
+                $AdminID = $parsedBody['AdminID'];
 				
 				// Check already approve or not
                 $RoomInfo = RoomReserveService::getReserveRoomInfo($ReserveRoomID);
@@ -523,7 +524,7 @@
 					exit(0);
                 }
 
-                $ReserveRoom = RoomReserveService::markStatus($ReserveRoomID, $ReserveStatus, $AdminComment);
+                $ReserveRoom = RoomReserveService::markStatus($ReserveRoomID, $ReserveStatus, $AdminComment, $AdminID);
                 $reserveRoomID = $ReserveRoom->ReserveRoomID;
 				$this->data_result['DATA']['ReserveRoomID'] = $ReserveRoomID;
 
@@ -627,7 +628,16 @@
                 $NotificationData = NotificationService::getNotificationRoomData($ReserveRoomID, $NotificationTypeList);
                 $NotificationData['NotificationText'] .= $descriptions;
                 NotificationService::updateNotificationSeenData($ReserveRoomID, $NotificationTypeList, $NotificationData['NotificationText']);
-                
+
+                // RoomReserveService::updateReserveRoomAdminRecv($pullBy, $NotificationData['NotificationKeyID']);
+
+                $_value = $NotificationData;
+                $_value['NotifcationID'] = '';
+                $_value['PushBy'] = $AdminID;
+                $_value['ToSpecificPersonID'] = $RequestUser['UserID'];
+                $_value['NotificationStatus'] = 'Unseen';
+
+                NotificationService::pushNotification($_value);
 
                 return $this->returnResponse(200, $this->data_result, $response);
             }catch(\Exception $e){
@@ -651,6 +661,7 @@
                 $ReserveRoomID = $parsedBody['ReserveRoomID'];
                 $ReserveStatus = $parsedBody['ReserveStatus'];
 				$AdminComment = $parsedBody['AdminComment'];
+                $AdminID = $parsedBody['AdminID'];
                 
                 $reserveRoomID = RoomReserveService::markStatusRoomDestination($ReserveRoomID, $ReserveStatus, $AdminComment);
 				$this->data_result['DATA']['ReserveRoomID'] = $reserveRoomID;
@@ -658,9 +669,17 @@
 				// Push notify
 				$notificationList = $this->generateNotificationMarkStatusRoomDesData($ReserveRoomInfo, $RoomInfo, $reserveRoomID, $ReserveStatus);
 				foreach($notificationList as $k => $v){
+                    $v['PushBy'] = $AdminID;
 					NotificationService::pushNotification($v);
 				}
-					
+
+                // Remove reserve room if reject
+                $RoomID = $RoomInfo['RoomID'];
+                $TopicConference = $ReserveRoomInfo['TopicConference'];
+                $StartDateTime = $ReserveRoomInfo['StartDateTime'];
+                $EndDateTime = $ReserveRoomInfo['EndDateTime'];
+				RoomReserveService::cancelRoomFromReject($RoomID, $TopicConference, $StartDateTime, $EndDateTime);	
+
                 return $this->returnResponse(200, $this->data_result, $response);
             }catch(\Exception $e){
                 return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);

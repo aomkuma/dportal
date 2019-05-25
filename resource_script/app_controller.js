@@ -214,20 +214,25 @@ app.controller('NotificationController', function($scope, NotificationFactory, I
 
     $scope.updateAndGotoPage = function (index,notify) {
         IndexOverlayFactory.overlayShow();
-        NotificationFactory.updateNotificationStatus(notify
-                            ,$scope.$parent.currentUser.UserID
-                            ,$scope.$parent.currentUser.RegionID
-                            ,$scope.$parent.currentUser.GroupID).then(function(result){
-            IndexOverlayFactory.overlayHide();
-            if(result.data.STATUS == 'OK'){
-                $scope.NotificationList[index].NotificationStatus = 'Seen';
-                $scope.totalNewNotifications = result.data.DATA.totalNewNotifications;
-                window.location.href = notify.NotificationUrl;
-            }else{
-                alert(result.DATA.DATA);
-            }
-        });
-
+        if(notify.NotificationType == '1' || notify.NotificationType == '2' || notify.NotificationType == '3' || notify.NotificationType == '6' || notify.NotificationType == '7' || notify.NotificationType == '8' 
+            || notify.NotificationType == '9' || notify.NotificationType == '10' || notify.NotificationType == '11'){
+            window.location.href = notify.NotificationUrl;
+        }else{
+            NotificationFactory.updateNotificationStatus(notify
+                                ,$scope.$parent.currentUser.UserID
+                                ,$scope.$parent.currentUser.RegionID
+                                ,$scope.$parent.currentUser.GroupID).then(function(result){
+                IndexOverlayFactory.overlayHide();
+                if(result.data.STATUS == 'OK'){
+                    $scope.NotificationList[index].NotificationStatus = 'Seen';
+                    $scope.totalNewNotifications = result.data.DATA.totalNewNotifications;
+                    window.location.href = notify.NotificationUrl;
+                }else{
+                    alert(result.DATA.DATA);
+                }
+            });
+        }
+        
     }
 
     $scope.updateAndGotoLeavePage = function (index,notify) {
@@ -341,19 +346,38 @@ app.controller('NotificationListController', function($scope, NotificationFactor
 
     $scope.updateAndGotoPage = function (index,notify) {
         IndexOverlayFactory.overlayShow();
-        NotificationFactory.updateNotificationStatus(notify
-                            ,$scope.$parent.currentUser.UserID
-                            ,$scope.$parent.currentUser.RegionID
-                            ,$scope.$parent.currentUser.GroupID).then(function(result){
-            IndexOverlayFactory.overlayHide();
-            if(result.data.STATUS == 'OK'){
-                $scope.NotificationList[index].NotificationStatus = 'Seen';
-                $scope.totalNewNotifications = result.data.DATA.totalNewNotifications;
-                window.location.href = notify.NotificationUrl;
-            }else{
-                alert(result.DATA.DATA);
-            }
-        });
+        // NotificationFactory.updateNotificationStatus(notify
+        //                     ,$scope.$parent.currentUser.UserID
+        //                     ,$scope.$parent.currentUser.RegionID
+        //                     ,$scope.$parent.currentUser.GroupID).then(function(result){
+        //     IndexOverlayFactory.overlayHide();
+        //     if(result.data.STATUS == 'OK'){
+        //         $scope.NotificationList[index].NotificationStatus = 'Seen';
+        //         $scope.totalNewNotifications = result.data.DATA.totalNewNotifications;
+        //         window.location.href = notify.NotificationUrl;
+        //     }else{
+        //         alert(result.DATA.DATA);
+        //     }
+        // });
+
+        if(notify.NotificationType == '1' || notify.NotificationType == '2' || notify.NotificationType == '3' || notify.NotificationType == '6' || notify.NotificationType == '7' || notify.NotificationType == '8' 
+            || notify.NotificationType == '9' || notify.NotificationType == '10' || notify.NotificationType == '11'){
+            window.location.href = notify.NotificationUrl;
+        }else{
+            NotificationFactory.updateNotificationStatus(notify
+                                ,$scope.$parent.currentUser.UserID
+                                ,$scope.$parent.currentUser.RegionID
+                                ,$scope.$parent.currentUser.GroupID).then(function(result){
+                IndexOverlayFactory.overlayHide();
+                if(result.data.STATUS == 'OK'){
+                    $scope.NotificationList[index].NotificationStatus = 'Seen';
+                    $scope.totalNewNotifications = result.data.DATA.totalNewNotifications;
+                    window.location.href = notify.NotificationUrl;
+                }else{
+                    alert(result.DATA.DATA);
+                }
+            });
+        }
 
     }
 
@@ -1225,7 +1249,7 @@ app.controller('RoomOverviewController', function($scope, $location, $compile, I
 
 });
 
-app.controller('RoomBookingController', function($scope, $location, $http, $filter, $uibModal, $routeParams, IndexOverlayFactory, ReserveRoomFactory, $routeParams) {
+app.controller('RoomBookingController', function($scope, $location, $http, $filter, $uibModal, $routeParams, IndexOverlayFactory, ReserveRoomFactory, $routeParams, HTTPFactory) {
 	//console.log(BookingRoomInfo.data.DATA);
     $scope.$parent.menu_selected = 'roomconference';
     IndexOverlayFactory.overlayShow();
@@ -1368,7 +1392,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
                     }else{
                         $scope.RoomDestinationList[i].selected_room = false;
                     }
-
+                    // console.log($scope.destinationRoomID , $scope.RoomDestinationList[i].DestinationRoomID);
                     if($scope.destinationRoomID == $scope.RoomDestinationList[i].DestinationRoomID){
                         $scope.RoomDestinationAdminIndex = i;
                     }
@@ -1377,11 +1401,11 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
             console.log($scope.RoomDestinationAdminIndex, $scope.destinationRoomID);
             //console.log($scope.destinationRoomID);
             if($scope.destinationRoomID != undefined && $scope.RoomDestinationAdminIndex != -1){
-                if($scope.currentUser.UserID == $scope.RoomDestinationList[$scope.RoomDestinationAdminIndex].VerifyBy){
+                // if($scope.currentUser.UserID == $scope.RoomDestinationList[$scope.RoomDestinationAdminIndex].VerifyBy){
                     $scope.ReserveRoomDestination = $scope.RoomDestinationList[$scope.RoomDestinationAdminIndex];
                     //$scope.AdminStatus = 'Reject';
                         //$scope.AdminComment = '';
-                }
+                // }
                 
             }
 
@@ -1434,9 +1458,27 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
 
     $scope.IsAdmin = false;
     $scope.checkAdminPermission = function(){
-        // if($scope.currentUser.UserID == )
-        // $scope.IsAdmin = false;
+        var params = {'UserID' : $scope.currentUser.UserID, 'ReserveRoomID' : $routeParams.roomReserveID, 'NotificationType' : '1'};
+        HTTPFactory.clientRequest('checkAdminPermission', params).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.IsAdmin = result.data.DATA.IsAdmin;
+            }
+            IndexOverlayFactory.overlayHide();
+        });
     }
+    $scope.checkAdminPermission();
+
+    $scope.IsDestAdmin = false;
+    $scope.checkDestAdminPermission = function(){
+        var params = {'UserID' : $scope.currentUser.UserID, 'ReserveRoomID' : $routeParams.destinationRoomID, 'NotificationType' : '6'};
+        HTTPFactory.clientRequest('checkAdminPermission', params).then(function (result) {
+            if (result.data.STATUS == 'OK') {
+                $scope.IsDestAdmin = result.data.DATA.IsAdmin;
+            }
+            IndexOverlayFactory.overlayHide();
+        });
+    }
+    $scope.checkDestAdminPermission();
 
     $scope.addExternalAdtendee = function (obj) {
         window.clearTimeout(timeoutReserve);
@@ -1513,7 +1555,8 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
                                         ,$scope.RequestUser
                                         , ReserveRoomID
                                         , ReserveStatus
-                                        , AdminComment).then(function(result){
+                                        , AdminComment
+                                        , $scope.currentUser.UserID).then(function(result){
                 IndexOverlayFactory.overlayHide();
                 if(result.data.STATUS=='OK'){
                     
@@ -1544,6 +1587,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
 
     $scope.markStatusRoomDestination = function(ReserveRoomID, ReserveStatus, AdminComment){
         window.clearTimeout(timeoutReserve);
+        console.log($scope.ReserveRoomDestination);
         $scope.alertMessage = 'ต้องการ '+(ReserveStatus=='Approve'?'อนุมัติ':'ไม่อนุมัติ')+' การจองห้องประชุมนี้ ใช่หรือไม่ ?';
         var modalInstance = $uibModal.open({
             animation : true,
@@ -1560,7 +1604,7 @@ app.controller('RoomBookingController', function($scope, $location, $http, $filt
         });
         modalInstance.result.then(function (valResult) {
             IndexOverlayFactory.overlayShow();
-            ReserveRoomFactory.markStatusRoomDestination($scope.ReserveRoomInfo ,$scope.ReserveRoomDestination, ReserveRoomID, ReserveStatus, AdminComment).then(function(result){
+            ReserveRoomFactory.markStatusRoomDestination($scope.ReserveRoomInfo ,$scope.ReserveRoomDestination, ReserveRoomID, ReserveStatus, AdminComment, $scope.currentUser.UserID).then(function(result){
                 IndexOverlayFactory.overlayHide();
                 if(result.data.STATUS=='OK'){
                     $scope.addAlert('บันทึกสำเร็จ','success');

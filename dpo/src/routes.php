@@ -140,6 +140,7 @@ $app->post('/updateRegionOfDepartment/', 'DepartmentController:updateRegionOfDep
 $app->get('/getNotificationList/{regionID}/{adminGroup}/{userID}/{offset}', 'NotificationController:getNotificationList');
 $app->get('/getNotificationListByCondition/{notificationType}/{regionID}/{adminGroup}/{userID}/{offset}/{keyword}', 'NotificationController:getNotificationListByCondition');
 $app->post('/updateNotificationStatus/', 'NotificationController:updateNotificationStatus');
+$app->post('/checkAdminPermission/', 'NotificationController:checkAdminPermission');
 
 //  Room reserve action
 $app->get('/room-reserve/find-by-keyword/{keyword}', 'RoomReserveController:findByKeyword');
@@ -176,6 +177,10 @@ $app->post('/adminUpdateCarStatus/', 'CarReserveController:adminUpdateCarStatus'
 $app->get('/getReserveCartypeList/', 'CarReserveController:getReserveCartypeList');
 $app->get('/getCarsInRegion/{regionID}/{findDate}', 'CarReserveController:getCarsInRegion');
 $app->post('/carreserve/list/detail/', 'CarReserveController:getCarListDetail');
+$app->post('/checkSameDestination/', 'CarReserveController:checkSameDestination');
+$app->post('/chooseSameDestination/', 'CarReserveController:chooseSameDestination');
+
+
 
 // eHr action
 $app->get('/eHrUpdateDepartment/', 'EHRController:eHrUpdateDepartment');
@@ -234,6 +239,8 @@ $app->post('/inbox/attach-file/delete/', 'InboxController:deleteInboxAttachFile'
 $app->post('/inbox/notification/push/', 'InboxController:pushNotification');
 $app->post('/inbox/notification/list/', 'InboxController:getListNotification');
 $app->post('/inbox/notification/count/', 'InboxController:getUnseen');
+
+
 
 // Default action
 $app->get('/[{name}]', function ($request, $response, $args) {

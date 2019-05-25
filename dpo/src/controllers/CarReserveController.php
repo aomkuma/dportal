@@ -247,6 +247,61 @@
             }    
         }
 
+        public function checkSameDestination($request, $response, $args){
+            try{
+
+                $parsedBody = $request->getParsedBody();
+                
+                $ReserveCarInfo = $parsedBody['Data'];
+                
+                $ReserveCarID = $ReserveCarInfo['ReserveCarID'];
+                $RegionID = $ReserveCarInfo['RegionID'];
+                $ProvinceID = $ReserveCarInfo['ProvinceID'];
+                $StartDateTime = $ReserveCarInfo['StartDateTime'];
+
+                $Data = CarReserveService::checkSameDestination($ReserveCarID, $RegionID, $ProvinceID, $StartDateTime);
+                
+                $this->data_result['DATA'] = $Data;
+
+                return $this->returnResponse(200, $this->data_result, $response);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }    
+        }
+
+        public function chooseSameDestination($request, $response, $args){
+            try{
+
+                $parsedBody = $request->getParsedBody();
+                
+                $TravellerList = $parsedBody['TravellerList'];
+                $ReserveCarID = $parsedBody['choose_destiny'];
+                
+                $traveller_amount = 0;
+                if(!empty($ReserveCarID)){
+                    // Add Travellers
+                    foreach ($TravellerList as $key => $value) {
+                        $traveller['ReserveCarID'] = $ReserveCarID;
+                        $traveller['UserID'] = $value['UserID'];
+                        $traveller['CreateBy'] = $value['CreateBy'];
+                        CarReserveService::updateTraveller($traveller);
+                        $traveller_amount++;
+                    }
+                }
+
+                // Update Total traveller
+                $Data = CarReserveService::updateTotalTraveller($ReserveCarID, $traveller_amount);
+                
+                $this->data_result['DATA'] = $Data;
+
+                return $this->returnResponse(200, $this->data_result, $response);
+                
+            }catch(\Exception $e){
+                return $this->returnSystemErrorResponse($this->logger, $this->data_result, $e, $response);
+            }    
+        }
+
         private function chkDuplicateTime($reserveCarID, $carID, $startDateTime, $endDateTime){
             $chkStartDateTime = date('Y-m-d H:i:s.000', strtotime("+1 minutes", strtotime($startDateTime)));
             $chkEndDateTime = date('Y-m-d H:i:s.000', strtotime("-1 minutes", strtotime($endDateTime)));
@@ -318,6 +373,28 @@
                             $this->logger->info('Sent mail Car failed');
                         }
                     }
+
+                    // $NotificationTypeList = [1,6];
+
+                    // if($ReserveStatus == 'Approve'){
+                    //     $descriptions = ' (ได้รับการอนุมัติแล้ว)';
+                    // }else if($ReserveStatus == 'Reject'){
+                    //     $descriptions = ' (ไม่ได้รับการอนุมัติ)';
+                    // }
+
+                    // $NotificationData = NotificationService::getNotificationRoomData($ReserveRoomID, $NotificationTypeList);
+                    // $NotificationData['NotificationText'] .= $descriptions;
+
+                    // CarReserveService::updateReserveCarAdminRecv($pullBy, $Notification['NotificationKeyID']);
+
+                    // $_value = $NotificationData;
+                    // $_value['NotifcationID'] = '';
+                    // $_value['PushBy'] = $ReserveCarInfo['AdminID'];
+                    // $_value['ToSpecificPersonID'] = $ReserveCarInfo['UserID'];
+                    // $_value['NotificationStatus'] = 'Unseen';
+
+                    // NotificationService::pushNotification($_value);
+
                 }else{
                     $this->data_result['STATUS'] = 'ERROR';
                     $this->data_result['DATA']['MSG'] = 'มีการจองพาหนะในช่วงเวลา ' . $duplicate[0]['StartDateTime'] . ' - ' . $duplicate[0]['EndDateTime'] . ' ในภารกิจ ' . $duplicate[0]['Mission'] . ' แล้ว';
